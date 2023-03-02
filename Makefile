@@ -102,10 +102,11 @@ export banner
 #
 ###################################
 
-all: BANNER $(NAME) $(eval SHELL:=/bin/zsh)
+all: BANNER $(DIST)/$(NAME) $(eval SHELL:=/bin/zsh)
 
 BANNER:
 	@printf "$$banner"
+	@printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] Compiling C++ Files... at \033[32m$(shell date)\033[00m\n\n\n"
 
 .ONESHELL:
 $(OBJDIR)/%.o: %.cpp
@@ -146,10 +147,23 @@ $(OBJDIR)/%.o: %.cpp
 	@$(eval PERC=$(shell echo "$(cnt)/$(NUM_CF)*100" | bc -l | tr '.' '\n' | head -n 1))
 	@$(eval cnt=$(shell echo $$(($(cnt)+1))))
 
-$(NAME): $(OBJDIR) $(OBJS)
-	@printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] WebServer Created !"
+.ONESHELL:
+$(DIST)/$(NAME): $(OBJDIR) $(OBJS)
+	@printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] WebServer Created at \033[32m$(shell date)\033[00m"
+	@printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] Version Build	: \033[32m$(DIST)\033[00m"
+	@printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] Version WServer	: \033[32m$(WEBSERVER_VERSION)\033[00m"
 	@mkdir -p $(DIST)
 	@$(CC) $(CXXFLAGS) $(OBJS) -o $(DIST)/$(NAME)
+	@echo -ne "\n[\033[0;32m\xE2\x9C\x94\033[0m] Sha1sum 		: \033[32m"
+	@sha1sum $(DIST)/$(NAME) | cut -d ' ' -f1 | tr '\n' ' '
+	@echo -ne "\e[00m"
+	@echo -en "\n[\033[0;32m\xE2\x9C\x94\033[0m] Md5sum		: \033[32m"
+	@md5sum $(DIST)/$(NAME) | cut -d ' ' -f1 | tr '\n' ' '
+	@echo -ne "\e[00m"
+	@echo -ne "\n[\033[0;32m\xE2\x9C\x94\033[0m] Sha256sum 		: \033[32m"
+	@sha256sum $(DIST)/$(NAME) | cut -d ' ' -f1 | tr '\n' ' '
+	@echo -ne "\e[00m"
+
 
 $(OBJDIR):
 	@mkdir -p $(sort $(addprefix $(OBJDIR)/, $(dir $(SRCS))))
