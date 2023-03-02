@@ -7,7 +7,7 @@
 AUTHORS = Sam0verfl0w, Clinche
 NAME = webserv
 WEBSERVER_VERSION = 0.0.1
-DIST = release
+DIST = bin
 
 ###################################
 #
@@ -25,7 +25,7 @@ VERSION = $(shell $(CC) --version | head -n 1)
 #
 ###################################
 
-GREEN 	= \033[38;5;82m
+GREEN 	= \033[32m
 RED   	= \033[38;5;196m
 YELLOW 	= \033[38;5;226m
 ORANGE	= \033[38;5;202m
@@ -68,7 +68,7 @@ OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
 
 ifdef DEBUG
 	CXXFLAGS += -g
-	DIST = debug
+	DIST = dbg
 endif
 
 ###################################
@@ -79,14 +79,16 @@ endif
 
 define banner
 
-$(LBLUE)
+\033[32m
 	_ _ _ ____ ___  ____ ____ ____ _  _ ____ ____ 
 	| | | |___ |__] [__  |___ |__/ |  | |___ |__/ 
 	|_|_| |___ |__] ___] |___ |  \  \/  |___ |  \ 
                                              
-											 
+
+$(LBLUE)
 		Version		: $(GREEN)$(WEBSERVER_VERSION)$(LBLUE)
-		CC Version	: $(GREEN)$(VERSION)$(RESET)
+		CC Version	: $(GREEN)$(VERSION)$(LBLUE)
+		Credits		: $(GREEN)$(AUTHORS)$(RESET)
 
 
 
@@ -104,9 +106,16 @@ export banner
 
 all: BANNER $(DIST)/$(NAME) $(eval SHELL:=/bin/zsh)
 
+.ONESHELL:
 BANNER:
 	@printf "$$banner"
+	@printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] Check C++ Files... at \033[32m$(shell date)\033[00m\n"
+	@if test -f $(DIST)/$(NAME)
+	@then
+	@printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] Project is already Compiled ! to rebuild use make re\033[00m\n\n\n"
+	@else
 	@printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] Compiling C++ Files... at \033[32m$(shell date)\033[00m\n\n\n"
+	@fi
 
 .ONESHELL:
 $(OBJDIR)/%.o: %.cpp
@@ -173,7 +182,7 @@ clean:
 
 fclean: clean
 	@rm -rf $(NAME)
-	@rm -rf debug release
+	@rm -rf bin dbg
 
 re: fclean all
 
