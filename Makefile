@@ -116,7 +116,15 @@ $(OBJDIR)/%.o: %.cpp
 	@	echo -n '='
 	@	((i++))
 	@done
+	@if [ $(PERC) -lt "25" ]
+	@then
+	@echo -ne "\033[31m>\033[00m"
+	@elif [ $(PERC) -gt "25" ] && [ $(PERC) -lt "75" ]
+	@then
+	@echo -ne "\033[33m>\033[00m"
+	@else
 	@echo -ne "\033[32m>\033[00m"
+	@fi
 	@i=$(cnt)
 	@while [ "$$i" -le $(NUM_CF) ]
 	@do
