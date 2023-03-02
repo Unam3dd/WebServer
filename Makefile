@@ -110,7 +110,7 @@ BANNER:
 .ONESHELL:
 $(OBJDIR)/%.o: %.cpp
 	@echo -ne '\e[1A\e[1K'
-	@echo -n '['
+	@echo -n '[ '
 	@i=2
 	@while [ "$$i" -le $(cnt) ]
 	@do
@@ -133,7 +133,15 @@ $(OBJDIR)/%.o: %.cpp
 	@	((i++))
 	@done
 	@echo -n ']'
-	@echo -e " ($(PERC)%) $<...          "
+	@if [ $(PERC) -lt "25" ]
+	@then
+	@echo -e " (\033[31m$(PERC)%\033[00m) $<...          "
+	@elif [ $(PERC) -gt "25" ] && [ $(PERC) -lt "75" ]
+	@then
+	@echo -e " (\033[33m$(PERC)%\033[00m) $<...          "
+	@else
+	@echo -e " (\033[32m$(PERC)%\033[00m) $<...          "
+	@fi
 	@$(CC) $(CXXFLAGS) -c $< -o $@
 	@$(eval PERC=$(shell echo "$(cnt)/$(NUM_CF)*100" | bc -l | tr '.' '\n' | head -n 1))
 	@$(eval cnt=$(shell echo $$(($(cnt)+1))))
