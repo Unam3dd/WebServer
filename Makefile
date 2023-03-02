@@ -147,7 +147,7 @@ $(OBJDIR)/%.o: %.cpp
 	@$(eval cnt=$(shell echo $$(($(cnt)+1))))
 
 $(NAME): $(OBJDIR) $(OBJS)
-	@printf "\n[+] WebServer Created !"
+	@printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] WebServer Created !"
 	@mkdir -p $(DIST)
 	@$(CC) $(CXXFLAGS) $(OBJS) -o $(DIST)/$(NAME)
 
