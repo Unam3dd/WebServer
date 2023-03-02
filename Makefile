@@ -110,6 +110,7 @@ BANNER:
 .ONESHELL:
 $(OBJDIR)/%.o: %.cpp
 	@echo -ne '\e[1A\e[1K'
+	@echo -n '🚀 '
 	@echo -n '['
 	@i=2
 	@while [ "$$i" -le $(cnt) ]
