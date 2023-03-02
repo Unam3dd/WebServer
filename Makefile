@@ -16,7 +16,7 @@ DIST = release
 ###################################
 
 CC = c++
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -I.
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -I. -Iinc -Iinc/libsocket
 VERSION = $(shell $(CC) --version | head -n 1)
 
 ###################################
@@ -62,9 +62,8 @@ vpath %.hpp inc
 #
 ###################################
 
-SRC_MAIN = main.cpp
 
-SRCS = $(SRC_MAIN)
+SRCS = $(shell find src -iname "*.cpp" -print | sed 's/src\///g')
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
 
 ifdef DEBUG
@@ -110,21 +109,23 @@ BANNER:
 
 .ONESHELL:
 $(OBJDIR)/%.o: %.cpp
-	@echo -n '['
+	@echo -ne '['
 	@i=2
 	@while [ "$$i" -le $(cnt) ]
 	@do
 	@	echo -n '='
 	@	((i++))
 	@done
-	@echo -n '>'
+	@echo -ne "\033[32m>\033[00m"
 	@i=$(cnt)
 	@while [ "$$i" -le $(NUM_CF) ]
 	@do
 	@	echo -n ' '
+	@	((i++))
 	@done
 	@echo -n ']'
 	@echo -n " ($(PERC)%)"
+	@echo -ne " $<...                                        \r"
 	@$(CC) $(CXXFLAGS) -c $< -o $@
 	@$(eval PERC=$(shell echo "$(cnt)/$(NUM_CF)*100" | bc -l | tr '.' '\n' | head -n 1))
 	@$(eval cnt=$(shell echo $$(($(cnt)+1))))
