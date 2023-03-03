@@ -9,7 +9,7 @@
 * @return   Epoll File descriptor
 *
 *********************************************************************/
-int	Epoll::Getfd(void)
+int	Epoll::Getfd(void) const
 {
 	return (this->_efd);
 }

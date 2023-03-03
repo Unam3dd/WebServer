@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 17:51:04 by stales            #+#    #+#             */
-/*   Updated: 2023/02/28 19:26:42 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/03 10:42:24 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,11 @@ class	Socket
 		//
 		/////////////////////////////////
 		
+		/*
+		 * 	@brief Socket Default constructor
+		 */
 		Socket(void);
+
 		Socket(int family, int type, int proto);
 		Socket(const Socket& s);
 		Socket	&operator=(const Socket& s);

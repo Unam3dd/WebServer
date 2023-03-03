@@ -71,6 +71,10 @@ ifdef DEBUG
 	DIST = dbg
 endif
 
+ifdef FAST
+	CXXFLAGS += -Ofast
+endif
+
 ###################################
 #
 #			BANNER
