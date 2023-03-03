@@ -127,6 +127,7 @@ all: BANNER $(DIST)/$(NAME) $(eval SHELL:=/bin/zsh)
 
 .ONESHELL:
 BANNER:
+	@clear
 	@printf "$$banner"
 	@printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] Check C++ Files... at \033[32m$(shell date)\033[00m\n"
 	@if test -f $(DIST)/$(NAME)
@@ -225,9 +226,8 @@ obj/tests/%.o: tests/%.cpp
 $(TEST_DIR): $(OBJDIR)
 	@mkdir -p $(OBJDIR)/$(TEST_DIR)
 
-$(TEST_NAME): $(TEST_WSERV_OBJS) $(TEST_DIR) $(TEST_OBJS)
+$(TEST_NAME): $(OBJS) $(TEST_DIR) $(TEST_OBJS)
 	@mkdir -p $(DIST)
-	echo "on est la"
 	$(CC) $(TESTFLAGS) -Itests $(TEST_WSERV_OBJS) $(TEST_OBJS) -o $(DIST)/$(TEST_NAME)
 
 unit: $(INC_GTEST) $(CONTRIB_DIR)
