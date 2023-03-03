@@ -8,8 +8,7 @@ AUTHORS = Sam0verfl0w, Clinche
 NAME = webserv
 WEBSERVER_VERSION = 0.0.1
 DIST = bin
-GTEST_INC = inc/greatest
-GTEST_LIB = lib
+GTEST_INC = inc/greatest/greatest.h
 
 ###################################
 #
@@ -205,7 +204,7 @@ $(GTEST_LIB):
 	@rm -rf greatest
 
 
-unit: $(INC_GTEST) $(GTEST_LIB)
+unit: $(INC_GTEST)
 	@echo -e "\033[32m\n[\033[0;32m\xE2\x9C\x94\033[0m]  Greatest was moved to project directory !"
 	@echo -e "\n[\033[0;32m\xE2\x9C\x94\033[0m] You can use make test to build test executable !\033[00m"
 
