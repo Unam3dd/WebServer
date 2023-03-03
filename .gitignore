@@ -1,3 +1,5 @@
+bin/webserv
+dbg/webserv
 .cache
 *.json
 # Prerequisites
