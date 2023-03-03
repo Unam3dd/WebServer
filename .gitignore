@@ -1,4 +1,4 @@
-.clang
+.cache
 *.json
 # Prerequisites
 *.d
