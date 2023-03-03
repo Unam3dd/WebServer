@@ -8,8 +8,7 @@ AUTHORS = Sam0verfl0w, Clinche
 NAME = webserv
 WEBSERVER_VERSION = 0.0.1
 DIST = bin
-GTEST_INC = inc/gtest
-GMOCK_INC = inc/gmock
+GTEST_INC = inc/greatest
 GTEST_LIB = lib
 
 ###################################
@@ -198,29 +197,23 @@ $(GTEST_LIB):
 	@then
 	@echo -e "\033[31m[-] Git is not installed"
 	@else
-	@git clone https://github.com/google/googletest gtest
-	@cd gtest
-	@mkdir -p build
-	@cd build
-	@cmake -DGTEST_CREATE_SHARED_LIBRARY=1 ..
-	@make
-	@cp -r lib ../../
-	@cp -r ../googletest/include/gtest ../../inc
-	@cp -r ../googlemock/include/gmock ../../inc
+	@echo -e "\033[32m[+] Cloning greatest please wait...\033[00m"
+	@git clone https://github.com/silentbicycle/greatest.git greatest
+	@mkdir -p inc/greatest
+	@cp greatest/greatest.h inc/greatest
 	@fi
-	@cd ../../
-	@rm -rf gtest
+	@rm -rf greatest
 
 
-unit: $(INC_GTEST) $(INC_GMOCK) $(GTEST_LIB)
-	@echo "YESS"
+unit: $(INC_GTEST) $(GTEST_LIB)
+	@echo -e "\033[32m\n[\033[0;32m\xE2\x9C\x94\033[0m]  Greatest was moved to project directory !"
+	@echo -e "\n[\033[0;32m\xE2\x9C\x94\033[0m] You can use make test to build test executable !\033[00m"
 
 unit_clean:
-	@rm -rf gtest
+	@rm -rf greatest
 
 unit_fclean: unit_clean
-	@rm -rf inc/gtest
-	@rm -rf inc/gmock
+	@rm -rf inc/greatest
 	@rm -rf lib
 
 .PHONY: all clean fclean re unit unit_clean unit_fclean
