@@ -6,11 +6,12 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:35:51 by stales            #+#    #+#             */
-/*   Updated: 2023/03/03 16:26:25 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/03 17:18:00 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "testunit.hpp"
+#include "ipformat.hpp"
 #include <iostream>
 #include <cstdlib>
 

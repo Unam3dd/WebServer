@@ -6,7 +6,7 @@
 #    By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/03 17:02:32 by stales            #+#    #+#              #
-#    Updated: 2023/03/03 17:08:10 by stales           ###   ########.fr        #
+#    Updated: 2023/03/03 17:14:09 by stales           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -115,6 +115,8 @@ define banner
 	| | | |___ |__] [__  |___ |__/ |  | |___ |__/ 
 	|_|_| |___ |__] ___] |___ |  \  \/  |___ |  \ 
                                              
+
+			Long Live the Rocket !
 
 $(LBLUE)
 		Version		: $(GREEN)$(WEBSERVER_VERSION)$(LBLUE)
