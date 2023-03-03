@@ -213,6 +213,5 @@ unit_clean:
 
 unit_fclean: unit_clean
 	@rm -rf inc/greatest
-	@rm -rf lib
 
 .PHONY: all clean fclean re unit unit_clean unit_fclean
