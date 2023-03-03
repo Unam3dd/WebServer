@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/03/03 17:02:32 by stales            #+#    #+#              #
+#    Updated: 2023/03/03 17:03:18 by stales           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 ###################################
 #
 #		WebServer Project
@@ -221,14 +233,14 @@ $(INC_GTEST) $(CONTRIB_DIR):
 	@rm -rf greatest
 
 obj/tests/%.o: tests/%.cpp
-	$(CC) $(TESTFLAGS) -Itests -c $< -o $@
+	@$(CC) $(TESTFLAGS) -Itests -c $< -o $@
 
 $(TEST_DIR): $(OBJDIR)
 	@mkdir -p $(OBJDIR)/$(TEST_DIR)
 
-$(TEST_NAME): $(OBJS) $(TEST_DIR) $(TEST_OBJS)
+$(TEST_NAME): $(INC_GTEST) $(CONTRIB_DIR) BANNER $(DIST)/$(NAME) $(OBJS) $(TEST_DIR) $(TEST_OBJS)
 	@mkdir -p $(DIST)
-	$(CC) $(TESTFLAGS) -Itests $(TEST_WSERV_OBJS) $(TEST_OBJS) -o $(DIST)/$(TEST_NAME)
+	@$(CC) $(TESTFLAGS) -Itests $(TEST_WSERV_OBJS) $(TEST_OBJS) -o $(DIST)/$(TEST_NAME)
 
 unit: $(INC_GTEST) $(CONTRIB_DIR)
 	@echo -e "\033[32m\n[\033[0;32m\xE2\x9C\x94\033[0m]  Greatest was moved to project directory !"
