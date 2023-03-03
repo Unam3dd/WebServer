@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ipformat.cpp                                       :+:      :+:    :+:   */
+/*   ipformat.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:24:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/03 16:16:06 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/03 17:29:22 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ TEST	ip_format_test1(void)
 	};
 
 	for (uint64_t i = 0; i < sizeof(addrs_ip)/sizeof(std::string); i++)
-		ASSERT_EQ(IS_BAD_IP(addrs_ip[i]), 1);
+		ASSERT_EQ(check_format_ip(addrs_ip[i]), true);
 	PASS();
 }
 

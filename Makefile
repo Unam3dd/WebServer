@@ -6,7 +6,7 @@
 #    By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/03 17:02:32 by stales            #+#    #+#              #
-#    Updated: 2023/03/03 17:14:09 by stales           ###   ########.fr        #
+#    Updated: 2023/03/03 17:32:29 by stales           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -256,5 +256,8 @@ unit_clean:
 unit_fclean: unit_clean
 	@rm -rf inc/greatest
 	@rm -rf contrib
+
+run_tests: $(TEST_NAME)
+	./$(DIST)/$(TEST_NAME) -v | ./contrib/greenest
 
 .PHONY: all clean fclean re unit unit_clean unit_fclean test
