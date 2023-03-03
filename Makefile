@@ -8,6 +8,9 @@ AUTHORS = Sam0verfl0w, Clinche
 NAME = webserv
 WEBSERVER_VERSION = 0.0.1
 DIST = bin
+GTEST_INC = inc/gtest
+GMOCK_INC = inc/gmock
+GTEST_LIB = lib
 
 ###################################
 #
@@ -177,7 +180,6 @@ $(DIST)/$(NAME): $(OBJDIR) $(OBJS)
 	@sha256sum $(DIST)/$(NAME) | cut -d ' ' -f1 | tr '\n' ' '
 	@echo -ne "\e[00m"
 
-
 $(OBJDIR):
 	@mkdir -p $(sort $(addprefix $(OBJDIR)/, $(dir $(SRCS))))
 
@@ -190,4 +192,35 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.ONESHELL:
+$(GTEST_LIB):
+	@if ! git --version > /dev/null
+	@then
+	@echo -e "\033[31m[-] Git is not installed"
+	@else
+	@git clone https://github.com/google/googletest gtest
+	@cd gtest
+	@mkdir -p build
+	@cd build
+	@cmake -DGTEST_CREATE_SHARED_LIBRARY=1 ..
+	@make
+	@cp -r lib ../../
+	@cp -r ../googletest/include/gtest ../../inc
+	@cp -r ../googlemock/include/gmock ../../inc
+	@fi
+	@cd ../../
+	@rm -rf gtest
+
+
+unit: $(INC_GTEST) $(INC_GMOCK) $(GTEST_LIB)
+	@echo "YESS"
+
+unit_clean:
+	@rm -rf gtest
+
+unit_fclean: unit_clean
+	@rm -rf inc/gtest
+	@rm -rf inc/gmock
+	@rm -rf lib
+
+.PHONY: all clean fclean re unit unit_clean unit_fclean
