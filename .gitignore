@@ -1,3 +1,5 @@
+inc/greatest
+contrib
 bin/webserv
 dbg/webserv
 .cache

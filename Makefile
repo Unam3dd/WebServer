@@ -8,7 +8,8 @@ AUTHORS = Sam0verfl0w, Clinche
 NAME = webserv
 WEBSERVER_VERSION = 0.0.1
 DIST = bin
-GTEST_INC = inc/greatest/greatest.h
+INC_GTEST = inc/greatest
+CONTRIB_DIR = contrib
 
 ###################################
 #
@@ -191,7 +192,7 @@ fclean: clean
 re: fclean all
 
 .ONESHELL:
-$(GTEST_LIB):
+$(INC_GTEST) $(CONTRIB_DIR):
 	@if ! git --version > /dev/null
 	@then
 	@echo -e "\033[31m[-] Git is not installed"
@@ -200,11 +201,12 @@ $(GTEST_LIB):
 	@git clone https://github.com/silentbicycle/greatest.git greatest
 	@mkdir -p inc/greatest
 	@cp greatest/greatest.h inc/greatest
+	@cp -r greatest/contrib .
 	@fi
 	@rm -rf greatest
 
 
-unit: $(INC_GTEST)
+unit: $(INC_GTEST) $(CONTRIB_DIR)
 	@echo -e "\033[32m\n[\033[0;32m\xE2\x9C\x94\033[0m]  Greatest was moved to project directory !"
 	@echo -e "\n[\033[0;32m\xE2\x9C\x94\033[0m] You can use make test to build test executable !\033[00m"
 
@@ -213,5 +215,6 @@ unit_clean:
 
 unit_fclean: unit_clean
 	@rm -rf inc/greatest
+	@rm -rf contrib
 
 .PHONY: all clean fclean re unit unit_clean unit_fclean

@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 11:43:55 by stales            #+#    #+#             */
-/*   Updated: 2023/03/03 12:34:15 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/03 14:40:00 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ class HttpServer
 		* @brief    Default Destructor of HttpServer class
 		*********************************************************************/
 		~HttpServer(void);
-
 	
 	/*
 	 * @brief Privates Attributes

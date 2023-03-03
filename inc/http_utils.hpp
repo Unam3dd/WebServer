@@ -4,6 +4,14 @@
 
 #include <string>
 
+//////////////////////////////////
+//
+//	       DEFINES
+//
+/////////////////////////////////
+
+#define IS_BAD_IP(x) (check_format_ip(x) == false)
+
 /*
  * @brief Check format of Ipv4 address
  *
