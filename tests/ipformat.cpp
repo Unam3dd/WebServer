@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:24:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/03 15:35:37 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/03 16:16:06 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 
 #include "greatest/greatest.h"
 #include "http_utils.hpp"
-#include "testunit.hpp"
 #include <string>
 #include <stdint.h>
 
@@ -37,21 +36,6 @@ TEST	ip_format_test1(void)
 
 	for (uint64_t i = 0; i < sizeof(addrs_ip)/sizeof(std::string); i++)
 		ASSERT_EQ(IS_BAD_IP(addrs_ip[i]), 1);
-	PASS();
-}
-
-TEST	ip_format_test2(void)
-{
-	PASS();
-}
-
-TEST	ip_format_test3(void)
-{
-	PASS();
-}
-
-TEST	ip_format_test4(void)
-{
 	PASS();
 }
 

@@ -6,10 +6,12 @@
 
 AUTHORS = Sam0verfl0w, Clinche
 NAME = webserv
+TEST_NAME = tester
 WEBSERVER_VERSION = 0.0.1
 DIST = bin
 INC_GTEST = inc/greatest
 CONTRIB_DIR = contrib
+TEST_DIR	= tests
 
 ###################################
 #
@@ -19,6 +21,7 @@ CONTRIB_DIR = contrib
 
 CC = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -I. -Iinc -Iinc/libsocket
+TESTFLAGS = -I. -Iinc -Iinc/libsocket -std=c++98
 VERSION = $(shell $(CC) --version | head -n 1)
 
 ###################################
@@ -67,6 +70,16 @@ vpath %.hpp inc
 
 SRCS = $(shell find src -iname "*.cpp" -print | sed 's/src\///g')
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
+
+###################################
+#
+#		CPP Sources Test Files
+#
+###################################
+
+TEST_SRCS = $(shell find tests -iname "*.cpp" -print)
+TEST_OBJS = $(addprefix $(OBJDIR)/, $(TEST_SRCS:.cpp=.o))
+TEST_WSERV_OBJS = $(filter-out obj/main.o, $(OBJS))
 
 ifdef DEBUG
 	CXXFLAGS += -g
@@ -186,7 +199,8 @@ clean:
 	@rm -rf $(OBJDIR)
 
 fclean: clean
-	@rm -rf $(NAME)
+	@rm -rf $(DIST)/$(NAME)
+	@rm -rf $(DIST)/$(TEST_NAME)
 	@rm -rf bin dbg
 
 re: fclean all
@@ -205,6 +219,16 @@ $(INC_GTEST) $(CONTRIB_DIR):
 	@fi
 	@rm -rf greatest
 
+obj/tests/%.o: tests/%.cpp
+	$(CC) $(TESTFLAGS) -Itests -c $< -o $@
+
+$(TEST_DIR): $(OBJDIR)
+	@mkdir -p $(OBJDIR)/$(TEST_DIR)
+
+$(TEST_NAME): $(TEST_WSERV_OBJS) $(TEST_DIR) $(TEST_OBJS)
+	@mkdir -p $(DIST)
+	echo "on est la"
+	$(CC) $(TESTFLAGS) -Itests $(TEST_WSERV_OBJS) $(TEST_OBJS) -o $(DIST)/$(TEST_NAME)
 
 unit: $(INC_GTEST) $(CONTRIB_DIR)
 	@echo -e "\033[32m\n[\033[0;32m\xE2\x9C\x94\033[0m]  Greatest was moved to project directory !"
@@ -217,4 +241,4 @@ unit_fclean: unit_clean
 	@rm -rf inc/greatest
 	@rm -rf contrib
 
-.PHONY: all clean fclean re unit unit_clean unit_fclean
+.PHONY: all clean fclean re unit unit_clean unit_fclean test

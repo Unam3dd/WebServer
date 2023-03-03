@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:19:31 by stales            #+#    #+#             */
-/*   Updated: 2023/03/03 15:24:32 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/03 16:26:09 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 #define TESTUNIT_HPP
 
 #include "greatest/greatest.h"
+#include "http_utils.hpp"
+#include <string>
+#include <stdint.h>
 
 GREATEST_MAIN_DEFS();
 
@@ -24,17 +27,23 @@ GREATEST_MAIN_DEFS();
  * @file	ipformat.cpp
 */
 
-TEST	ip_format_test1(void);
-TEST	ip_format_test2(void);
-TEST	ip_format_test3(void);
-TEST	ip_format_test4(void);
+//////////////////////////////////
+//
+//	       FUNCTIONS
+//
+/////////////////////////////////
 
-SUITE(ip_format_test)
+TEST	ip_format_test1(void)
 {
-	RUN_TEST(ip_format_test1);
-	RUN_TEST(ip_format_test2);
-	RUN_TEST(ip_format_test3);
-	RUN_TEST(ip_format_test4);
+	const std::string	addrs_ip[5] = {
+		"127.0.0.1", "0.0.0.0", "255.255.255.255",
+		"192.168.1.1", "172.17.0.1"
+	};
+
+	for (uint64_t i = 0; i < sizeof(addrs_ip)/sizeof(std::string); i++)
+		ASSERT_EQ(IS_BAD_IP(addrs_ip[i]), 1);
+	PASS();
 }
+
 
 #endif
