@@ -6,12 +6,13 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 12:33:12 by stales            #+#    #+#             */
-/*   Updated: 2023/03/03 12:35:56 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/03 19:44:29 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http_utils.hpp"
 
+#include <iostream>
 #include <cstring>
 #include <cstdlib>
 
@@ -38,11 +39,14 @@ bool	check_format_ip(const std::string& ip)
 
 		// byte must be between 0 and 255
 		if (std::atoi(ptr) > 0xFF) return (false);
+
 		ptr += len;
 
 		// count dot string contains more than . consecutively then its error 
-		if (i < 3 && ptr && std::strspn(ptr, ".") > 1) return (false);
-		ptr++;
+		if (i < 3 && ptr && (std::strspn(ptr, ".") > 1 || *ptr != '.')) return (false);
+
+		// if it's non last bytes increment for the next byte
+		if (i < 3) ptr++;
 	}
-	return (true);
+	return ((*ptr) ? false : true);
 }

@@ -11,6 +11,8 @@
 /////////////////////////////////
 
 #define IS_BAD_IP(x) (check_format_ip(x) == false)
+#define IPV4_BYTES_LEN 0x4
+#define IPV4_BITS_LEN 0x20
 
 /*
  * @brief Check format of Ipv4 address
