@@ -1,3 +1,4 @@
+.clang
 *.json
 # Prerequisites
 *.d
