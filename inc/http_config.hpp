@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:54:26 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 13:05:46 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/04 15:12:47 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,9 @@ class HttpConfig
 		 */
 		~HttpConfig(void);
 
+		//		Read file method
+		size_t	read(void);
+
 		//		Open file method
 		bool	open(const std::string& filename);
 
@@ -54,13 +57,13 @@ class HttpConfig
 
 		// Accessors
 		const std::string&	getFilename(void) const;
+		const std::string&	getData(void) const;
 
 	/*
 	 * Privates Attributes
 	 */
 	private:
-		std::string			_fname;
-		std::fstream		_f;
+		std::string				_fname;
 };
 
 #endif

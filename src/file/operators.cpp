@@ -1,23 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   accessors.cpp                                      :+:      :+:    :+:   */
+/*   operators.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/04 13:05:57 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 14:44:37 by sam0verfl0w      ###   ########.fr       */
+/*   Created: 2023/03/04 15:31:06 by sam0verfl0w       #+#    #+#             */
+/*   Updated: 2023/03/04 15:32:16 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "http_config.hpp"
+#include "file.hpp"
 
-const std::string&	HttpConfig::getFilename(void) const
+File	&File::operator=(const File &f)
 {
-	return (this->_fname);
-}
-
-const std::string&	HttpConfig::getData(void) const
-{
-	return (_data);
+	return ((this == &f) ? (*this) : *this = f);
 }
