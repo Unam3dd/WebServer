@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:54:26 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 15:12:47 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/04 19:03:53 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #ifndef HTTP_CONFIG_HPP
 #define HTTP_CONFIG_HPP
 
-#include <fstream>
+#include "file.hpp"
 #include <sys/stat.h>
 
 /*********************************************************************
@@ -57,13 +57,13 @@ class HttpConfig
 
 		// Accessors
 		const std::string&	getFilename(void) const;
-		const std::string&	getData(void) const;
 
 	/*
 	 * Privates Attributes
 	 */
 	private:
 		std::string				_fname;
+		File					_f;
 };
 
 #endif

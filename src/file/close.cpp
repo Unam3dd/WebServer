@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:40:32 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 15:43:12 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/04 18:44:13 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,10 @@
 #include <iostream>
 #include <unistd.h>
 
-bool	File::close(void)
+void	File::close(void)
 {
-	if (::close(_fd) < 0) {
-		std::cerr << FAIL << " error during closing " << _filename << std::endl;
-		return (false);
-	}
+	if (_fd < 0) return ;
+	::close(_fd);
 	std::cout << SUCCESS << " " << _filename << " closed successfully !" << std::endl;
-	return (true);
+	_fd = -1;
 }

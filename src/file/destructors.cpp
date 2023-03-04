@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:26:29 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 15:41:52 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/04 19:08:23 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,7 @@
 
 File::~File(void)
 {
+	this->free();
 	this->close();
+	_filename = NULL;
 }
