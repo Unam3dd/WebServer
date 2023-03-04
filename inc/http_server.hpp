@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 11:43:55 by stales            #+#    #+#             */
-/*   Updated: 2023/03/04 01:06:53 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/04 01:25:15 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,6 @@ class HttpServer
 		* @brief    Default Constructor of HttpServer class
 		*********************************************************************/
 		HttpServer(void);
-
-		/*********************************************************************
-		*
-		* @brief    Overloaded Address constructor of HttpServer class
-		*
-		* @param   address: const std::string& like (127.0.0.1:8080)
-		*
-		*********************************************************************/
-		HttpServer(const std::string& address);
 
 		/*********************************************************************
 		*

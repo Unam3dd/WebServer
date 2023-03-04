@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 11:47:54 by stales            #+#    #+#             */
-/*   Updated: 2023/03/04 01:16:16 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/04 01:24:15 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,6 @@
 #include "http_utils.hpp"
 
 HttpServer::HttpServer(void) {}
-
-HttpServer::HttpServer(const std::string& address)
-{
-	if (address.empty())
-		return ;
-	this->_address = address;
-}
 
 HttpServer::HttpServer(const std::string& ip, port_t port)
 {
