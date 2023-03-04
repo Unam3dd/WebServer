@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:13:34 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 18:56:45 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/04 21:38:15 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,56 @@ typedef unsigned long long file_size_t;
 #include <string>
 #include <fcntl.h>
 
+/*
+ * @class File class
+ */
 class File
 {
+	// @brief Public Methods
 	public:
+		
+		// @brief Default constructor
 		File(void);
+		
+		/*
+		 * @brief overloaded constructor
+		 *
+		 * @param filename: const char *	File to open and read
+		 * @param flags:	int				(O_RDONLY | O_RDWR)
+		 * @param mode:		unsigned int	S_IRUSR
+		 */
 		File(const char *filename, int flags, mode_t mode);
+		
+		// @brief Copy constructor
 		File(const File& f);
+
+		// @brief operator assignement
 		File	&operator=(const File& f);
+
+		// @brief Default destructor
 		~File(void);
 
+		/*
+		 * @brief open file and reading methods
+		 *
+		 * @param filename: const char *	File to open
+		 * @param flags:	int				O_RDONLY | O_RDWR
+		 * @param mode:		unsigned int	S_IRUSR
+		 *
+		 * @return true if file was opened successfully otherwise is an error
+		 */
 		bool		open(const char *filename, int flags, mode_t mode);
+		
+		// @brief Read Methods, read from fd and write it on heap memory area pointed by _data
 		file_size_t	read(void);
+
+		// @brief Free _data buffer
 		void		free(void);
+
+		// @brief close file fd
 		void		close(void);
 
+		// Accessors
 		const char			*getFilename(void) const;
 		const char			*getData(void) const;
 		int					getFd(void) const;
@@ -40,9 +76,16 @@ class File
 		file_size_t			size(void) const;
 
 	private:
+		// @brief pointer to heap zone memory, which represent file data
 		char		*_data;
+
+		// @brief name of file
 		char		*_filename;
+
+		// @brief Size of file
 		file_size_t	_size;
+
+		// @brief	fd of file
 		int			_fd;
 };
 
