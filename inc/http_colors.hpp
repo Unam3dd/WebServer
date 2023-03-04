@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 02:27:43 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 11:17:43 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/04 12:56:31 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@
 #define BGPURPLE "\033[45m"
 #define BGCYAN	 "\033[46m"
 #define BGGREY	"\033[47m"
+#define SUCCESS "[\033[32m SUCCESS \033[00m]"
+#define FAIL	"[\033[31m FAIL \033[00m]"
 #define TICK	"\n[\033[0;32m\xE2\x9C\x94\033[0m]"
 
 #endif

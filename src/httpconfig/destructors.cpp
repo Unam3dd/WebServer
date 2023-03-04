@@ -1,15 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   destructor.cpp                                     :+:      :+:    :+:   */
+/*   destructors.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 02:14:37 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 02:14:50 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/04 12:51:10 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http_config.hpp"
 
-HttpConfig::~HttpConfig(void) {}
+HttpConfig::~HttpConfig(void) { this->close(); }

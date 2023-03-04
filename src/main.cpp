@@ -6,12 +6,13 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:41:25 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 01:48:31 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/04 12:51:30 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http_utils.hpp"
 #include "http_server.hpp"
+#include "http_config.hpp"
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
@@ -38,7 +39,7 @@ void	show_version(void)
 	exit(0);
 }
 
-int main(int ac, char **av)
+void	help(int ac, char **av)
 {
 	if (ac != 2) show_usage(av[0]);
 
@@ -46,5 +47,13 @@ int main(int ac, char **av)
 		show_help(av[0]);
 	else if (av[1] && !std::strcmp(av[1], "--version"))
 		show_version();
+}
+
+int main(int ac, char **av)
+{
+	help(ac, av);
+
+	HttpConfig config(av[1]);
+
 	return (0);
 }
