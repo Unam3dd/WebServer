@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   accessors.cpp                                      :+:      :+:    :+:   */
+/*   constructor.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/04 01:09:40 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 01:29:38 by sam0verfl0w      ###   ########.fr       */
+/*   Created: 2023/03/04 02:09:31 by sam0verfl0w       #+#    #+#             */
+/*   Updated: 2023/03/04 02:16:26 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "http_server.hpp"
+#include "http_config.hpp"
 
-const std::string&	HttpServer::getIP(void) const
+HttpConfig::HttpConfig(void) {}
+
+HttpConfig::HttpConfig(const std::string& filename)
 {
-	return (this->_ip);
+	if (filename.empty())
+		return ;
 }
 
-port_t	HttpServer::getPort(void) const
+HttpConfig::HttpConfig(const HttpConfig& c)
 {
-	return (this->_port);
+	if (this == &c) return ;
+	*this = c;
 }
+

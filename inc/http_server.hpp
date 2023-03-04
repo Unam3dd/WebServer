@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 11:43:55 by stales            #+#    #+#             */
-/*   Updated: 2023/03/04 01:26:46 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/04 01:54:19 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 
 #include "socket.hpp"
 #include <ostream>
+
+#define VERSION "0.0.1"
 
 /*
  * @class HttpServer
