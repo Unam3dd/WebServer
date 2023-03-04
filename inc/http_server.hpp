@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 11:43:55 by stales            #+#    #+#             */
-/*   Updated: 2023/03/04 01:25:15 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/04 01:26:46 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,6 @@ class HttpServer
 	 */
 	private:
 
-		/* @brief address like 127.0.0.1:8080 */
-		std::string	_address;
 		/* @brief address like 127.0.0.1 */
 		std::string	_ip;
 		/* @brief port unsigned short 0-65535 */
