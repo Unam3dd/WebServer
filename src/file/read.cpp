@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 18:11:10 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 19:05:20 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/04 19:28:46 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ file_size_t	File::read(void)
 	std::memset(_data, 0, _size+1);
 	
 	if (::read(_fd, _data, _size) != (ssize_t)_size) {
-		std::cerr << FAIL << " During reading file data !" << std::endl;
+		std::cerr << FAIL << " During reading file descriptor !" << std::endl;
 		return (0);
 	}
 

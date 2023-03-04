@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:54:26 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 19:03:53 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/04 19:26:08 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 /*********************************************************************
 * @class    HttpConfig class
 *********************************************************************/
-class HttpConfig
+class HttpConfig: public File
 {
 	/*
 	 * Public Methods
@@ -45,25 +45,6 @@ class HttpConfig
 		 * @brief Default Destructor
 		 */
 		~HttpConfig(void);
-
-		//		Read file method
-		size_t	read(void);
-
-		//		Open file method
-		bool	open(const std::string& filename);
-
-		//		Close file method
-		void	close(void);
-
-		// Accessors
-		const std::string&	getFilename(void) const;
-
-	/*
-	 * Privates Attributes
-	 */
-	private:
-		std::string				_fname;
-		File					_f;
 };
 
 #endif

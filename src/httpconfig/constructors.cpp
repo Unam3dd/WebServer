@@ -5,24 +5,17 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/04 15:22:54 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 19:19:50 by sam0verfl0w      ###   ########.fr       */
+/*   Created: 2023/03/04 19:12:16 by sam0verfl0w       #+#    #+#             */
+/*   Updated: 2023/03/04 19:19:28 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "file.hpp"
+#include "http_config.hpp"
 #include <fcntl.h>
+#include <sys/stat.h>
 
-File::File(void): _data(NULL), _filename(NULL), _size(0), _fd(-1) {}
+HttpConfig::HttpConfig(void): File() {}
 
-File::File(const char *filename, int flags, mode_t mode): _data(NULL), _filename(NULL), _size(0), _fd(-1)
-{
-	this->open(filename, flags, mode);
-	this->read();
-}
+HttpConfig::HttpConfig(const std::string& filename): File(filename.c_str(), O_RDONLY, S_IRUSR) {}
 
-File::File(const File& f)
-{
-	if (this == &f) return ;
-	*this = f;
-}
+HttpConfig::HttpConfig(const HttpConfig& h): File(h) {};

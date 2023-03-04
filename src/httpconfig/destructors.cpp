@@ -1,28 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   constructors.cpp                                   :+:      :+:    :+:   */
+/*   destructors.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/04 15:22:54 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 19:19:50 by sam0verfl0w      ###   ########.fr       */
+/*   Created: 2023/03/04 19:14:17 by sam0verfl0w       #+#    #+#             */
+/*   Updated: 2023/03/04 19:26:20 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "http_config.hpp"
 #include "file.hpp"
-#include <fcntl.h>
 
-File::File(void): _data(NULL), _filename(NULL), _size(0), _fd(-1) {}
-
-File::File(const char *filename, int flags, mode_t mode): _data(NULL), _filename(NULL), _size(0), _fd(-1)
+HttpConfig::~HttpConfig(void)
 {
-	this->open(filename, flags, mode);
-	this->read();
-}
-
-File::File(const File& f)
-{
-	if (this == &f) return ;
-	*this = f;
 }

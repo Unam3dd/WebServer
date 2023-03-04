@@ -6,17 +6,17 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:41:25 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 18:45:58 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/04 19:21:02 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http_utils.hpp"
 #include "http_server.hpp"
-#include "file.hpp"
+#include "http_config.hpp"
 #include <fcntl.h>
 #include <iostream>
-#include <cstdlib>
 #include <cstring>
+#include <cstdlib>
 
 void	show_usage(const char *path)
 {
@@ -54,15 +54,9 @@ int main(int ac, char **av)
 {
 	help(ac, av);
 
-	File	f;
-	
-	f.open(av[1], O_RDONLY, S_IRUSR);
+	HttpConfig	config(av[1]);
 
-	f.read();
-
-	std::cout << f.getData() << std::endl;
-
-	f.close(); 
+	std::cout << config.getData() << std::endl;
 
 	return (0);
 }
