@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 15:24:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/03 19:37:48 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/04 01:19:09 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,20 @@ TEST	ip_format_test3(void)
 	ASSERT_EQ(check_format_ip(addrs_ip[2]), false);
 	ASSERT_EQ(check_format_ip(addrs_ip[3]), false);
 	ASSERT_EQ(check_format_ip(addrs_ip[4]), false);
+	PASS();
+}
+
+TEST	ip_format_test4(void)
+{
+	const std::string	addrs_ip[5] = {
+		"0...", "192A.168.1.1",
+		"1.1.1.1.1", ".1.1.1.1.", "1A.1.1.1"
+	};
+
+	ASSERT_EQ(IS_BAD_IP(addrs_ip[0]), 1);
+	ASSERT_EQ(IS_BAD_IP(addrs_ip[1]), 1);
+	ASSERT_EQ(IS_BAD_IP(addrs_ip[2]), 1);
+	ASSERT_EQ(IS_BAD_IP(addrs_ip[3]), 1);
+	ASSERT_EQ(IS_BAD_IP(addrs_ip[4]), 1);
 	PASS();
 }

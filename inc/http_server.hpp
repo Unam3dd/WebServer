@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 11:43:55 by stales            #+#    #+#             */
-/*   Updated: 2023/03/03 14:40:00 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/04 01:06:53 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,30 @@ class HttpServer
 		* @brief    Default Destructor of HttpServer class
 		*********************************************************************/
 		~HttpServer(void);
+
+		/*********************************************************************
+		*
+		* @brief    Getter of _address attributes
+		* @return   Address used by Server
+		*
+		*********************************************************************/
+		const std::string&	getAddress(void) const;
+
+		/*********************************************************************
+		*
+		* @brief    Getter of _IP attributes
+		* @return   Ip Used by server
+		*
+		*********************************************************************/
+		const std::string&	getIP(void) const;
+
+		/*********************************************************************
+		*
+		* @brief    Getter of _address attributes
+		* @return   Port Used by server
+		*
+		*********************************************************************/
+		port_t			getPort(void) const;
 	
 	/*
 	 * @brief Privates Attributes
