@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 18:11:10 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 19:28:46 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/05 17:01:56 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ file_size_t	File::read(void)
 	}
 
 	this->close();
+
+	std::cout << SUCCESS << " " << this->_filename << " Mapped into heap memory !" << std::endl;
 
 	return (_size);
 }

@@ -6,13 +6,14 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:41:25 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 19:21:02 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/05 16:57:33 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http_utils.hpp"
 #include "http_server.hpp"
 #include "http_config.hpp"
+#include "http_config_parser.hpp"
 #include <fcntl.h>
 #include <iostream>
 #include <cstring>
@@ -55,8 +56,9 @@ int main(int ac, char **av)
 	help(ac, av);
 
 	HttpConfig	config(av[1]);
+	HttpConfigParser	cp;
 
-	std::cout << config.getData() << std::endl;
+	std::cout << cp.Parse(config) << std::endl;
 
 	return (0);
 }

@@ -1,23 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.cpp                                           :+:      :+:    :+:   */
+/*   operators.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
+/*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/04 18:56:58 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/05 18:06:06 by stales           ###   ########.fr       */
+/*   Created: 2023/03/05 16:01:28 by stales            #+#    #+#             */
+/*   Updated: 2023/03/05 16:02:10 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "file.hpp"
-#include "http_colors.hpp"
-#include <iostream> 
+#include "http_config_parser.hpp"
 
-void	File::free(void)
+HttpConfigParser	&HttpConfigParser::operator=(const HttpConfigParser &h)
 {
-	if (_data) {
-		delete []_data;
-		_data = NULL;
-	}
+	if (this == &h) return (*this);
+	return (*this);
 }
