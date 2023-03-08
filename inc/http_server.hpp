@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 11:43:55 by stales            #+#    #+#             */
-/*   Updated: 2023/03/04 01:54:19 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/08 01:57:35 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #define HTTP_SERVER_HPP
 
 #include "socket.hpp"
+#include "epoll.hpp"
 #include <ostream>
 
 #define VERSION "0.0.1"
@@ -65,11 +66,24 @@ class HttpServer
 
 		/*********************************************************************
 		*
-		* @brief    Getter of _address attributes
-		* @return   Address used by Server
+		* @brief    Listening on port set in parameters
+		*
+		* @return    true if success otherwise considered as an error
 		*
 		*********************************************************************/
-		const std::string&	getAddress(void) const;
+
+		bool	Listen(int backlog);
+
+		/*********************************************************************
+		*
+		* @brief    Wait connection
+		*
+		* @param    void
+		*
+		* @return   true or false  is server is on waiting
+		*
+		*********************************************************************/
+		bool	Wait(void);
 
 		/*********************************************************************
 		*
@@ -93,9 +107,12 @@ class HttpServer
 	private:
 
 		/* @brief address like 127.0.0.1 */
-		std::string	_ip;
+		std::string		_ip;
 		/* @brief port unsigned short 0-65535 */
-		port_t		_port;
+		port_t			_port;
+		Socket			_s;
+		Epoll			_e;
+		bool			_loop;
 };
 
 #endif

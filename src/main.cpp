@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:41:25 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/05 16:57:33 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/08 01:30:00 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
+#include <sys/socket.h>
 
 void	show_usage(const char *path)
 {
@@ -56,9 +57,9 @@ int main(int ac, char **av)
 	help(ac, av);
 
 	HttpConfig	config(av[1]);
-	HttpConfigParser	cp;
-
-	std::cout << cp.Parse(config) << std::endl;
+	HttpServer	server("127.0.0.1", 8080);
+	
+	server.Listen(SOMAXCONN);
 
 	return (0);
 }

@@ -1,24 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.cpp                                         :+:      :+:    :+:   */
+/*   wait.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/05 16:02:17 by stales            #+#    #+#             */
-/*   Updated: 2023/03/07 17:07:03 by stales           ###   ########.fr       */
+/*   Created: 2023/03/08 01:53:06 by stales            #+#    #+#             */
+/*   Updated: 2023/03/08 02:24:19 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "http_config_parser.hpp"
-#include <string.h>
-#include <cstring>
-#include <iostream>
+#include "http_server.hpp"
 
-bool	HttpConfigParser::Parse(const HttpConfig& c)
+bool	HttpServer::Wait(void)
 {
-	if (!c.getData() || !c.length()) return (false);
-	char	*tmp = const_cast<char*>(c.getData());
-	(void)tmp;
+	this->_loop = 1;
 	return (true);
 }
