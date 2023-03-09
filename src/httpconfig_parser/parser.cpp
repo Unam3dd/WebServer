@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 16:02:17 by stales            #+#    #+#             */
-/*   Updated: 2023/03/09 17:54:18 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/09 18:11:32 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,21 @@
 #include <iostream>
 #include <cstring>
 
-static bool	parse_token(const std::string& str)
+int HttpConfigParser::parse_token(const std::string& str)
 {
-	if (str.empty()) return (false);
+	if (str.empty()) return (1);
 	size_t	spaces = 0;
 
-	std::cout << str << std::endl;
 	spaces = std::strspn(str.c_str(), " \t");
-	if (spaces == str.size()) return (false);
+	if (spaces == str.size()) return (1);
 
-	return (true);
+	spaces = std::strcspn(str.c_str(), " \t");
+	if (spaces == str.size() || !spaces)
+		return (1);
+
+	std::cout << this->GetTypeToken(str.substr(0, spaces)) << std::endl;
+
+	return (0);
 }
 
 bool	HttpConfigParser::Parse(const HttpConfig& c)

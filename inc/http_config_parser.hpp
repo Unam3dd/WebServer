@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 13:50:26 by stales            #+#    #+#             */
-/*   Updated: 2023/03/09 17:46:30 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/09 18:09:18 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,9 @@ class HttpConfigParser: private HttpConfig
 
 		config_tokens_t	GetTypeToken(const std::string& str);
 		bool			Parse(const HttpConfig& c);
+	
+	private:
+		int				parse_token(const std::string& str);
 };
 
 #endif
