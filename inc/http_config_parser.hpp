@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 13:50:26 by stales            #+#    #+#             */
-/*   Updated: 2023/03/09 19:19:36 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/09 19:56:08 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ class HttpConfigParser: private HttpConfig
 	
 	private:
 		int						parse_token(const std::string& str);
+		int						read_token(const std::string& str);
+		int						read_value(const std::string& str);
 };
 
 #endif

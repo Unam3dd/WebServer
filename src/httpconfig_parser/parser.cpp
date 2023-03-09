@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 16:02:17 by stales            #+#    #+#             */
-/*   Updated: 2023/03/09 19:18:12 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/09 19:51:22 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 int HttpConfigParser::parse_token(const std::string& str)
 {
 	if (str.empty()) return (1);
+	std::string nstr = "";
 	size_t	spaces = 0;
 	config_tokens_t type = CONFIG_TOKEN_INVALID;
 
@@ -28,10 +29,13 @@ int HttpConfigParser::parse_token(const std::string& str)
 	if (spaces == str.size() || !spaces)
 		return (1);
 
-	type = GetTypeToken(str.substr(0, spaces));
+	nstr = str.substr(0, spaces);
+	if (nstr.empty()) return (1);
+
+	type = GetTypeToken(nstr);
 	if (type == CONFIG_TOKEN_INVALID) return (false);
 
-	std::cout << "TOKEN IS VALID " << GetStringToken(type) << std::endl;
+	std::cout << "TOKEN READED " << GetStringToken(type) << std::endl;
 
 	return (0);
 }

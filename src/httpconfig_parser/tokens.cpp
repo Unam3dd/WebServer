@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 16:04:09 by stales            #+#    #+#             */
-/*   Updated: 2023/03/09 19:00:49 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/09 19:53:07 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@ const std::string	*HttpConfigParser::GetTokensTable(size_t *size) const
 {
 	static const std::string tokens[3] = { "", "ADDR", "PORT" };
 
-	if (size)
-		*size = sizeof(tokens)/sizeof(std::string);
+	if (size) *size = sizeof(tokens)/sizeof(std::string);
 	return (tokens);
 }
 
