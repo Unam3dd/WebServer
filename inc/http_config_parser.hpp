@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 13:50:26 by stales            #+#    #+#             */
-/*   Updated: 2023/03/05 16:33:42 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/09 17:46:30 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ enum config_tokens_t
 /*
  * @class	Http Config Parser
  */
-class HttpConfigParser
+class HttpConfigParser: private HttpConfig
 {
 	public:
 		HttpConfigParser(void);

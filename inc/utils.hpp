@@ -1,29 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   constructors.cpp                                   :+:      :+:    :+:   */
+/*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/05 15:58:42 by stales            #+#    #+#             */
-/*   Updated: 2023/03/09 17:48:47 by stales           ###   ########.fr       */
+/*   Created: 2023/03/09 17:20:14 by stales            #+#    #+#             */
+/*   Updated: 2023/03/09 17:20:29 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "http_config.hpp"
-#include "http_config_parser.hpp"
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
-HttpConfigParser::HttpConfigParser(void): HttpConfig()
-{
-}
+typedef unsigned int index_t;
 
-HttpConfigParser::HttpConfigParser(const HttpConfigParser& h): HttpConfig(h)
-{
-	(void)h;
-}
-
-HttpConfigParser::HttpConfigParser(const HttpConfig& c): HttpConfig(c)
-{
-	(void)c;
-}
-
+#endif

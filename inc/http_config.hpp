@@ -6,11 +6,12 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:54:26 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/05 15:56:19 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/09 17:44:48 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+#include "socket.hpp"
 #ifndef HTTP_CONFIG_HPP
 #define HTTP_CONFIG_HPP
 
@@ -45,6 +46,17 @@ class HttpConfig: public File
 		 * @brief Default Destructor
 		 */
 		~HttpConfig(void);
+
+		/*
+		 * @brief Accessors
+		 */
+
+		const std::string&	getIP(void) const;
+		port_t		getPort(void) const;
+	
+	private:
+		std::string		_ip;
+		port_t			_port;
 };
 
 #endif
