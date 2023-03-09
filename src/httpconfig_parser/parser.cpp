@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 16:02:17 by stales            #+#    #+#             */
-/*   Updated: 2023/03/09 18:11:32 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/09 19:04:42 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,19 @@ int HttpConfigParser::parse_token(const std::string& str)
 {
 	if (str.empty()) return (1);
 	size_t	spaces = 0;
+	config_tokens_t type = CONFIG_TOKEN_INVALID;
 
-	spaces = std::strspn(str.c_str(), " \t");
+	spaces = std::strspn(str.c_str(), " \t\n");
 	if (spaces == str.size()) return (1);
 
 	spaces = std::strcspn(str.c_str(), " \t");
 	if (spaces == str.size() || !spaces)
 		return (1);
 
-	std::cout << this->GetTypeToken(str.substr(0, spaces)) << std::endl;
+	type = GetTypeToken(str.substr(0, spaces));
+	if (type == CONFIG_TOKEN_INVALID) return (false);
+
+	std::cout << "TOKEN IS VALID " << GetStringToken(type) << std::endl;
 
 	return (0);
 }
@@ -45,7 +49,7 @@ bool	HttpConfigParser::Parse(const HttpConfig& c)
 
 	while (ln != std::string::npos)
 	{
-		std::cout << parse_token(str.substr(start, ln)) << std::endl;
+		parse_token(str.substr(start, ln));
 		start += ln+1;
 		ln = str.find("\n", start);
 	}
