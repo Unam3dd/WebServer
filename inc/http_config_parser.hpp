@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 13:50:26 by stales            #+#    #+#             */
-/*   Updated: 2023/03/09 18:24:03 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/09 19:19:36 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,12 @@ enum config_tokens_t
 	CONFIG_TOKEN_PORT		= 1 << 1
 };
 
+enum parse_config_status_t
+{
+	CONFIG_LOADED_SUCCESS,
+	CONFIG_LOADED_FAILED
+};
+
 /*
  * @class	Http Config Parser
  */
@@ -34,18 +40,18 @@ class HttpConfigParser: private HttpConfig
 {
 	public:
 		HttpConfigParser(void);
-		HttpConfigParser(const HttpConfig& c);
 		HttpConfigParser(const HttpConfigParser& h);
 		HttpConfigParser	&operator=(const HttpConfigParser& h);
 		~HttpConfigParser(void);
 
-		const std::string	*GetTokensTable(size_t *size) const;
-		const std::string&	GetStringToken(config_tokens_t token);
-		config_tokens_t		GetTypeToken(const std::string& str);
-		bool				Parse(const HttpConfig& c);
+		const std::string		*GetTokensTable(size_t *size) const;
+		const std::string&		GetStringToken(config_tokens_t token);
+		config_tokens_t			GetTypeToken(const std::string& str);
+		parse_config_status_t	Parse(const HttpConfig& c);
+		void					PrintConfigurationStatus(parse_config_status_t s);
 	
 	private:
-		int				parse_token(const std::string& str);
+		int						parse_token(const std::string& str);
 };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 16:02:17 by stales            #+#    #+#             */
-/*   Updated: 2023/03/09 19:04:42 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/09 19:18:12 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,10 @@ int HttpConfigParser::parse_token(const std::string& str)
 	return (0);
 }
 
-bool	HttpConfigParser::Parse(const HttpConfig& c)
+parse_config_status_t	HttpConfigParser::Parse(const HttpConfig& c)
 {
-	if (!c.getData() || !c.length()) return (false);
+	if (!c.getData() || !c.length())
+		return (CONFIG_LOADED_FAILED);
 
 	std::string	str(c.getData());
 
@@ -49,10 +50,9 @@ bool	HttpConfigParser::Parse(const HttpConfig& c)
 
 	while (ln != std::string::npos)
 	{
-		parse_token(str.substr(start, ln));
+		if (parse_token(str.substr(start, ln))) return (CONFIG_LOADED_FAILED);
 		start += ln+1;
 		ln = str.find("\n", start);
 	}
-
-	return (true);
+	return (CONFIG_LOADED_SUCCESS);
 }
