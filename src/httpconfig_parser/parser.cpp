@@ -6,12 +6,13 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 16:02:17 by stales            #+#    #+#             */
-/*   Updated: 2023/03/09 19:51:22 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/10 16:45:42 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http_config_parser.hpp"
 #include "utils.hpp"
+#include <cstdlib>
 #include <iostream>
 #include <cstring>
 
@@ -37,6 +38,17 @@ int HttpConfigParser::parse_token(const std::string& str)
 
 	std::cout << "TOKEN READED " << GetStringToken(type) << std::endl;
 
+	return (0);
+}
+
+int	HttpConfigParser::read_token(const std::string& str, config_tokens_t token)
+{
+	if (str.empty()) return (1);
+
+	if (token == CONFIG_TOKEN_ADDR)
+		this->_ip = str;
+	else if (token == CONFIG_TOKEN_PORT && str.at(0) != '-' && !check_overflow_short(str))
+		this->_port = (port_t)std::atoi(str.c_str());
 	return (0);
 }
 

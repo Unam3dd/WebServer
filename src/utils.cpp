@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.hpp                                          :+:      :+:    :+:   */
+/*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/09 17:20:14 by stales            #+#    #+#             */
-/*   Updated: 2023/03/10 17:02:46 by stales           ###   ########.fr       */
+/*   Created: 2023/03/10 15:32:27 by stales            #+#    #+#             */
+/*   Updated: 2023/03/10 15:49:52 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_HPP
-#define UTILS_HPP
+#include "utils.hpp"
+#include <cstdlib>
 
-#include <string>
+bool	check_overflow_port(const std::string &str)
+{
+	if (str.empty()) return (false);
 
-typedef unsigned int index_t;
+	unsigned long long	_ov = std::atoll(str.c_str());
+	unsigned short		_real = _ov;
 
-bool	check_overflow_port(const std::string& str);
-
-#endif
+	return (_ov != _real);
+}

@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:54:26 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/09 17:44:48 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/10 14:38:16 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ class HttpConfig: public File
 		const std::string&	getIP(void) const;
 		port_t		getPort(void) const;
 	
-	private:
+	protected:
 		std::string		_ip;
 		port_t			_port;
 };
