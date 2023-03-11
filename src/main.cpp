@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:41:25 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/10 17:01:50 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/10 18:05:18 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,8 @@ int main(int ac, char **av)
 	HttpConfig	config(av[1]);
 	HttpConfigParser	cparser;
 
-	parse_config_status_t s = cparser.Parse(config);
 
-	cparser.PrintConfigurationStatus(s);
 
-	std::cout << config.getIP() << std::endl;
 
 	return (0);
 }
