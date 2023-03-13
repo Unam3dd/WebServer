@@ -24,6 +24,7 @@
 
 typedef unsigned int	timeout_t;
 typedef unsigned int	errcode_t;
+typedef unsigned int	maxpost_size_t;
 
 //////////////////////////////////
 //
