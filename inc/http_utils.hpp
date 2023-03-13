@@ -14,6 +14,42 @@
 #define IPV4_BYTES_LEN 0x4
 #define IPV4_BITS_LEN 0x20
 
+#define MAX_ERR_PAGES 0x8
+
+//////////////////////////////////
+//
+//	       TYPEDEFS
+//
+/////////////////////////////////
+
+typedef unsigned int	timeout_t;
+typedef unsigned int	errcode_t;
+
+//////////////////////////////////
+//
+//	       ENUM
+//
+/////////////////////////////////
+
+enum methods_t
+{
+	GET = 1 << 0,
+	POST = 1 << 1,
+	DELETE = 1 << 2
+};
+
+//////////////////////////////////
+//
+//	       STRUCTS
+//
+/////////////////////////////////
+
+struct errpage_t
+{
+	std::string		path;
+	errcode_t		code;
+};
+
 /*
  * @brief Check format of Ipv4 address
  *

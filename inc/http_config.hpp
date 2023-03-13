@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 12:02:25 by stales            #+#    #+#             */
-/*   Updated: 2023/03/13 16:43:28 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/13 17:37:25 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,10 @@
 
 #include "file.hpp"
 #include "socket.hpp"
+#include "http_utils.hpp"
 #include <vector>
 
-class	HttpRequestConfig
-{
-	public:
-		HttpRequestConfig(void);
-		HttpRequestConfig(const HttpRequestConfig& c);
-		~HttpRequestConfig(void);
-};
+class HttpRequestConfig;
 
 class HttpServerConfig: public File
 {
@@ -33,17 +28,22 @@ class HttpServerConfig: public File
 		HttpServerConfig(const HttpServerConfig& c);
 		~HttpServerConfig(void);
 
-		inline const std::string&			GetServerName(void) const { return (this->_name); }
-		inline const std::vector<port_t>&	GetServerPort(void) const { return (this->_port); }
-		inline unsigned int					GetServerTimeout(void) const { return (this->_timeout); }
+		inline const std::vector<std::string>&		GetServerName(void) const { return (this->_names); }
+		inline const std::vector<port_t>&			GetServerPort(void) const { return (this->_ports); }
+		inline timeout_t							GetServerTimeout(void) const { return (this->_timeout); }
 	
-	private:
-		std::string						_name;
-		std::string						_root;
+	protected:
+		std::vector<std::string>		_names;
+		std::vector<port_t>				_ports;
 		std::vector<HttpRequestConfig>	_reqconfig;
-		std::vector<port_t>				_port;
-		unsigned int					_timeout;
-
+		std::vector<std::string>		_indexs;
+		errpage_t						_errpages[MAX_ERR_PAGES];
+		std::string						_root;
+		std::string						_sessionpath;
+		methods_t						_methods;
+		timeout_t						_timeout;
+		bool							_cookies;
+		bool							_uploads;
 };
 
 
