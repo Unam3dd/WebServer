@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 12:02:25 by stales            #+#    #+#             */
-/*   Updated: 2023/03/13 18:41:25 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/13 19:14:19 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,8 @@
 #include "file.hpp"
 #include "socket.hpp"
 #include "http_utils.hpp"
+#include "http_request_config.hpp"
 #include <vector>
-
-class HttpRequestConfig;
 
 /*********************************************************************
 * @brief    HttpServerConfig Class
@@ -42,6 +41,7 @@ class HttpServerConfig: public File
 		*
 		*********************************************************************/
 		int											Parse(const std::string& path);
+		int											Parse(void);
 
 		inline const std::vector<std::string>&		GetServerName(void) const { return (this->_names); }
 		inline const std::vector<HttpRequestConfig>	GetRequestConfig(void) const { return (this->_reqconfig); }
@@ -53,9 +53,9 @@ class HttpServerConfig: public File
 		inline timeout_t							GetServerTimeout(void) const { return (this->_timeout); }
 		methods_t									GetMethods(void) const { return (this->_methods); }
 		maxpost_size_t								GetMaxPostSize(void) const { return (this->_max_size_post); }
-		bool										GetCookies(void) const { return (this->_cookies); }
-		bool										GetUploads(void) const { return (this->_uploads); }
-		bool										GetDirList(void) const { return (this->_dirlist); }
+		inline bool									GetCookies(void) const { return (this->_cookies); }
+		inline bool									GetUploads(void) const { return (this->_uploads); }
+		inline bool									GetDirList(void) const { return (this->_dirlist); }
 
 	
 	protected:

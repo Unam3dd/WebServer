@@ -1,27 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   constructors.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
+/*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/04 01:41:25 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/13 19:58:52 by stales           ###   ########.fr       */
+/*   Created: 2023/03/13 19:09:58 by stales            #+#    #+#             */
+/*   Updated: 2023/03/13 19:10:45 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "http_server.hpp"
-#include "http_colors.hpp"
-#include "http_config.hpp"
-#include "webserver_help.hpp"
-#include <iostream>
+#include "http_request_config.hpp"
 
-int main(int ac, char **av)
+HttpRequestConfig::HttpRequestConfig(void)
 {
-	(void)ac, (void)av;
-	help(ac, av);
-	
-	HttpServerConfig	config(av[1]);
+}
 
-	return (0);
+HttpRequestConfig::HttpRequestConfig(const HttpRequestConfig& c)
+{
+	(void)c;
 }

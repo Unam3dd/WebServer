@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   parse.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
+/*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/04 01:41:25 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/13 19:58:52 by stales           ###   ########.fr       */
+/*   Created: 2023/03/13 18:52:14 by stales            #+#    #+#             */
+/*   Updated: 2023/03/13 19:00:15 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "http_server.hpp"
-#include "http_colors.hpp"
 #include "http_config.hpp"
-#include "webserver_help.hpp"
 #include <iostream>
 
-int main(int ac, char **av)
+int	HttpServerConfig::Parse(void)
 {
-	(void)ac, (void)av;
-	help(ac, av);
-	
-	HttpServerConfig	config(av[1]);
+	std::cout << this->getData() << std::endl;
+	return (0);
+}
+
+int	HttpServerConfig::Parse(const std::string &path)
+{
+	if (path.empty()) return (1);
+
+	std::cout << this->getData() << std::endl;
 
 	return (0);
 }

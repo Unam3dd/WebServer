@@ -1,24 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   http_request_config.hpp                            :+:      :+:    :+:   */
+/*   constructors.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/13 17:17:45 by stales            #+#    #+#             */
-/*   Updated: 2023/03/13 19:01:18 by stales           ###   ########.fr       */
+/*   Created: 2023/03/13 18:48:26 by stales            #+#    #+#             */
+/*   Updated: 2023/03/13 19:16:15 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef HTTP_REQUEST_CONFIG_HPP
-#define HTTP_REQUEST_CONFIG_HPP
+#include "file.hpp"
+#include "http_config.hpp"
 
-class HttpRequestConfig
+HttpServerConfig::HttpServerConfig(void): File()
 {
-	public:
-		HttpRequestConfig(void);
-		HttpRequestConfig(const HttpRequestConfig& c);
-		~HttpRequestConfig(void);
-};
+}
 
-#endif
+HttpServerConfig::HttpServerConfig(const std::string& path): File(path.c_str(), O_RDONLY, S_IRUSR)
+{
+	(void)path;
+	this->Parse(path);
+}
+
+HttpServerConfig::HttpServerConfig(const HttpServerConfig& c): File(c)
+{
+	if (this == &c) return ;
+
+	*this = c;
+}
+
