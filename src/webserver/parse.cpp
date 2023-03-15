@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   parse.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
+/*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/04 01:41:25 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/15 12:41:52 by stales           ###   ########.fr       */
+/*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
+/*   Updated: 2023/03/15 19:22:37 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "webserver_help.hpp"
 #include "webserver.hpp"
 #include <iostream>
 
-int main(int ac, char **av)
+int	WebServer::Parse(const std::string& path)
 {
-	help(ac, av);
+	if (path.empty()) return (1);
+	std::cout << this->getData() << std::endl;
+	return (0);
+}
 
-	WebServer	ws(av[1]);
-
-	ws.Parse();
-
+int	WebServer::Parse(void)
+{
+	std::cout << this->getData() << std::endl;
 	return (0);
 }
