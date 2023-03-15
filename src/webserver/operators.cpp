@@ -1,31 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   constructors.cpp                                   :+:      :+:    :+:   */
+/*   operators.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/13 18:48:26 by stales            #+#    #+#             */
-/*   Updated: 2023/03/15 11:19:36 by stales           ###   ########.fr       */
+/*   Created: 2023/03/15 11:33:30 by stales            #+#    #+#             */
+/*   Updated: 2023/03/15 11:34:19 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "file.hpp"
-#include "http_config.hpp"
+#include "webserver.hpp"
 
-HttpServerConfig::HttpServerConfig(void)
+WebServer	&WebServer::operator=(const WebServer& ws)
 {
+	if (this == &ws) return (*this);
+	*this = ws;
+	return (*this);
 }
-
-HttpServerConfig::HttpServerConfig(const std::string& path)
-{
-	(void)path;
-}
-
-HttpServerConfig::HttpServerConfig(const HttpServerConfig& c)
-{
-	if (this == &c) return ;
-
-	*this = c;
-}
-

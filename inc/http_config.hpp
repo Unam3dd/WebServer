@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 12:02:25 by stales            #+#    #+#             */
-/*   Updated: 2023/03/13 19:14:19 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/15 11:42:42 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,30 +23,18 @@
 * @brief    HttpServerConfig Class
 *********************************************************************/
 
-class HttpServerConfig: public File
+class HttpServerConfig
 {
 	public:
 		HttpServerConfig(void);
 		HttpServerConfig(const std::string& path);
 		HttpServerConfig(const HttpServerConfig& c);
 		~HttpServerConfig(void);
-		
-		/*********************************************************************
-		*
-		* @brief    This function will parse the server config
-		*
-		* @param   reference on const std::string 
-		*
-		* @return   0 is success otherwise considered as an error 
-		*
-		*********************************************************************/
-		int											Parse(const std::string& path);
-		int											Parse(void);
 
-		inline const std::vector<std::string>&		GetServerName(void) const { return (this->_names); }
-		inline const std::vector<HttpRequestConfig>	GetRequestConfig(void) const { return (this->_reqconfig); }
+		inline const std::vector<std::string>&		GetServerNames(void) const { return (this->_names); }
+		inline const std::vector<HttpRequestConfig>	GetRequestConfigs(void) const { return (this->_reqconfig); }
 		inline const std::vector<std::string>		GetIndexs(void) const { return (this->_indexs); }
-		inline const std::vector<port_t>&			GetServerPort(void) const { return (this->_ports); }
+		inline const std::vector<port_t>&			GetServerPorts(void) const { return (this->_ports); }
 		inline const errpage_t						*GetErrorPages(void) const { return (this->_errpages); }
 		inline const std::string					GetRoot(void) const { return (this->_root); }
 		inline const std::string					GetSessionPath(void) const { return (this->_sessionpath); }

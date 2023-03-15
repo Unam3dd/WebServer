@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse.cpp                                          :+:      :+:    :+:   */
+/*   constructors.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/13 18:52:14 by stales            #+#    #+#             */
-/*   Updated: 2023/03/13 19:00:15 by stales           ###   ########.fr       */
+/*   Created: 2023/03/15 11:31:17 by stales            #+#    #+#             */
+/*   Updated: 2023/03/15 11:34:33 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "http_config.hpp"
-#include <iostream>
+#include "webserver.hpp"
 
-int	HttpServerConfig::Parse(void)
+WebServer::WebServer(void)
 {
-	std::cout << this->getData() << std::endl;
-	return (0);
 }
 
-int	HttpServerConfig::Parse(const std::string &path)
+WebServer::WebServer(const std::string& path)
 {
-	if (path.empty()) return (1);
-
-	std::cout << this->getData() << std::endl;
-
-	return (0);
+	if (path.empty()) return ;
 }
+
+WebServer::WebServer(const WebServer& ws)
+{
+	if (this == &ws) return ;
+}
+
