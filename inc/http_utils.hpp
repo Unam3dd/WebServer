@@ -39,6 +39,30 @@ enum methods_t
 	DELETE = 1 << 2
 };
 
+typedef enum {
+	ERRPARSE_OK = 0,
+	ERRPARSE_UNKNOWN,
+	ERRPARSE_NEWSRVBLK,
+	ERRPARSE_NEWLOCBLK,
+	ERRPARSE_ENDBLK,
+	ERRPARSE_SINGLEARG,
+	ERRPARSE_NOARG,
+	ERRPARSE_PORT,
+	ERRPARSE_ERRPAGE
+} t_errcode;
+
+typedef enum {
+	E400 = 0,
+	E401 = 1,
+	E403 = 3,
+	E404 = 4,
+	E405 = 5,
+	E500 = 6,
+	E501 = 7,
+	E505 = 8
+} t_errpages;
+
+
 //////////////////////////////////
 //
 //	       STRUCTS

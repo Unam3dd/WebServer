@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 12:02:25 by stales            #+#    #+#             */
-/*   Updated: 2023/03/15 11:42:42 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/17 19:52:42 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,19 @@ class HttpServerConfig
 		inline bool									GetCookies(void) const { return (this->_cookies); }
 		inline bool									GetUploads(void) const { return (this->_uploads); }
 		inline bool									GetDirList(void) const { return (this->_dirlist); }
+
+		t_errcode									SetServerNames(const std::vector<std::string>& names);
+		t_errcode									SetIndexes(const std::vector<std::string>& indexs);
+		t_errcode									SetServerPorts(const std::vector<std::string>& ports);
+		t_errcode									SetErrorPages(const std::vector<std::string>& errpages);
+		t_errcode									SetRoot(const std::string& root);
+		t_errcode									SetSessionPath(const std::string& sessionpath);
+		t_errcode									SetServerTimeout(const std::string& timeout);
+		t_errcode									SetMethods(const std::vector<std::string>& methods);
+		t_errcode									SetMaxPostSize(const std::string& max_size_post);
+		t_errcode									SetCookies(const std::string& cookies);
+		t_errcode									SetUploads(const std::string& uploads);
+		t_errcode									SetDirList(const std::string& dirlist);
 
 	
 	protected:

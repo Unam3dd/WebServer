@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/03/17 16:02:32 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/17 19:53:29 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,14 @@
 # define DEBUG 0
 #endif
 
+#define COUNT_SPACES(x) (std::count(x.begin(), x.end(), ' ') + std::count(x.begin(), x.end(), '\t'))
+#define SANITIZE_SPACES(x) x.erase(std::remove(x.begin(), x.end(), ' '), x.end()); x.erase(std::remove(x.begin(), x.end(), '\t'), x.end())
+
 #include <string>
 #include <vector>
 #include "file.hpp"
+#include "http_utils.hpp"
 #include "http_config.hpp"
-#include "http_request_config.hpp"
-
-typedef enum {
-	ERRPARSE_OK = 0,
-	ERRPARSE_NEWSRVBLK,
-	ERRPARSE_NEWLOCBLK,
-	ERRPARSE_ENDBLK
-} t_errcode;
 
 class WebServer: public File
 {
@@ -39,10 +35,10 @@ class WebServer: public File
 		WebServer	&operator=(const WebServer& ws);
 		~WebServer(void);
 
-		int				Parse(const std::string& path);
-		int				Parse(void);
+		int								Parse(const std::string& path);
+		int								Parse(void);
 
-		inline size_t	GetNumberOfServers(void) const { return (this->_nserv); }
+		inline size_t					GetNumberOfServers(void) const { return (this->_nserv); }
 	
 	private:
 		/*
@@ -50,15 +46,20 @@ class WebServer: public File
 		 */
 		std::vector<HttpServerConfig>	_configs;
 		size_t							_nserv;
+		bool							_srvBlk;
+		bool							_locBlk;
 
 		/*
 		 * 	Private methods
 		 */
-		t_errcode		_parseSrvBlk(const std::string& line);
-		t_errcode		_parseLocBlk(const std::string& line);
-		bool			_isSrvBlk(const std::string& line);
-		bool			_isLocBlk(const std::string& line);
-		bool			_isEndBlk(const std::string& line);
+		std::vector<std::string>		_splitDirective(const std::string& line);
+		t_errcode						_parseSrvBlk(const std::string& line);
+		t_errcode						_parseLocBlk(const std::string& line);
+		bool							_isSrvBlk(const std::string& line);
+		bool							_isLocBlk(const std::string& line);
+		bool							_isEndBlk(const std::string& line);
+		void							_initNewSrvBlk(void);
+		void							_initNewLocBlk(void);
 };
 
 #endif

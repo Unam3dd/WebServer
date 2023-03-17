@@ -6,13 +6,15 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:16:47 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/17 15:59:28 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/17 19:54:43 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "http_config.hpp"
 #include "webserver.hpp"
 #include <iostream>
 #include <algorithm>
+#include <sstream>
 
 bool	WebServer::_isSrvBlk(const std::string& line)
 {
@@ -49,4 +51,27 @@ bool	WebServer::_isEndBlk(const std::string& line)
 	if (!tmp.empty() && tmp.at(tmp.length() - 1) == '}' && std::count(tmp.begin(), tmp.end(), '}') == 1)
 		return (true);
 	return (false);
+}
+
+std::vector<std::string> WebServer::_splitDirective(const std::string& directive)
+{
+	std::vector<std::string> ret;
+	std::string tmp = directive;
+	std::stringstream ss(tmp);
+	std::string token;
+
+	while (std::getline(ss, token, ' '))
+	{
+		if (!token.empty())
+			ret.push_back(token);
+	}
+	return (ret);
+}
+
+void	WebServer::_initNewSrvBlk()
+{
+}
+
+void	WebServer::_initNewLocBlk()
+{
 }

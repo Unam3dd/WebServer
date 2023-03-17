@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/17 16:01:36 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/17 19:55:01 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ int	WebServer::Parse(const std::string& path)
 
 int	WebServer::Parse(void)
 {
-	bool srvBlk = false;
-	bool locBlk = false;
 	std::string line;
 	std::string buffer;
 
@@ -33,8 +31,8 @@ int	WebServer::Parse(void)
 		line = buffer.substr(0, buffer.find("\n"));
 		if (DEBUG)
 		{
-			srvBlk ? std::cout << "srvblk::": std::cout << "!srvblk::";
-			locBlk ? std::cout << "locblk::": std::cout << "!locblk::";
+			this->_srvBlk ? std::cout << "srvblk::": std::cout << "!srvblk::";
+			this->_locBlk ? std::cout << "locblk::": std::cout << "!locblk::";
 			std::cout << line << std::endl;
 		}
 		if (line.empty() || line.size() == 0)
@@ -44,39 +42,41 @@ int	WebServer::Parse(void)
 		}
 		if (this->_isSrvBlk(line))
 		{
-			if (srvBlk == true)
+			if (this->_srvBlk == true)
 				return (ERRPARSE_NEWSRVBLK);
-			srvBlk = true;
+			this->_srvBlk = true;
+			this->_initNewSrvBlk();
 		}
-		else if (srvBlk && this->_isLocBlk(line))  
+		else if (this->_srvBlk && this->_isLocBlk(line))  
 		{
-			if (locBlk == true)
+			if (this->_locBlk == true)
 				return (ERRPARSE_NEWLOCBLK);
-			locBlk = true;
+			this->_locBlk = true;
+			this->_initNewLocBlk();
 		}
-		else if (srvBlk && locBlk && this->_isEndBlk(line))
+		else if (this->_srvBlk && this->_locBlk && this->_isEndBlk(line))
 		{
 			t_errcode err = this->_parseLocBlk(line);
 			if (err != ERRPARSE_OK)
 				return (err);
-			locBlk = false;
+			this->_locBlk = false;
 		}
-		else if (srvBlk && !locBlk && this->_isEndBlk(line))
+		else if (this->_srvBlk && !this->_locBlk && this->_isEndBlk(line))
 		{
 			t_errcode err = this->_parseSrvBlk(line);
 			if (err != ERRPARSE_OK)
 				return (err);
-			srvBlk = false;
+			this->_srvBlk = false;
 		}
-		else if (!srvBlk && !locBlk && this->_isEndBlk(line))
+		else if (!this->_srvBlk && !this->_locBlk && this->_isEndBlk(line))
 			return (ERRPARSE_ENDBLK);
-		else if (srvBlk && !locBlk && (!line.empty() || line.find_first_not_of(" \t") != std::string::npos))
+		else if (this->_srvBlk && !this->_locBlk && (!line.empty() || line.find_first_not_of(" \t") != std::string::npos))
 		{
 			t_errcode err = this->_parseSrvBlk(line);
 			if (err != ERRPARSE_OK)
 				return (err);
 		}
-		else if (srvBlk && locBlk && (!line.empty() || line.find_first_not_of(" \t") != std::string::npos))
+		else if (this->_srvBlk && this->_locBlk && (!line.empty() || line.find_first_not_of(" \t") != std::string::npos))
 		{
 			t_errcode err = this->_parseLocBlk(line);
 			if (err != ERRPARSE_OK)

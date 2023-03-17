@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 11:43:55 by stales            #+#    #+#             */
-/*   Updated: 2023/03/08 01:57:35 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/17 18:45:44 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "epoll.hpp"
 #include <ostream>
 
-#define VERSION "0.0.1"
+#define VERSION "0.1.1"
 
 /*
  * @class HttpServer
