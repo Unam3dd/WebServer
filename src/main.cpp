@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:41:25 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/15 12:41:52 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/17 15:31:07 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,21 @@ int main(int ac, char **av)
 
 	WebServer	ws(av[1]);
 
-	ws.Parse();
+	switch(ws.Parse())
+	{
+		case ERRPARSE_OK:
+			std::cout << "OK" << std::endl;
+			break;
+		case ERRPARSE_NEWSRVBLK:
+			std::cout << "Error new server block" << std::endl;
+			break;
+		case ERRPARSE_NEWLOCBLK:
+			std::cout << "error new location block" << std::endl;
+			break;
+		default:
+			std::cout << "Error" << std::endl;
+			break;
+	}
 
 	return (0);
 }

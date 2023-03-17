@@ -6,7 +6,7 @@
 #    By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/03 17:02:32 by stales            #+#    #+#              #
-#    Updated: 2023/03/03 17:32:29 by stales           ###   ########.fr        #
+#    Updated: 2023/03/17 16:02:38 by ldournoi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@
 AUTHORS = Sam0verfl0w, Clinche
 NAME = webserv
 TEST_NAME = tester
-WEBSERVER_VERSION = 0.0.1
+WEBSERVER_VERSION = 0.1.1
 DIST = bin
 INC_GTEST = inc/greatest
 CONTRIB_DIR = contrib
@@ -32,7 +32,7 @@ TEST_DIR	= tests
 ###################################
 
 CC = c++
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -I. -Iinc -Iinc/libsocket
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -I. -Iinc -Iinc/libsocket 
 TESTFLAGS = -I. -Iinc -Iinc/libsocket -std=c++98
 VERSION = $(shell $(CC) --version | head -n 1)
 
@@ -94,7 +94,7 @@ TEST_OBJS = $(addprefix $(OBJDIR)/, $(TEST_SRCS:.cpp=.o))
 TEST_WSERV_OBJS = $(filter-out obj/main.o, $(OBJS))
 
 ifdef DEBUG
-	CXXFLAGS += -g
+	CXXFLAGS += -g -DDEBUG=1
 	DIST = dbg
 endif
 
