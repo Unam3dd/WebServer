@@ -6,11 +6,12 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/17 19:55:01 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/17 20:07:03 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserver.hpp"
+#include "http_colors.hpp"
 #include <iostream>
 
 int	WebServer::Parse(const std::string& path)
@@ -31,6 +32,7 @@ int	WebServer::Parse(void)
 		line = buffer.substr(0, buffer.find("\n"));
 		if (DEBUG)
 		{
+			std::cout << DBG << "[WebServer::Parse]\t";
 			this->_srvBlk ? std::cout << "srvblk::": std::cout << "!srvblk::";
 			this->_locBlk ? std::cout << "locblk::": std::cout << "!locblk::";
 			std::cout << line << std::endl;
