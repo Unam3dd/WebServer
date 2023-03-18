@@ -6,10 +6,11 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:28:25 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/18 12:04:41 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 16:16:30 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "http_utils.hpp"
 #include "webserver.hpp"
 #include "http_config.hpp"
 #include "http_request_config.hpp"
@@ -36,16 +37,21 @@ t_errcode WebServer::_parseSrvDirective(const std::string& line)
 			if (argv.at(0) == "}")
 			{
 				if (DEBUG)
-					std::cout << DBG << "End of server block" << std::endl;
+					std::cout << DBG << "[_parseSrvDirective] end of server block" << std::endl;
 				return (ERRPARSE_ENDBLK);
 			}
 			return (ERRPARSE_SINGLEARG);
 	}
-	if (arg == "server_name" || arg == "server_names")
-	{
+	try{
+		HttpServerConfig::t_parseMap callback;
+		callback = srv.GetParseMap().at(arg);
+		t_errcode err = (srv.*callback)(argv);
+		if (err != ERRPARSE_OK)
+			return (err);
+	}catch (std::out_of_range& e){
 		if (DEBUG)
-			std::cout << DBG << "[_parseSrvDirective] server_name: '" << argv.at(1) << "'" << std::endl;
-		srv.SetServerNames(argv);
+			std::cerr << DBG << "[_parseSrvDirective]" << RED << "[ERROR] unknown directive: " << arg << RESET << std::endl;
+		return (ERRPARSE_UNKNOWN);
 	}
 	return (ERRPARSE_OK);
 }

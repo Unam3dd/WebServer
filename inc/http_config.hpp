@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 12:02:25 by stales            #+#    #+#             */
-/*   Updated: 2023/03/17 19:52:42 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 15:57:46 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "http_utils.hpp"
 #include "http_request_config.hpp"
 #include <vector>
+#include <map>
 
 /*********************************************************************
 * @brief    HttpServerConfig Class
@@ -26,11 +27,14 @@
 class HttpServerConfig
 {
 	public:
+		typedef t_errcode (HttpServerConfig::*t_parseMap)(const std::vector<std::string>& argv);
+
 		HttpServerConfig(void);
 		HttpServerConfig(const std::string& path);
 		HttpServerConfig(const HttpServerConfig& c);
 		~HttpServerConfig(void);
 
+		inline const std::map<std::string, t_parseMap>&					GetParseMap(void) const { return (this->_parseMap); }
 		inline const std::vector<std::string>&		GetServerNames(void) const { return (this->_names); }
 		inline const std::vector<HttpRequestConfig>	GetRequestConfigs(void) const { return (this->_reqconfig); }
 		inline const std::vector<std::string>		GetIndexs(void) const { return (this->_indexs); }
@@ -49,17 +53,18 @@ class HttpServerConfig
 		t_errcode									SetIndexes(const std::vector<std::string>& indexs);
 		t_errcode									SetServerPorts(const std::vector<std::string>& ports);
 		t_errcode									SetErrorPages(const std::vector<std::string>& errpages);
-		t_errcode									SetRoot(const std::string& root);
-		t_errcode									SetSessionPath(const std::string& sessionpath);
-		t_errcode									SetServerTimeout(const std::string& timeout);
+		t_errcode									SetRoot(const std::vector<std::string>& root);
+		t_errcode									SetSessionPath(const std::vector<std::string>& sessionpath);
+		t_errcode									SetServerTimeout(const std::vector<std::string>& timeout);
 		t_errcode									SetMethods(const std::vector<std::string>& methods);
-		t_errcode									SetMaxPostSize(const std::string& max_size_post);
-		t_errcode									SetCookies(const std::string& cookies);
-		t_errcode									SetUploads(const std::string& uploads);
-		t_errcode									SetDirList(const std::string& dirlist);
+		t_errcode									SetMaxPostSize(const std::vector<std::string>& max_size_post);
+		t_errcode									SetCookies(const std::vector<std::string>& cookies);
+		t_errcode									SetUploads(const std::vector<std::string>& uploads);
+		t_errcode									SetDirList(const std::vector<std::string>& dirlist);
 
 	
 	protected:
+		std::map<std::string,t_parseMap> _parseMap;
 		std::vector<std::string>		_names;
 		std::vector<port_t>				_ports;
 		std::vector<HttpRequestConfig>	_reqconfig;

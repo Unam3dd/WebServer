@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:41:25 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/18 11:27:06 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 16:04:42 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int main(int ac, char **av)
 			std::cout << "OK" << std::endl;
 			break;
 		case ERRPARSE_UNKNOWN:
-			std::cout << "Unknown error" << std::endl;
+			std::cout << "error unknown config arg" << std::endl;
 			break;
 		case ERRPARSE_NEWSRVBLK:
 			std::cout << "Error new server block" << std::endl;

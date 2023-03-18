@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/03/18 11:56:45 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 12:56:28 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include "file.hpp"
 #include "http_utils.hpp"
 #include "http_config.hpp"
@@ -48,7 +49,7 @@ class WebServer: public File
 		size_t							_nserv;
 		bool							_srvBlk;
 		bool							_locBlk;
-
+	
 		/*
 		 * 	Private methods
 		 */

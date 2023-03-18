@@ -6,13 +6,14 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/18 12:03:45 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 16:14:34 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserver.hpp"
 #include "http_colors.hpp"
 #include <iostream>
+#include <algorithm>
 
 int	WebServer::Parse(const std::string& path)
 {
@@ -30,17 +31,18 @@ int	WebServer::Parse(void)
 	while (!buffer.empty())
 	{
 		line = buffer.substr(0, buffer.find("\n"));
-		if (DEBUG)
-		{
-			std::cout << DBG << "[WebServer::Parse]\t";
-			this->_srvBlk ? std::cout << "srvblk::": std::cout << "!srvblk::";
-			this->_locBlk ? std::cout << "locblk::": std::cout << "!locblk::";
-			std::cout << line << std::endl;
-		}
+		line.erase(0, line.find_last_of("\t") + 1);
 		if (line.empty() || line.size() == 0)
 		{
 			buffer = buffer.substr(buffer.find("\n") + 1);
 			continue;
+		}
+		if (DEBUG)
+		{
+			std::cout << DBG << "[WebServer::Parse]";
+			this->_srvBlk ? std::cout << GREEN << "srvblk::" << RESET: std::cout << RED << "!srvblk::" << RESET;
+			this->_locBlk ? std::cout << GREEN << "locblk\t" << RESET: std::cout << RED << "!locblk\t" << RESET;
+			std::cout << BGBLACK << line << RESET << std::endl;
 		}
 		if (this->_isSrvBlk(line))
 		{
