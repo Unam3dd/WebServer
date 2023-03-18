@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 19:09:58 by stales            #+#    #+#             */
-/*   Updated: 2023/03/18 17:58:30 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 21:54:43 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ HttpRequestConfig::HttpRequestConfig(const std::string& scope): _scope(scope){
 	_parseMap["dirlist"] = &HttpRequestConfig::SetDirList;
 	_parseMap["cgi"] = &HttpRequestConfig::SetCgi;
 	_parseMap["methods"] = &HttpRequestConfig::SetMethods;
+	_parseMap["redirect"] = &HttpRequestConfig::SetRedirect;
 	_parseMap["http_response_code"] = &HttpRequestConfig::SetHttpResponseCode;
 }
 

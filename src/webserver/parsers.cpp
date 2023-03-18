@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:28:25 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/18 17:59:38 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 21:57:52 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_errcode WebServer::_parseSrvDirective(const std::string& line)
 			{
 				if (DEBUG)
 					std::cout << DBG << "[_parseSrvDirective] end of server block" << std::endl;
-				return (ERRPARSE_ENDBLK);
+				return (ERRPARSE_OK);
 			}
 			return (ERRPARSE_SINGLEARG);
 	}
@@ -75,7 +75,7 @@ t_errcode WebServer::_parseLocDirective(const std::string& line)
 			if (argv.at(0) == "}")
 			{
 				if (DEBUG)
-					std::cout << DBG << "[_parseSrvDirective] end of server block" << std::endl;
+					std::cout << DBG << "[_parseLocDirective] end of location block" << std::endl;
 				return (ERRPARSE_OK);
 			}
 			return (ERRPARSE_SINGLEARG);

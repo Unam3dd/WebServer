@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 16:59:57 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/18 18:00:05 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 21:54:13 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,5 +162,13 @@ t_errcode	HttpRequestConfig::SetHttpResponseCode(const std::vector<std::string> 
 	(void)argv;
 	if (DEBUG)
 		std::cout << DBG << "[HttpRequestConfig::SetHttpResponseCode] setting http response code" << std::endl;
+	return (ERRPARSE_OK);
+}
+
+t_errcode	HttpRequestConfig::SetRedirect(const std::vector<std::string> &argv)
+{
+	(void)argv;
+	if (DEBUG)
+		std::cout << DBG << "[HttpRequestConfig::SetRedirect] setting redirect" << std::endl;
 	return (ERRPARSE_OK);
 }

@@ -75,6 +75,13 @@ struct errpage_t
 	errcode_t		code;
 };
 
+struct redirect_t
+{
+	std::string		path;
+	std::string		dest;
+	int				code;
+};
+
 /*
  * @brief Check format of Ipv4 address
  *
