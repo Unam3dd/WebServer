@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/17 20:07:03 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 12:03:45 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,14 @@ int	WebServer::Parse(void)
 		}
 		else if (this->_srvBlk && this->_locBlk && this->_isEndBlk(line))
 		{
-			t_errcode err = this->_parseLocBlk(line);
+			t_errcode err = this->_parseLocDirective(line);
 			if (err != ERRPARSE_OK)
 				return (err);
 			this->_locBlk = false;
 		}
 		else if (this->_srvBlk && !this->_locBlk && this->_isEndBlk(line))
 		{
-			t_errcode err = this->_parseSrvBlk(line);
+			t_errcode err = this->_parseSrvDirective(line);
 			if (err != ERRPARSE_OK)
 				return (err);
 			this->_srvBlk = false;
@@ -74,13 +74,13 @@ int	WebServer::Parse(void)
 			return (ERRPARSE_ENDBLK);
 		else if (this->_srvBlk && !this->_locBlk && (!line.empty() || line.find_first_not_of(" \t") != std::string::npos))
 		{
-			t_errcode err = this->_parseSrvBlk(line);
+			t_errcode err = this->_parseSrvDirective(line);
 			if (err != ERRPARSE_OK)
 				return (err);
 		}
 		else if (this->_srvBlk && this->_locBlk && (!line.empty() || line.find_first_not_of(" \t") != std::string::npos))
 		{
-			t_errcode err = this->_parseLocBlk(line);
+			t_errcode err = this->_parseLocDirective(line);
 			if (err != ERRPARSE_OK)
 				return (err);
 		}

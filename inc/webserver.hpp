@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/03/17 19:53:29 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 11:56:45 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ class WebServer: public File
 		 * 	Private methods
 		 */
 		std::vector<std::string>		_splitDirective(const std::string& line);
-		t_errcode						_parseSrvBlk(const std::string& line);
-		t_errcode						_parseLocBlk(const std::string& line);
+		t_errcode						_parseSrvDirective(const std::string& line);
+		t_errcode						_parseLocDirective(const std::string& line);
 		bool							_isSrvBlk(const std::string& line);
 		bool							_isLocBlk(const std::string& line);
 		bool							_isEndBlk(const std::string& line);
