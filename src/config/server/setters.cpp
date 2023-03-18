@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 18:57:36 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/18 16:03:51 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 16:31:44 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,5 +158,29 @@ t_errcode	HttpServerConfig::SetDirList(const std::vector<std::string> &dirlist)
 	(void)dirlist;
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetDirList] setting dir list" << std::endl;
+	return (ERRPARSE_OK);
+}
+
+t_errcode	HttpServerConfig::SetCgi(const std::vector<std::string> &cgi)
+{
+	(void)cgi;
+	if (DEBUG)
+		std::cout << DBG << "[HttpServerConfig::SetCgi] setting cgi" << std::endl;
+	return (ERRPARSE_OK);
+}
+
+t_errcode	HttpServerConfig::SetMethods(const std::vector<std::string> &methods)
+{
+	(void)methods;
+	if (DEBUG)
+		std::cout << DBG << "[HttpServerConfig::SetMethods] setting methods" << std::endl;
+	return (ERRPARSE_OK);
+}
+
+t_errcode	HttpServerConfig::SetUploadDir(const std::vector<std::string> &uploaddir)
+{
+	(void)uploaddir;
+	if (DEBUG)
+		std::cout << DBG << "[HttpServerConfig::SetUploadDir] setting upload dir" << std::endl;
 	return (ERRPARSE_OK);
 }

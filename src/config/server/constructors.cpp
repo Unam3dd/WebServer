@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:48:26 by stales            #+#    #+#             */
-/*   Updated: 2023/03/18 15:56:52 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 16:29:25 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,13 @@ HttpServerConfig::HttpServerConfig(void)
 	_parseMap["errpage"] = &HttpServerConfig::SetErrorPages;
 	_parseMap["docroot"] = &HttpServerConfig::SetRoot;
 	_parseMap["session_path"] = &HttpServerConfig::SetSessionPath;
-	_parseMap["request_timeout"] = &HttpServerConfig::SetServerTimeout;
-	_parseMap["max_body_size"] = &HttpServerConfig::SetMaxPostSize;
+	_parseMap["timeout"] = &HttpServerConfig::SetServerTimeout;
+	_parseMap["max_post_size"] = &HttpServerConfig::SetMaxPostSize;
 	_parseMap["cookies"] = &HttpServerConfig::SetCookies;
 	_parseMap["uploads"] = &HttpServerConfig::SetUploads;
 	_parseMap["dirlist"] = &HttpServerConfig::SetDirList;
+	_parseMap["cgi"] = &HttpServerConfig::SetCgi;
+	_parseMap["methods"] = &HttpServerConfig::SetMethods;
 }
 
 HttpServerConfig::HttpServerConfig(const std::string& path)

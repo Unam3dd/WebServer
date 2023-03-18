@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 12:02:25 by stales            #+#    #+#             */
-/*   Updated: 2023/03/18 15:57:46 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 16:31:17 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ class HttpServerConfig
 		inline const std::vector<std::string>&		GetServerNames(void) const { return (this->_names); }
 		inline const std::vector<HttpRequestConfig>	GetRequestConfigs(void) const { return (this->_reqconfig); }
 		inline const std::vector<std::string>		GetIndexs(void) const { return (this->_indexs); }
+		inline const std::vector<std::string>&		GetCgi(void) const { return (this->_cgi); }
 		inline const std::vector<port_t>&			GetServerPorts(void) const { return (this->_ports); }
 		inline const errpage_t						*GetErrorPages(void) const { return (this->_errpages); }
 		inline const std::string					GetRoot(void) const { return (this->_root); }
@@ -60,7 +61,9 @@ class HttpServerConfig
 		t_errcode									SetMaxPostSize(const std::vector<std::string>& max_size_post);
 		t_errcode									SetCookies(const std::vector<std::string>& cookies);
 		t_errcode									SetUploads(const std::vector<std::string>& uploads);
+		t_errcode									SetUploadDir(const std::vector<std::string>& uploaddir);
 		t_errcode									SetDirList(const std::vector<std::string>& dirlist);
+		t_errcode									SetCgi(const std::vector<std::string>& cgi);
 
 	
 	protected:
@@ -69,9 +72,11 @@ class HttpServerConfig
 		std::vector<port_t>				_ports;
 		std::vector<HttpRequestConfig>	_reqconfig;
 		std::vector<std::string>		_indexs;
+		std::vector<std::string>		_cgi;
 		errpage_t						_errpages[MAX_ERR_PAGES];
 		std::string						_root;
 		std::string						_sessionpath;
+		std::string						_uploaddir;
 		methods_t						_methods;
 		timeout_t						_timeout;
 		maxpost_size_t					_max_size_post;

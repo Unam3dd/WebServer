@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:28:25 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/18 16:16:30 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 16:22:11 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ t_errcode WebServer::_parseSrvDirective(const std::string& line)
 			return (err);
 	}catch (std::out_of_range& e){
 		if (DEBUG)
-			std::cerr << DBG << "[_parseSrvDirective]" << RED << "[ERROR] unknown directive: " << arg << RESET << std::endl;
+			std::cerr << FAIL << "[_parseSrvDirective]" << RED << " unknown directive: " << arg << RESET << std::endl;
 		return (ERRPARSE_UNKNOWN);
 	}
 	return (ERRPARSE_OK);
