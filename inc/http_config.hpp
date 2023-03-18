@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 12:02:25 by stales            #+#    #+#             */
-/*   Updated: 2023/03/18 16:31:17 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 17:20:35 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 #include "http_request_config.hpp"
 #include <vector>
 #include <map>
-
 /*********************************************************************
 * @brief    HttpServerConfig Class
 *********************************************************************/
@@ -34,9 +33,10 @@ class HttpServerConfig
 		HttpServerConfig(const HttpServerConfig& c);
 		~HttpServerConfig(void);
 
-		inline const std::map<std::string, t_parseMap>&					GetParseMap(void) const { return (this->_parseMap); }
+
+		inline const std::map<std::string, t_parseMap>&		GetParseMap(void) const { return (this->_parseMap); }
 		inline const std::vector<std::string>&		GetServerNames(void) const { return (this->_names); }
-		inline const std::vector<HttpRequestConfig>	GetRequestConfigs(void) const { return (this->_reqconfig); }
+		inline std::vector<HttpRequestConfig>		GetRequestConfigs(void) { return (this->_reqconfig); }
 		inline const std::vector<std::string>		GetIndexs(void) const { return (this->_indexs); }
 		inline const std::vector<std::string>&		GetCgi(void) const { return (this->_cgi); }
 		inline const std::vector<port_t>&			GetServerPorts(void) const { return (this->_ports); }
@@ -66,6 +66,8 @@ class HttpServerConfig
 		t_errcode									SetCgi(const std::vector<std::string>& cgi);
 
 	
+		void										initNewLocBlk(const std::string& scope) { this->_reqconfig.push_back(HttpRequestConfig(scope)); \
+																	this->_nreqcfg +=1; }
 	protected:
 		std::map<std::string,t_parseMap> _parseMap;
 		std::vector<std::string>		_names;
@@ -80,6 +82,7 @@ class HttpServerConfig
 		methods_t						_methods;
 		timeout_t						_timeout;
 		maxpost_size_t					_max_size_post;
+		int								_nreqcfg;
 		bool							_cookies;
 		bool							_uploads;
 		bool							_dirlist;

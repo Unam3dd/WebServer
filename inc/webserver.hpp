@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/03/18 12:56:28 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 17:22:36 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ class WebServer: public File
 		bool							_isLocBlk(const std::string& line);
 		bool							_isEndBlk(const std::string& line);
 		void							_initNewSrvBlk(void);
-		void							_initNewLocBlk(void);
+		t_errcode						_initNewLocBlk(const std::string& line);
 };
 
 #endif

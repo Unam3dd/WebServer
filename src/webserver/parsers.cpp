@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:28:25 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/18 16:22:11 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 17:59:38 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ t_errcode WebServer::_parseSrvDirective(const std::string& line)
 			}
 			return (ERRPARSE_SINGLEARG);
 	}
+	if (arg == "/" || arg == "//" || arg == "#" || arg == "/*")
+		return (ERRPARSE_OK);
 	try{
 		HttpServerConfig::t_parseMap callback;
 		callback = srv.GetParseMap().at(arg);
@@ -58,6 +60,38 @@ t_errcode WebServer::_parseSrvDirective(const std::string& line)
 
 t_errcode WebServer::_parseLocDirective(const std::string& line)
 {
-	(void)line;
+	HttpRequestConfig			loc = this->_configs.at(this->_nserv - 1).GetRequestConfigs().back();
+	std::vector<std::string>	argv;
+	std::string					arg;
+	int							argc;	
+
+	argv = this->_splitDirective(line);
+	arg = argv.at(0);
+	argc = argv.size();
+	switch (argc){
+		case 0:
+			return (ERRPARSE_OK);
+		case 1:
+			if (argv.at(0) == "}")
+			{
+				if (DEBUG)
+					std::cout << DBG << "[_parseSrvDirective] end of server block" << std::endl;
+				return (ERRPARSE_OK);
+			}
+			return (ERRPARSE_SINGLEARG);
+	}
+	if (arg == "/" || arg == "//" || arg == "#" || arg == "/*")
+		return (ERRPARSE_OK);
+	try{
+		HttpRequestConfig::t_parseMap callback;
+		callback = loc.GetParseMap().at(arg);
+		t_errcode err = (loc.*callback)(argv);
+		if (err != ERRPARSE_OK)
+			return (err);
+	}catch (std::out_of_range& e){
+		if (DEBUG)
+			std::cerr << FAIL << "[_parseLocDirective]" << RED << " unknown directive: " << arg << RESET << std::endl;
+		return (ERRPARSE_UNKNOWN);
+	}
 	return (ERRPARSE_OK);
 }

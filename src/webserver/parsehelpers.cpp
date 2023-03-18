@@ -6,11 +6,13 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:16:47 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/17 20:20:44 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 17:55:00 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http_config.hpp"
+#include "http_colors.hpp"
+#include "http_utils.hpp"
 #include "webserver.hpp"
 #include <iostream>
 #include <algorithm>
@@ -23,7 +25,7 @@ bool	WebServer::_isSrvBlk(const std::string& line)
 	tmp.erase(std::remove(tmp.begin(), tmp.end(), ' '), tmp.end());
 	//remove all tabs
 	tmp.erase(std::remove(tmp.begin(), tmp.end(), '\t'), tmp.end());
-	if (tmp.compare("server{" ) == 0 || tmp.compare("server") == 0)
+	if (tmp.compare("server{" ) == 0)
 		return (true);
 	return (false);
 }
@@ -75,6 +77,15 @@ void	WebServer::_initNewSrvBlk()
 	this->_nserv += 1;
 }
 
-void	WebServer::_initNewLocBlk()
+t_errcode	WebServer::_initNewLocBlk(const std::string& line)
 {
+	HttpServerConfig& srv = this->_configs.at(this->_nserv - 1);
+	std::string scope = line.substr(8, line.find_first_of("{") - 8);
+	
+	if (DEBUG)
+		std::cout << DBG << "[WebServer::_initNewLocBlk] scope: " << scope << std::endl;
+	if (scope.empty())
+		return (ERRPARSE_NEWLOCBLK);
+	srv.initNewLocBlk(scope);
+	return (ERRPARSE_OK);
 }

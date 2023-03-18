@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/18 16:14:34 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 17:23:56 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,9 @@ int	WebServer::Parse(void)
 			if (this->_locBlk == true)
 				return (ERRPARSE_NEWLOCBLK);
 			this->_locBlk = true;
-			this->_initNewLocBlk();
+			t_errcode err = this->_initNewLocBlk(line);
+			if (err != ERRPARSE_OK)
+				return (err);
 		}
 		else if (this->_srvBlk && this->_locBlk && this->_isEndBlk(line))
 		{

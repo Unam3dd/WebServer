@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:48:26 by stales            #+#    #+#             */
-/*   Updated: 2023/03/18 16:29:25 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 16:45:32 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ HttpServerConfig::HttpServerConfig(void)
 	_parseMap["max_post_size"] = &HttpServerConfig::SetMaxPostSize;
 	_parseMap["cookies"] = &HttpServerConfig::SetCookies;
 	_parseMap["uploads"] = &HttpServerConfig::SetUploads;
+	_parseMap["upload_dir"] = &HttpServerConfig::SetUploadDir;
 	_parseMap["dirlist"] = &HttpServerConfig::SetDirList;
 	_parseMap["cgi"] = &HttpServerConfig::SetCgi;
 	_parseMap["methods"] = &HttpServerConfig::SetMethods;
