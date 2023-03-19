@@ -73,8 +73,12 @@ std::vector<std::string> WebServer::_splitDirective(const std::string& directive
 
 void	WebServer::_initNewSrvBlk()
 {
+	if (DEBUG)
+		std::cout << DBG << "[WebServer::_initNewSrvBlk] entering function. previous _nserv:" << this->_nserv << " _configs.size():" << _configs.size() << std::endl;
 	this->_configs.push_back(HttpServerConfig());
 	this->_nserv += 1;
+	if (DEBUG)
+		std::cout << DBG << "[WebServer::_initNewSrvBlk] successful. new _nserv:" << this->_nserv << " _configs.size():" << _configs.size() << std::endl;
 }
 
 t_errcode	WebServer::_initNewLocBlk(const std::string& line)

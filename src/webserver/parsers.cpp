@@ -22,14 +22,19 @@
 
 t_errcode WebServer::_parseSrvDirective(const std::string& line)
 {
-	HttpServerConfig			srv = this->_configs.at(this->_nserv - 1);
+	HttpServerConfig			srv;
 	std::vector<std::string>	argv;
 	std::string					arg;
 	int							argc;	
 
+	if (DEBUG)
+		std::cout << DBG << "[WebServer::_parseSrvDirective] parsing server directive: " << line << std::endl;
+	srv = this->_configs.at(this->_nserv - 1);
 	argv = this->_splitDirective(line);
 	arg = argv.at(0);
 	argc = argv.size();
+	if (DEBUG)
+		std::cout << DBG << "[WebServer::_parseSrvDirective] arg: " << arg << "\targc: " << argc << std::endl;
 	switch (argc){
 		case 0:
 			return (ERRPARSE_OK);

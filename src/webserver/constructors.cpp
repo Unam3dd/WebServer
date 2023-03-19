@@ -14,15 +14,24 @@
 
 WebServer::WebServer(void)
 {
+	_srvBlk = false;
+	_locBlk = false;
+	_nserv = 0;
 }
 
 WebServer::WebServer(const std::string& path): File(path.c_str(), O_RDONLY, S_IRUSR)
 {
 	if (path.empty()) return ;
+	_srvBlk = false;
+	_locBlk = false;
+	_nserv = 0;
 }
 
 WebServer::WebServer(const WebServer& ws): File(ws)
 {
 	if (this == &ws) return ;
+	_srvBlk = false;
+	_locBlk = false;
+	_nserv = 0;
 }
 
