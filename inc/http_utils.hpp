@@ -3,7 +3,7 @@
 #define HTTP_UTILS_HPP
 
 #include <string>
-
+#include <vector>
 //////////////////////////////////
 //
 //	       DEFINES
@@ -13,6 +13,9 @@
 #define IS_BAD_IP(x) (check_format_ip(x) == false)
 #define IPV4_BYTES_LEN 0x4
 #define IPV4_BITS_LEN 0x20
+
+#define PRINT_VECTOR_STR(x,y) for (std::vector<std::string>::iterator it = x.begin(); it != x.end(); ++it) y << *it << ", ";
+#define PRINT_VECTOR_PORTS(x,y) for (std::vector<port_t>::iterator it = x.begin(); it != x.end(); ++it) y << *it << ", ";
 
 #define MAX_ERR_PAGES 0x8
 

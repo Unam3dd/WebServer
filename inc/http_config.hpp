@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 12:02:25 by stales            #+#    #+#             */
-/*   Updated: 2023/03/18 17:20:35 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/19 09:52:04 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,12 @@ class HttpServerConfig
 		inline const std::vector<port_t>&			GetServerPorts(void) const { return (this->_ports); }
 		inline const errpage_t						*GetErrorPages(void) const { return (this->_errpages); }
 		inline const std::string					GetRoot(void) const { return (this->_root); }
+		inline const std::string					GetUploadDir(void) const { return (this->_uploaddir); }
 		inline const std::string					GetSessionPath(void) const { return (this->_sessionpath); }
+		inline std::vector<redirect_t>				GetRedirections(void) const { return (this->_redirects); }
 		inline timeout_t							GetServerTimeout(void) const { return (this->_timeout); }
-		methods_t									GetMethods(void) const { return (this->_methods); }
-		maxpost_size_t								GetMaxPostSize(void) const { return (this->_max_size_post); }
+		inline methods_t									GetMethods(void) const { return (this->_methods); }
+		inline maxpost_size_t								GetMaxPostSize(void) const { return (this->_max_size_post); }
 		inline bool									GetCookies(void) const { return (this->_cookies); }
 		inline bool									GetUploads(void) const { return (this->_uploads); }
 		inline bool									GetDirList(void) const { return (this->_dirlist); }
@@ -64,10 +66,12 @@ class HttpServerConfig
 		t_errcode									SetUploadDir(const std::vector<std::string>& uploaddir);
 		t_errcode									SetDirList(const std::vector<std::string>& dirlist);
 		t_errcode									SetCgi(const std::vector<std::string>& cgi);
-
+		t_errcode									SetRedirect(const std::vector<std::string>& redirect);
 	
 		void										initNewLocBlk(const std::string& scope) { this->_reqconfig.push_back(HttpRequestConfig(scope)); \
 																	this->_nreqcfg +=1; }
+
+		friend std::ostream&						operator<<(std::ostream& os, HttpServerConfig& c);
 	protected:
 		std::map<std::string,t_parseMap> _parseMap;
 		std::vector<std::string>		_names;
@@ -75,6 +79,7 @@ class HttpServerConfig
 		std::vector<HttpRequestConfig>	_reqconfig;
 		std::vector<std::string>		_indexs;
 		std::vector<std::string>		_cgi;
+		std::vector<redirect_t>			_redirects;
 		errpage_t						_errpages[MAX_ERR_PAGES];
 		std::string						_root;
 		std::string						_sessionpath;

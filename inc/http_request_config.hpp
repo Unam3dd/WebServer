@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 17:17:45 by stales            #+#    #+#             */
-/*   Updated: 2023/03/18 21:56:10 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 22:32:06 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ class HttpRequestConfig{
 		t_errcode										SetDirList(const std::vector<std::string>& dirlist);
 		t_errcode										SetCgi(const std::vector<std::string>& cgi);
 		t_errcode										SetRedirect(const std::vector<std::string>& redirect);
-	
+
+		friend std::ostream&							operator<<(std::ostream& os, HttpRequestConfig& c);
 	protected:
 		std::map<std::string,t_parseMap> _parseMap;
 		std::vector<std::string>		_indexs;

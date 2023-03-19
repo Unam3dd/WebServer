@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:41:25 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/18 16:04:42 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/18 22:01:09 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int main(int ac, char **av)
 			std::cout << "Error" << std::endl;
 			break;
 	}
+
+	std::cout << ws << std::endl;
 
 	return (0);
 }
