@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 17:17:45 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 00:47:43 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 05:41:28 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class HttpRequestConfig{
 
 		inline const std::map<std::string, t_parseMap>&	GetParseMap(void) const { return (this->_parseMap); }
 		inline const std::vector<std::string>&			GetIndexs(void) const { return (this->_indexs); }
-		inline const std::vector<std::string>&			GetCgi(void) const { return (this->_cgi); }
+		inline const std::map<std::string, std::string>& GetCgi(void) const { return (this->_cgi); }
 		inline const errpage_t							*GetErrorPages(void) const { return (this->_errpages); }
 		inline const std::string&						GetRoot(void) const { return (this->_root); }
 		inline const std::string&						GetSessionPath(void) const { return (this->_sessionpath); }
@@ -64,7 +64,7 @@ class HttpRequestConfig{
 	protected:
 		std::map<std::string,t_parseMap> _parseMap;
 		std::vector<std::string>		_indexs;
-		std::vector<std::string>		_cgi;
+		std::map<std::string, std::string> _cgi;
 		errpage_t						_errpages[MAX_ERR_PAGES];
 		std::string						_scope;
 		std::string						_root;

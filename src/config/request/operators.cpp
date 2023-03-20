@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 22:03:40 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/20 01:19:02 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 05:42:59 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 std::ostream	&operator<<(std::ostream& os, HttpRequestConfig& sc)
 {
 	std::vector <std::string> tmp;
+	std::map<std::string, std::string> cgi;
 	os << "\t\tRequestConfig: "  << sc.GetScope() << std::endl;
 	tmp = sc.GetIndexs();
 	sc.GetHttpResponseCode() == 0 ? os << "\t\t\tResponse code: 200" << std::endl : os << "\t\t\tResponse code: " << sc.GetHttpResponseCode() << std::endl;
@@ -29,8 +30,8 @@ std::ostream	&operator<<(std::ostream& os, HttpRequestConfig& sc)
 	os << "\t\t\tMaxPostSize: " << sc.GetMaxPostSize() << std::endl;
 	os << "\t\t\tCookies: " << sc.GetCookies() << std::endl;
 	os << "\t\t\tMethods: "; sc.GetMethods() & GET ? os << "GET " : os; sc.GetMethods() & POST ? os << "POST " : os; sc.GetMethods() & PUT ? os << "PUT " : os; sc.GetMethods() & DELETE ? os << "DELETE " : os; os << std::endl;
-	tmp = sc.GetCgi();
-	os << "\t\t\tCGI: "; PRINT_VECTOR_STR(tmp, os); os << std::endl;
+	cgi = sc.GetCgi();
+	os << "\t\t\tCGI: "; PRINT_MAP_STR(cgi, os); os << std::endl;
 	os << "\t\t\tError pages: " << std::endl;
 	for (size_t i = 0; i < MAX_ERR_PAGES; i++)
 		os << "\t\t\t\t" << sc.GetErrorPages()[i].code << " -> " << sc.GetErrorPages()[i].path << std::endl;

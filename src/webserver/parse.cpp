@@ -6,10 +6,11 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/18 17:23:56 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 05:26:20 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "http_config.hpp"
 #include "webserver.hpp"
 #include "http_colors.hpp"
 #include <iostream>
@@ -89,6 +90,17 @@ int	WebServer::Parse(void)
 				return (err);
 		}
 		buffer = buffer.substr(buffer.find("\n") + 1);
+	}
+	if (this->_srvBlk == true)
+		return (ERRPARSE_NEWSRVBLK);
+	if (this->_locBlk == true)
+		return (ERRPARSE_NEWLOCBLK);
+	for (std::vector<HttpServerConfig*>::iterator it = this->_configs.begin(); it != this->_configs.end(); it++)
+	{
+		if ((*it)->GetServerNames().empty())
+			return (ERRPARSE_NOSRVNAME);
+		if ((*it)->GetServerPorts().empty())
+			return (ERRPARSE_NOPORT);
 	}
 	return (0);
 }
