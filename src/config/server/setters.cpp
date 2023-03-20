@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 18:57:36 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/20 02:03:18 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 02:20:26 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,8 @@
 
 t_errcode	HttpServerConfig::SetServerNames(const std::vector<std::string> &names)
 {
-	static bool	already_set = false;
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetServerNames] setting server names" << std::endl;
-	if (already_set)
-		return (ERRPARSE_DUP);
 	for (size_t i = 1; i < names.size(); i++)
 	{
 		if (names.at(i).find_first_of(" \t") != std::string::npos)
@@ -34,18 +31,14 @@ t_errcode	HttpServerConfig::SetServerNames(const std::vector<std::string> &names
 		this->_names.push_back(names.at(i));
 		if (DEBUG)
 			std::cout << DBG << "[HttpServerConfig::SetServerNames] pushed server_name[" << i - 1<< "]: " << _names.at(i - 1) << std::endl;
-		already_set = true;
 	}
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpServerConfig::SetIndexes(const std::vector<std::string> &indexs)
 {
-	static bool	already_set = false;
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetIndexes] setting indexes" << std::endl;
-	if (already_set)
-		return (ERRPARSE_DUP);
 	for (size_t i = 1; i < indexs.size(); i++)
 	{
 		if (indexs.at(i).find_first_of(" \t") != std::string::npos)
@@ -53,18 +46,14 @@ t_errcode	HttpServerConfig::SetIndexes(const std::vector<std::string> &indexs)
 		this->_indexs.push_back(indexs.at(i));
 		if (DEBUG)
 			std::cout << DBG << "[HttpServerConfig::SetIndexes] pushed index[" << i - 1<< "]: " << _indexs.at(i - 1) << std::endl;
-		already_set = true;
 	}
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpServerConfig::SetServerPorts(const std::vector<std::string> &ports)
 {
-	static bool	already_set = false;
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetServerPorts] setting server ports" << std::endl;
-	if (already_set)
-		return (ERRPARSE_DUP);
 	int port = 0;
 	for (size_t i = 1; i < ports.size(); i++)
 	{
@@ -76,7 +65,6 @@ t_errcode	HttpServerConfig::SetServerPorts(const std::vector<std::string> &ports
 		this->_ports.push_back(static_cast<port_t>(port));
 		if (DEBUG)
 			std::cout << DBG << "[HttpServerConfig::SetServerPorts] pushed port[" << i - 1<< "]: " << _ports.at(i - 1) << std::endl;
-		already_set = true;
 	}
 	return (ERRPARSE_OK);
 }
@@ -142,75 +130,58 @@ t_errcode	HttpServerConfig::SetErrorPages(const std::vector<std::string> &pages)
 
 t_errcode	HttpServerConfig::SetRoot(const std::vector<std::string> &root)
 {
-	static bool	already_set = false;
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetRoot] setting root" << std::endl;
-	if (already_set)
-		return (ERRPARSE_DUP);
+	if (root.size() != 2)
+		return (ERRPARSE_NBARGS);
 	this->_root = root.at(1);
 	if (this->_root.at(this->_root.size() - 1) != '/')
 		this->_root += '/';
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetRoot] root set to: " << this->GetRoot() << _root << std::endl;
-	already_set = true;
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpServerConfig::SetMaxPostSize(const std::vector<std::string> &max_size_post)
 {
-	static bool	already_set = false;
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetMaxPostSize] setting max post size" << std::endl;
-	if (already_set)
-		return (ERRPARSE_DUP);
 	if (std::atof(max_size_post.at(1).c_str()) < 0 || std::atof(max_size_post.at(1).c_str()) == HUGE_VAL)
 		return (ERRPARSE_POST);
 	this->_max_size_post = std::atof(max_size_post.at(1).c_str());
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetMaxPostSize] max post size set to: " << this->GetMaxPostSize() << std::endl;
-	already_set = true;
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpServerConfig::SetSessionPath(const std::vector<std::string> &sessionpath)
 {
-	static bool	already_set = false;
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetSessionPath] setting session path" << std::endl;
-	if (already_set)
-		return (ERRPARSE_DUP);
 	this->_sessionpath = sessionpath.at(1);
 	if (this->_sessionpath.at(this->_sessionpath.size() - 1) != '/')
 		this->_sessionpath += '/';
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetSessionPath] session path set to: " << this->GetSessionPath() << std::endl;
-	already_set = true;
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpServerConfig::SetServerTimeout(const std::vector<std::string> &sessiontimeout)
 {
-	static bool	already_set = false;
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetServerTimeout] setting session timeout" << std::endl;
-	if (already_set)
-		return (ERRPARSE_DUP);
 	if (std::atof(sessiontimeout.at(1).c_str()) < 0 || std::atof(sessiontimeout.at(1).c_str()) > 3600)
 		return (ERRPARSE_TIMEOUT);
 	this->_timeout = std::atof(sessiontimeout.at(1).c_str());
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetServerTimeout] session timeout set to: " << this->GetServerTimeout() << std::endl;
-	already_set = true;
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpServerConfig::SetCookies(const std::vector<std::string> &cookies)
 {
-	static bool	already_set = false;
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetCookies] setting cookies" << std::endl;
-	if (already_set)
-		return (ERRPARSE_DUP);
 	std::string tmp = cookies.at(1);
 	LOWERCASE(tmp);
 	if (tmp == "on")
@@ -221,17 +192,13 @@ t_errcode	HttpServerConfig::SetCookies(const std::vector<std::string> &cookies)
 		return (ERRPARSE_COOKIES);
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetCookies] cookies set to: " << this->GetCookies() << std::endl;
-	already_set = true;
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpServerConfig::SetUploads(const std::vector<std::string> &uploads)
 {
-	static bool	already_set = false;
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetUploads] setting uploads" << std::endl;
-	if (already_set)
-		return (ERRPARSE_DUP);
 	std::string tmp = uploads.at(1);
 	LOWERCASE(tmp);
 	if (tmp == "on")
@@ -242,17 +209,13 @@ t_errcode	HttpServerConfig::SetUploads(const std::vector<std::string> &uploads)
 		return (ERRPARSE_UPLOADS);
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetUploads] uploads set to: " << this->GetUploads() << std::endl;
-	already_set = true;
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpServerConfig::SetDirList(const std::vector<std::string> &dirlist)
 {
-	static bool	already_set = false;
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetDirList] setting dir list" << std::endl;
-	if (already_set)
-		return (ERRPARSE_DUP);
 	std::string tmp = dirlist.at(1);
 	LOWERCASE(tmp);
 	if (tmp == "on")
@@ -263,7 +226,6 @@ t_errcode	HttpServerConfig::SetDirList(const std::vector<std::string> &dirlist)
 		return (ERRPARSE_DIRLIST);
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetDirList] dir list set to: " << this->GetDirList() << std::endl;
-	already_set = true;
 	return (ERRPARSE_OK);
 }
 
@@ -289,13 +251,10 @@ t_errcode	HttpServerConfig::SetCgi(const std::vector<std::string> &cgi)
 
 t_errcode	HttpServerConfig::SetMethods(const std::vector<std::string> &methods)
 {
-	static bool	already_set = false;
-	int	tmp;
+	int	tmp = 0;
 	std::string tmpstr;
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetMethods] setting methods" << std::endl;
-	if (already_set)
-		return (ERRPARSE_DUP);
 	for (size_t i = 1; i < methods.size(); i++)
 	{
 		tmpstr = methods.at(i);
@@ -314,20 +273,15 @@ t_errcode	HttpServerConfig::SetMethods(const std::vector<std::string> &methods)
 	this->_methods = static_cast<methods_t>(tmp);
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetMethods] methods set to: " << this->GetMethods() << std::endl;
-	already_set = true;
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpServerConfig::SetUploadDir(const std::vector<std::string> &uploaddir)
 {
-	static bool	already_set = false;
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetUploadDir] setting upload dir" << std::endl;
-	if (already_set)
-		return (ERRPARSE_DUP);
 	this->_uploaddir = uploaddir.at(1);
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetUploadDir] upload dir set to: " << this->GetUploadDir() << std::endl;
-	already_set = true;
 	return (ERRPARSE_OK);
 }

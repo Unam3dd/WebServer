@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:41:25 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/19 23:30:37 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 02:10:22 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,33 @@ int main(int ac, char **av)
 			break;
 		case ERRPARSE_SPCORTAB:
 			std::cout << "error space or tab misplaced" << std::endl;
+			break;
+		case ERRPARSE_DUP:
+			std::cout << "error duplicate directive" << std::endl;
+			break;
+		case ERRPARSE_POST:
+			std::cout << "error post" << std::endl;
+			break;
+		case ERRPARSE_TIMEOUT:
+			std::cout << "error timeout" << std::endl;
+			break;
+		case ERRPARSE_COOKIES:
+			std::cout << "error cookies" << std::endl;
+			break;
+		case ERRPARSE_UPLOADS:
+			std::cout << "error uploads" << std::endl;
+			break;
+		case ERRPARSE_DIRLIST:
+			std::cout << "error dirlist" << std::endl;
+			break;
+		case ERRPARSE_CGI:
+			std::cout << "error cgi" << std::endl;
+			break;
+		case ERRPARSE_METHODS:
+			std::cout << "error methods" << std::endl;
+			break;
+		case ERRPARSE_UPLOADDIR:
+			std::cout << "error upload dir" << std::endl;
 			break;
 		default:
 			std::cout << "Error" << std::endl;
