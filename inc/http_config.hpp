@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 12:02:25 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 00:17:30 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 01:43:16 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ class HttpServerConfig
 		inline const std::vector<std::string>&		GetServerNames(void) const { return (this->_names); }
 		inline const std::vector<HttpRequestConfig>&		GetRequestConfigs(void) const { return (this->_reqconfig); }
 		inline const std::vector<std::string>&		GetIndexs(void) const { return (this->_indexs); }
-		inline const std::vector<std::string>&		GetCgi(void) const { return (this->_cgi); }
+		inline const std::map<std::string, std::string>&		GetCgi(void) const { return (this->_cgi); }
 		inline const std::vector<port_t>&			GetServerPorts(void) const { return (this->_ports); }
 		inline const errpage_t						*GetErrorPages(void) const { return (this->_errpages); }
 		inline const std::string&					GetRoot(void) const { return (this->_root); }
@@ -78,7 +78,7 @@ class HttpServerConfig
 		std::vector<port_t>				_ports;
 		std::vector<HttpRequestConfig>	_reqconfig;
 		std::vector<std::string>		_indexs;
-		std::vector<std::string>		_cgi;
+		std::map<std::string, std::string> _cgi;
 		std::vector<redirect_t>			_redirects;
 		errpage_t						_errpages[MAX_ERR_PAGES];
 		std::string						_root;

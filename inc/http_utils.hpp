@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 //////////////////////////////////
 //
 //	       DEFINES
@@ -16,7 +17,8 @@
 
 #define PRINT_VECTOR_STR(x,y) for (std::vector<std::string>::iterator it = x.begin(); it != x.end(); ++it) y << *it << " ";
 #define PRINT_VECTOR_PORTS(x,y) for (std::vector<port_t>::iterator it = x.begin(); it != x.end(); ++it) y << *it << " ";
-
+#define PRINT_MAP_STR(x, y) for (std::map<std::string, std::string>::iterator it = x.begin(); it != x.end(); ++it) y << it->first << " -> " << it->second << " ";
+#define LOWERCASE(x) std::transform(x.begin(), x.end(), x.begin(), ::tolower);
 #define MAX_ERR_PAGES 0x8
 
 //////////////////////////////////
@@ -54,17 +56,26 @@ typedef enum {
 	ERRPARSE_PORT,
 	ERRPARSE_ERRPAGE,
 	ERRPARSE_SPCORTAB,
+	ERRPARSE_DUP,
+	ERRPARSE_POST,
+	ERRPARSE_TIMEOUT,
+	ERRPARSE_COOKIES,
+	ERRPARSE_UPLOADS,
+	ERRPARSE_DIRLIST,
+	ERRPARSE_CGI,
+	ERRPARSE_METHODS,
+	ERRPARSE_UPLOADDIR
 } t_errcode;
 
 typedef enum {
 	E400 = 0,
 	E401 = 1,
-	E403 = 3,
-	E404 = 4,
-	E405 = 5,
-	E500 = 6,
-	E501 = 7,
-	E505 = 8
+	E403 = 2,
+	E404 = 3,
+	E405 = 4,
+	E500 = 5,
+	E501 = 6,
+	E505 = 7
 } errpagecode_t;
 
 
@@ -77,7 +88,7 @@ typedef enum {
 struct errpage_t
 {
 	std::string		path;
-	errcode_t		code;
+	int				code;
 };
 
 struct redirect_t

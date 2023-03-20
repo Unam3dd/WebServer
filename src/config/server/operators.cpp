@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 22:03:40 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/20 00:54:53 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 01:52:36 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 std::ostream	&operator<<(std::ostream& os, HttpServerConfig& sc)
 {
+	std::map<std::string, std::string> cgi;
 	std::vector<std::string> tmp;
 	std::vector<port_t> ports = sc.GetServerPorts();
 	std::vector<HttpRequestConfig> locations = sc.GetRequestConfigs();
@@ -29,13 +30,13 @@ std::ostream	&operator<<(std::ostream& os, HttpServerConfig& sc)
 	os << "\t\tUpload: " << sc.GetUploads() << std::endl;
 	os << "\t\tUploaddir: " << sc.GetUploadDir() << std::endl;
 	os << "\t\tMethods: "; sc.GetMethods() & GET ? os << "GET " : os; sc.GetMethods() & POST ? os << "POST " : os; sc.GetMethods() & PUT ? os << "PUT " : os; sc.GetMethods() & DELETE ? os << "DELETE " : os; os << std::endl;
-	os << "\t\tSessionPath: " << sc.GetSessionPath() << std::endl;
+	//os << "\t\tSessionPath: " << sc.GetSessionPath() << std::endl;
 	os << "\t\tTimeout: " << sc.GetServerTimeout() << std::endl;
 	os << "\t\tMaxPostSize: " << sc.GetMaxPostSize() << std::endl;
 	os << "\t\tCookies: " << sc.GetCookies() << std::endl;
 	os << "\t\tDir Listing: " << sc.GetDirList() << std::endl;
-	tmp = sc.GetCgi();
-	os << "\t\tCGI: "; PRINT_VECTOR_STR(tmp, os) os << std::endl;
+	cgi = sc.GetCgi();
+	os << "\t\tCGI: "; PRINT_MAP_STR(cgi, os) os << std::endl;
 	os << "\t\tError pages: " << std::endl;
 	for (size_t i = 0; i < MAX_ERR_PAGES; i++)
 		os << "\t\t\t" << sc.GetErrorPages()[i].code << " -> " << sc.GetErrorPages()[i].path << std::endl;
