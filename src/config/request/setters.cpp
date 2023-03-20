@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 16:59:57 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/18 21:54:13 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 00:01:02 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,16 @@
 
 t_errcode	HttpRequestConfig::SetIndexes(const std::vector<std::string> &indexs)
 {
-	(void)indexs;
 	if (DEBUG)
 		std::cout << DBG << "[HttpRequestConfig::SetIndexes] setting indexes" << std::endl;
+	for (size_t i = 1; i < indexs.size(); i++)
+	{
+		if (indexs.at(i).find_first_of(" \t") != std::string::npos)
+			return (ERRPARSE_SPCORTAB);
+		this->_indexs.push_back(indexs.at(i));
+		if (DEBUG)
+			std::cout << DBG << "[HttpRequestConfig::SetIndexes] pushed index[" << i - 1<< "]: " << _indexs.at(i - 1) << std::endl;
+	}
 	return (ERRPARSE_OK);
 }
 

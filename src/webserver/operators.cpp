@@ -6,10 +6,11 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:33:30 by stales            #+#    #+#             */
-/*   Updated: 2023/03/19 09:42:28 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 00:34:34 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "http_config.hpp"
 #include "webserver.hpp"
 
 WebServer	&WebServer::operator=(const WebServer& ws)
@@ -21,10 +22,9 @@ WebServer	&WebServer::operator=(const WebServer& ws)
 
 std::ostream	&operator<<(std::ostream& os, const WebServer& ws)
 {
-	std::vector < HttpServerConfig > serverConfigs = ws.GetServers();
-
-	os << "Number of servers: " << ws._nserv << std::endl;
-	for (size_t i = 0; i < serverConfigs.size(); i++)
-		os << "\t" << serverConfigs[i];
+	std::vector<HttpServerConfig*> servers = ws.GetServers();
+	os << "Number of servers: " << ws.GetNumberOfServers() << std::endl;
+	for (size_t i = 0; i < ws.GetNumberOfServers(); i++)
+		os << "\t" << *servers.at(i) << std::endl;
 	return (os);
 }

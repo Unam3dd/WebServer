@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 12:02:25 by stales            #+#    #+#             */
-/*   Updated: 2023/03/19 09:52:04 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 00:17:30 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,15 @@ class HttpServerConfig
 
 		inline const std::map<std::string, t_parseMap>&		GetParseMap(void) const { return (this->_parseMap); }
 		inline const std::vector<std::string>&		GetServerNames(void) const { return (this->_names); }
-		inline std::vector<HttpRequestConfig>		GetRequestConfigs(void) { return (this->_reqconfig); }
-		inline const std::vector<std::string>		GetIndexs(void) const { return (this->_indexs); }
+		inline const std::vector<HttpRequestConfig>&		GetRequestConfigs(void) const { return (this->_reqconfig); }
+		inline const std::vector<std::string>&		GetIndexs(void) const { return (this->_indexs); }
 		inline const std::vector<std::string>&		GetCgi(void) const { return (this->_cgi); }
 		inline const std::vector<port_t>&			GetServerPorts(void) const { return (this->_ports); }
 		inline const errpage_t						*GetErrorPages(void) const { return (this->_errpages); }
-		inline const std::string					GetRoot(void) const { return (this->_root); }
-		inline const std::string					GetUploadDir(void) const { return (this->_uploaddir); }
-		inline const std::string					GetSessionPath(void) const { return (this->_sessionpath); }
-		inline std::vector<redirect_t>				GetRedirections(void) const { return (this->_redirects); }
+		inline const std::string&					GetRoot(void) const { return (this->_root); }
+		inline const std::string&					GetUploadDir(void) const { return (this->_uploaddir); }
+		inline const std::string&					GetSessionPath(void) const { return (this->_sessionpath); }
+		inline const std::vector<redirect_t>&		GetRedirections(void) const { return (this->_redirects); }
 		inline timeout_t							GetServerTimeout(void) const { return (this->_timeout); }
 		inline methods_t									GetMethods(void) const { return (this->_methods); }
 		inline maxpost_size_t								GetMaxPostSize(void) const { return (this->_max_size_post); }

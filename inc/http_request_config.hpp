@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 17:17:45 by stales            #+#    #+#             */
-/*   Updated: 2023/03/18 22:32:06 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 00:47:43 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ class HttpRequestConfig{
 		inline const std::string&						GetUploadDir(void) const { return (this->_uploaddir); }
 		inline timeout_t								GetServerTimeout(void) const { return (this->_timeout); }
 		methods_t										GetMethods(void) const { return (this->_methods); }
-		inline redirect_t								GetRedirect(void) const { return (this->_redirect); }
+		inline const std::vector<redirect_t>&			GetRedirect(void) const { return (this->_redirect); }
 		maxpost_size_t									GetMaxPostSize(void) const { return (this->_max_size_post); }
 		inline bool										GetCookies(void) const { return (this->_cookies); }
 		inline bool										GetUploads(void) const { return (this->_uploads); }
@@ -70,7 +70,7 @@ class HttpRequestConfig{
 		std::string						_root;
 		std::string						_sessionpath;
 		std::string						_uploaddir;
-		redirect_t						_redirect;
+		std::vector<redirect_t>			_redirect;
 		methods_t						_methods;
 		timeout_t						_timeout;
 		maxpost_size_t					_max_size_post;

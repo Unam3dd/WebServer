@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:28:25 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/18 21:57:52 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 00:31:20 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 t_errcode WebServer::_parseSrvDirective(const std::string& line)
 {
-	HttpServerConfig			srv;
+	HttpServerConfig			*srv;
 	std::vector<std::string>	argv;
 	std::string					arg;
 	int							argc;	
@@ -51,8 +51,8 @@ t_errcode WebServer::_parseSrvDirective(const std::string& line)
 		return (ERRPARSE_OK);
 	try{
 		HttpServerConfig::t_parseMap callback;
-		callback = srv.GetParseMap().at(arg);
-		t_errcode err = (srv.*callback)(argv);
+		callback = srv->GetParseMap().at(arg);
+		t_errcode err = (srv->*callback)(argv);
 		if (err != ERRPARSE_OK)
 			return (err);
 	}catch (std::out_of_range& e){
@@ -65,7 +65,7 @@ t_errcode WebServer::_parseSrvDirective(const std::string& line)
 
 t_errcode WebServer::_parseLocDirective(const std::string& line)
 {
-	HttpRequestConfig			loc = this->_configs.at(this->_nserv - 1).GetRequestConfigs().back();
+	HttpRequestConfig			loc = this->_configs.at(this->_nserv - 1)->GetRequestConfigs().back();
 	std::vector<std::string>	argv;
 	std::string					arg;
 	int							argc;	

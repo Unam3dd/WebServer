@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/03/19 09:32:48 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 00:22:45 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ class WebServer: public File
 		int								Parse(void);
 
 		inline size_t					GetNumberOfServers(void) const { return (this->_nserv);}
-		inline std::vector < HttpServerConfig >	GetServers(void) const { return (this->_configs); }
+		inline std::vector < HttpServerConfig* >	GetServers(void) const { return (this->_configs); }
 		friend std::ostream				&operator<<(std::ostream& os, const WebServer& ws);
 	
 	private:
 		/*
 		 * 	Private members
 		 */
-		std::vector<HttpServerConfig>	_configs;
+		std::vector<HttpServerConfig*>	_configs;
 		size_t							_nserv;
 		bool							_srvBlk;
 		bool							_locBlk;

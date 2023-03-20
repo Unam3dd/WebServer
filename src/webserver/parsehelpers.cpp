@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:16:47 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/18 17:55:00 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 00:31:44 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	WebServer::_initNewSrvBlk()
 {
 	if (DEBUG)
 		std::cout << DBG << "[WebServer::_initNewSrvBlk] entering function. previous _nserv:" << this->_nserv << " _configs.size():" << _configs.size() << std::endl;
-	this->_configs.push_back(HttpServerConfig());
+	this->_configs.push_back(new HttpServerConfig());
 	this->_nserv += 1;
 	if (DEBUG)
 		std::cout << DBG << "[WebServer::_initNewSrvBlk] successful. new _nserv:" << this->_nserv << " _configs.size():" << _configs.size() << std::endl;
@@ -83,13 +83,13 @@ void	WebServer::_initNewSrvBlk()
 
 t_errcode	WebServer::_initNewLocBlk(const std::string& line)
 {
-	HttpServerConfig& srv = this->_configs.at(this->_nserv - 1);
+	HttpServerConfig* srv = this->_configs.at(this->_nserv - 1);
 	std::string scope = line.substr(8, line.find_first_of("{") - 8);
 	
 	if (DEBUG)
 		std::cout << DBG << "[WebServer::_initNewLocBlk] scope: " << scope << std::endl;
 	if (scope.empty())
 		return (ERRPARSE_NEWLOCBLK);
-	srv.initNewLocBlk(scope);
+	srv->initNewLocBlk(scope);
 	return (ERRPARSE_OK);
 }

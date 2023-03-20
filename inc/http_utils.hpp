@@ -14,8 +14,8 @@
 #define IPV4_BYTES_LEN 0x4
 #define IPV4_BITS_LEN 0x20
 
-#define PRINT_VECTOR_STR(x,y) for (std::vector<std::string>::iterator it = x.begin(); it != x.end(); ++it) y << *it << ", ";
-#define PRINT_VECTOR_PORTS(x,y) for (std::vector<port_t>::iterator it = x.begin(); it != x.end(); ++it) y << *it << ", ";
+#define PRINT_VECTOR_STR(x,y) for (std::vector<std::string>::iterator it = x.begin(); it != x.end(); ++it) y << *it << " ";
+#define PRINT_VECTOR_PORTS(x,y) for (std::vector<port_t>::iterator it = x.begin(); it != x.end(); ++it) y << *it << " ";
 
 #define MAX_ERR_PAGES 0x8
 
@@ -39,7 +39,8 @@ enum methods_t
 {
 	GET = 1 << 0,
 	POST = 1 << 1,
-	DELETE = 1 << 2
+	PUT = 1 << 2,
+	DELETE = 1 << 3
 };
 
 typedef enum {
@@ -51,7 +52,8 @@ typedef enum {
 	ERRPARSE_SINGLEARG,
 	ERRPARSE_NOARG,
 	ERRPARSE_PORT,
-	ERRPARSE_ERRPAGE
+	ERRPARSE_ERRPAGE,
+	ERRPARSE_SPCORTAB,
 } t_errcode;
 
 typedef enum {
@@ -63,7 +65,7 @@ typedef enum {
 	E500 = 6,
 	E501 = 7,
 	E505 = 8
-} t_errpages;
+} errpagecode_t;
 
 
 //////////////////////////////////

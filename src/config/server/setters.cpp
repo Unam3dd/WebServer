@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 18:57:36 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/18 16:31:44 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 00:04:00 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,17 @@
 
 t_errcode	HttpServerConfig::SetServerNames(const std::vector<std::string> &names)
 {
-	(void)names;
-	if (DEBUG)
-		std::cout << DBG << "[HttpServerConfig::SetServerNames] setting server names" << std::endl;
+	if (names.at(0) == "server_names" || names.at(0) == "server_name")
+	{
+		for (size_t i = 1; i < names.size(); i++)
+		{
+			if (names.at(i).find_first_of(" \t") != std::string::npos)
+				return (ERRPARSE_SPCORTAB);
+			this->_names.push_back(names.at(i));
+			if (DEBUG)
+				std::cout << DBG << "[HttpServerConfig::SetServerNames] pushed server_name[" << i - 1<< "]: " << _names.at(i - 1) << std::endl;
+		}
+	}
 	return (ERRPARSE_OK);
 }
 
@@ -107,9 +115,13 @@ t_errcode	HttpServerConfig::SetErrorPages(const std::vector<std::string> &pages)
 
 t_errcode	HttpServerConfig::SetRoot(const std::vector<std::string> &root)
 {
-	(void)root;
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetRoot] setting root" << std::endl;
+	this->_root = root.at(1);
+	if (this->_root.at(this->_root.size() - 1) != '/')
+		this->_root += '/';
+	if (DEBUG)
+		std::cout << DBG << "[HttpServerConfig::SetRoot] root set to: " << this->GetRoot() << _root << std::endl;
 	return (ERRPARSE_OK);
 }
 
