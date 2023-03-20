@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 17:08:48 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 17:58:56 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 23:46:40 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ void	show_version(void)
 
 void	help(int ac, char **av)
 {
-	if (ac != 2) show_usage(av[0]);
+	(void)ac;
+	//if (ac != 2) show_usage(av[0]);
 
 	if (av[1] && (!std::strcmp(av[1], "--help") || !std::strcmp(av[1], "-h")))
 		show_help(av[0]);

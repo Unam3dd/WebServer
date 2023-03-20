@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:16:47 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/20 06:32:59 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/21 00:13:11 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,20 @@ std::vector<std::string> WebServer::_splitDirective(const std::string& directive
 {
 	std::vector<std::string> ret;
 	std::string tmp = directive;
-	std::stringstream ss(tmp);
 	std::string token;
 
-	while (std::getline(ss, token, ' '))
+	while (!tmp.empty())
 	{
-		SANITIZE_SPACES(token);
-		if (!token.empty())
-			ret.push_back(token);
+		token = tmp.substr(0, tmp.find_first_of(" \t"));
+		if (token.empty())
+		{
+			tmp = tmp.substr(tmp.find_first_of(" \t") + 1);
+			continue;
+		}
+		ret.push_back(token);
+		if (tmp.find_first_of(" \t") == std::string::npos)
+			break;
+		tmp = tmp.substr(tmp.find_first_of(" \t") + 1);
 	}
 	return (ret);
 }
