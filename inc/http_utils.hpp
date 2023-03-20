@@ -5,16 +5,21 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <map>
+
 //////////////////////////////////
 //
 //	       DEFINES
 //
 /////////////////////////////////
 
+#define VERSION "0.6.9"
+
 #define IS_BAD_IP(x) (check_format_ip(x) == false)
 #define IPV4_BYTES_LEN 0x4
 #define IPV4_BITS_LEN 0x20
-
+#define COUNT_SPACES(x) (std::count(x.begin(), x.end(), ' ') + std::count(x.begin(), x.end(), '\t'))
+#define SANITIZE_SPACES(x) x.erase(std::remove(x.begin(), x.end(), ' '), x.end()); x.erase(std::remove(x.begin(), x.end(), '\t'), x.end())
 #define PRINT_VECTOR_STR(x,y) for (std::vector<std::string>::iterator it = x.begin(); it != x.end(); ++it) y << *it << " ";
 #define PRINT_VECTOR_PORTS(x,y) for (std::vector<port_t>::iterator it = x.begin(); it != x.end(); ++it) y << *it << " ";
 #define PRINT_MAP_STR(x, y) for (std::map<std::string, std::string>::iterator it = x.begin(); it != x.end(); ++it) y << it->first << " -> " << it->second << " ";
@@ -101,6 +106,13 @@ struct redirect_t
 	int				code;
 };
 
+//////////////////////////////////
+///
+///	       MAPS
+///
+/////////////////////////////////
+
+typedef std::map<t_errcode, std::string> errcodestr_t;
 /*
  * @brief Check format of Ipv4 address
  *

@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 00:22:45 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 18:10:31 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@
 #ifndef DEBUG
 # define DEBUG 0
 #endif
-
-#define COUNT_SPACES(x) (std::count(x.begin(), x.end(), ' ') + std::count(x.begin(), x.end(), '\t'))
-#define SANITIZE_SPACES(x) x.erase(std::remove(x.begin(), x.end(), ' '), x.end()); x.erase(std::remove(x.begin(), x.end(), '\t'), x.end())
 
 #include <string>
 #include <vector>
@@ -37,17 +34,20 @@ class WebServer: public File
 		~WebServer(void);
 
 		int								Parse(const std::string& path);
-		int								Parse(void);
+		t_errcode						Parse(void);
 
 		inline size_t					GetNumberOfServers(void) const { return (this->_nserv);}
 		inline std::vector < HttpServerConfig* >	GetServers(void) const { return (this->_configs); }
 		friend std::ostream				&operator<<(std::ostream& os, const WebServer& ws);
+
+		inline const errcodestr_t&					GetErrorStrs(void) const { return (this->_error); }
 	
 	private:
 		/*
 		 * 	Private members
 		 */
 		std::vector<HttpServerConfig*>	_configs;
+		errcodestr_t					_error;
 		size_t							_nserv;
 		bool							_srvBlk;
 		bool							_locBlk;

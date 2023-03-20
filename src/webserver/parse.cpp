@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 06:24:40 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 18:10:51 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	WebServer::Parse(const std::string& path)
 	return (0);
 }
 
-int	WebServer::Parse(void)
+t_errcode	WebServer::Parse(void)
 {
 	std::string line;
 	std::string buffer;
@@ -102,5 +102,5 @@ int	WebServer::Parse(void)
 		if ((*it)->GetServerPorts().empty())
 			return (ERRPARSE_NOPORT);
 	}
-	return (0);
+	return (ERRPARSE_OK);
 }

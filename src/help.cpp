@@ -6,12 +6,13 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 17:08:48 by stales            #+#    #+#             */
-/*   Updated: 2023/03/09 17:11:40 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/20 17:58:56 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserver_help.hpp"
 #include "http_server.hpp"
+#include "http_utils.hpp"
 #include <iostream>
 #include <cstdlib>
 #include <cstring>

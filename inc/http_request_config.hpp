@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 17:17:45 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 05:41:28 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 17:34:58 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,17 @@ class HttpRequestConfig{
 		~HttpRequestConfig(void);
 
 		inline const std::map<std::string, t_parseMap>&	GetParseMap(void) const { return (this->_parseMap); }
-		inline const std::vector<std::string>&			GetIndexs(void) const { return (this->_indexs); }
 		inline const std::map<std::string, std::string>& GetCgi(void) const { return (this->_cgi); }
+		inline const std::vector<std::string>&			GetIndexs(void) const { return (this->_indexs); }
+		inline const std::vector<redirect_t>&			GetRedirect(void) const { return (this->_redirect); }
 		inline const errpage_t							*GetErrorPages(void) const { return (this->_errpages); }
 		inline const std::string&						GetRoot(void) const { return (this->_root); }
 		inline const std::string&						GetSessionPath(void) const { return (this->_sessionpath); }
 		inline const std::string&						GetScope(void) const { return (this->_scope); }
 		inline const std::string&						GetUploadDir(void) const { return (this->_uploaddir); }
 		inline timeout_t								GetServerTimeout(void) const { return (this->_timeout); }
-		methods_t										GetMethods(void) const { return (this->_methods); }
-		inline const std::vector<redirect_t>&			GetRedirect(void) const { return (this->_redirect); }
-		maxpost_size_t									GetMaxPostSize(void) const { return (this->_max_size_post); }
+		inline methods_t								GetMethods(void) const { return (this->_methods); }
+		inline maxpost_size_t							GetMaxPostSize(void) const { return (this->_max_size_post); }
 		inline bool										GetCookies(void) const { return (this->_cookies); }
 		inline bool										GetUploads(void) const { return (this->_uploads); }
 		inline bool										GetDirList(void) const { return (this->_dirlist); }
@@ -62,22 +62,22 @@ class HttpRequestConfig{
 
 		friend std::ostream&							operator<<(std::ostream& os, HttpRequestConfig& c);
 	protected:
-		std::map<std::string,t_parseMap> _parseMap;
-		std::vector<std::string>		_indexs;
-		std::map<std::string, std::string> _cgi;
-		errpage_t						_errpages[MAX_ERR_PAGES];
-		std::string						_scope;
-		std::string						_root;
-		std::string						_sessionpath;
-		std::string						_uploaddir;
-		std::vector<redirect_t>			_redirect;
-		methods_t						_methods;
-		timeout_t						_timeout;
-		maxpost_size_t					_max_size_post;
-		int								_response_code;
-		bool							_cookies;
-		bool							_uploads;
-		bool							_dirlist;
+		std::map<std::string,t_parseMap>	_parseMap;
+		std::map<std::string, std::string>	_cgi;
+		std::vector<std::string>			_indexs;
+		std::vector<redirect_t>				_redirect;
+		errpage_t							_errpages[MAX_ERR_PAGES];
+		std::string							_scope;
+		std::string							_root;
+		std::string							_sessionpath;
+		std::string							_uploaddir;
+		methods_t							_methods;
+		timeout_t							_timeout;
+		maxpost_size_t						_max_size_post;
+		int									_response_code;
+		bool								_cookies;
+		bool								_uploads;
+		bool								_dirlist;
 };
 
 #endif
