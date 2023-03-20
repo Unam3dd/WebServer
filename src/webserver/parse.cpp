@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 05:26:20 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 06:24:40 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	WebServer::Parse(void)
 	while (!buffer.empty())
 	{
 		line = buffer.substr(0, buffer.find("\n"));
-		line.erase(0, line.find_last_of("\t") + 1);
+		line.erase(0, line.find_first_not_of(" \t"));
 		if (line.empty() || line.size() == 0)
 		{
 			buffer = buffer.substr(buffer.find("\n") + 1);

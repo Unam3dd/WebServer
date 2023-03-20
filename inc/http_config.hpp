@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 12:02:25 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 01:43:16 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 06:17:18 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ class HttpServerConfig
 
 		inline const std::map<std::string, t_parseMap>&		GetParseMap(void) const { return (this->_parseMap); }
 		inline const std::vector<std::string>&		GetServerNames(void) const { return (this->_names); }
-		inline const std::vector<HttpRequestConfig>&		GetRequestConfigs(void) const { return (this->_reqconfig); }
+		inline const std::vector<HttpRequestConfig*>&		GetRequestConfigs(void) const { return (this->_reqconfig); }
 		inline const std::vector<std::string>&		GetIndexs(void) const { return (this->_indexs); }
 		inline const std::map<std::string, std::string>&		GetCgi(void) const { return (this->_cgi); }
 		inline const std::vector<port_t>&			GetServerPorts(void) const { return (this->_ports); }
@@ -68,7 +68,7 @@ class HttpServerConfig
 		t_errcode									SetCgi(const std::vector<std::string>& cgi);
 		t_errcode									SetRedirect(const std::vector<std::string>& redirect);
 	
-		void										initNewLocBlk(const std::string& scope) { this->_reqconfig.push_back(HttpRequestConfig(scope)); \
+		void										initNewLocBlk(const std::string& scope) { this->_reqconfig.push_back(new HttpRequestConfig(scope)); \
 																	this->_nreqcfg +=1; }
 
 		friend std::ostream&						operator<<(std::ostream& os, HttpServerConfig& c);
@@ -76,7 +76,7 @@ class HttpServerConfig
 		std::map<std::string,t_parseMap> _parseMap;
 		std::vector<std::string>		_names;
 		std::vector<port_t>				_ports;
-		std::vector<HttpRequestConfig>	_reqconfig;
+		std::vector<HttpRequestConfig*>	_reqconfig;
 		std::vector<std::string>		_indexs;
 		std::map<std::string, std::string> _cgi;
 		std::vector<redirect_t>			_redirects;

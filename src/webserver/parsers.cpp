@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:28:25 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/20 01:06:19 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 06:17:58 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,13 @@ t_errcode WebServer::_parseSrvDirective(const std::string& line)
 	}
 	if (arg == "/" || arg == "//" || arg == "#" || arg == "/*")
 		return (ERRPARSE_OK);
+	if (argv.back() == "}"){
+		argv.pop_back();
+		argc--;
+	}
+	if (argv.back().at(argv.back().size() - 1) == '}'){
+		argv.back().erase(argv.back().end() - 1);
+	}
 	try{
 		HttpServerConfig::t_parseMap callback;
 		callback = srv->GetParseMap().at(arg);
@@ -65,7 +72,7 @@ t_errcode WebServer::_parseSrvDirective(const std::string& line)
 
 t_errcode WebServer::_parseLocDirective(const std::string& line)
 {
-	HttpRequestConfig			loc = this->_configs.at(this->_nserv - 1)->GetRequestConfigs().back();
+	HttpRequestConfig*			loc = this->_configs.at(this->_nserv - 1)->GetRequestConfigs().back();
 	std::vector<std::string>	argv;
 	std::string					arg;
 	int							argc;	
@@ -87,10 +94,17 @@ t_errcode WebServer::_parseLocDirective(const std::string& line)
 	}
 	if (arg == "/" || arg == "//" || arg == "#" || arg == "/*")
 		return (ERRPARSE_OK);
+	if (argv.back() == "}"){
+		argv.pop_back();
+		argc--;
+	}
+	if (argv.back().at(argv.back().size() - 1) == '}'){
+		argv.back().erase(argv.back().end() - 1);
+	}
 	try{
 		HttpRequestConfig::t_parseMap callback;
-		callback = loc.GetParseMap().at(arg);
-		t_errcode err = (loc.*callback)(argv);
+		callback = loc->GetParseMap().at(arg);
+		t_errcode err = (loc->*callback)(argv);
 		if (err != ERRPARSE_OK)
 			return (err);
 	}catch (std::out_of_range& e){

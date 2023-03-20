@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 22:03:40 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/20 01:52:36 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/20 06:18:36 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ std::ostream	&operator<<(std::ostream& os, HttpServerConfig& sc)
 	std::map<std::string, std::string> cgi;
 	std::vector<std::string> tmp;
 	std::vector<port_t> ports = sc.GetServerPorts();
-	std::vector<HttpRequestConfig> locations = sc.GetRequestConfigs();
+	std::vector<HttpRequestConfig*> locations = sc.GetRequestConfigs();
 
 	tmp = sc.GetServerNames();
 	os << "HttpServerConfig: "; PRINT_VECTOR_STR(tmp, os); os << std::endl;
@@ -45,6 +45,6 @@ std::ostream	&operator<<(std::ostream& os, HttpServerConfig& sc)
 		os << "\t\t\t" << sc.GetRedirections()[i].path << " -> " << sc.GetRedirections()[i].dest << "(" << sc.GetRedirections()[i].code << ")" << std::endl;
 	os << "\t\tNumber of locations: " << locations.size() << std::endl;
 	for (size_t i = 0; i < locations.size(); i++)
-		os << locations[i];
+		os << *locations[i];
 	return (os);
 }
