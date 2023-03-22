@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 18:10:31 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/21 08:53:28 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ class WebServer: public File
 		std::vector<HttpServerConfig*>	_configs;
 		errcodestr_t					_error;
 		size_t							_nserv;
+		int								_line;
 		bool							_srvBlk;
 		bool							_locBlk;
 	

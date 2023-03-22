@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 18:10:51 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/22 13:55:48 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,11 @@ t_errcode	WebServer::Parse(void)
 	std::string buffer;
 
 	buffer = static_cast<std::string>(this->getData());
+	_line = 0;
 	while (!buffer.empty())
 	{
 		line = buffer.substr(0, buffer.find("\n"));
+		_line++;
 		line.erase(0, line.find_first_not_of(" \t"));
 		if (line.empty() || line.size() == 0)
 		{
@@ -48,14 +50,19 @@ t_errcode	WebServer::Parse(void)
 		if (this->_isSrvBlk(line))
 		{
 			if (this->_srvBlk == true)
+			{
+				std::cerr << FAIL << "[WebServer::Parse] " << RED << "line " << _line << "\tnew server block before end of previous one" << std::endl;
 				return (ERRPARSE_NEWSRVBLK);
+			}
 			this->_srvBlk = true;
 			this->_initNewSrvBlk();
 		}
 		else if (this->_srvBlk && this->_isLocBlk(line))  
 		{
-			if (this->_locBlk == true)
+			if (this->_locBlk == true){
+				std::cerr << FAIL << "[WebServer::Parse] " << RED << "line " << _line << "\tnew location block before end of previous one" << std::endl;
 				return (ERRPARSE_NEWLOCBLK);
+			}
 			this->_locBlk = true;
 			t_errcode err = this->_initNewLocBlk(line);
 			if (err != ERRPARSE_OK)
@@ -76,7 +83,10 @@ t_errcode	WebServer::Parse(void)
 			this->_srvBlk = false;
 		}
 		else if (!this->_srvBlk && !this->_locBlk && this->_isEndBlk(line))
+		{
+			std::cerr << FAIL << "[WebServer::Parse] " << RED << "line " << _line << "\tend of block without any block opened" << std::endl;
 			return (ERRPARSE_ENDBLK);
+		}
 		else if (this->_srvBlk && !this->_locBlk && (!line.empty() || line.find_first_not_of(" \t") != std::string::npos))
 		{
 			t_errcode err = this->_parseSrvDirective(line);
@@ -92,15 +102,28 @@ t_errcode	WebServer::Parse(void)
 		buffer = buffer.substr(buffer.find("\n") + 1);
 	}
 	if (this->_srvBlk == true)
+	{
+		std::cerr << FAIL << "[WebServer::Parse] " << RED << "line " << _line << "\tnew server block before end of previous one" << std::endl;
 		return (ERRPARSE_NEWSRVBLK);
+	}
 	if (this->_locBlk == true)
+	{
+		std::cerr << FAIL << "[WebServer::Parse] " << RED << "line " << _line << "\tnew location block before end of previous one" << std::endl;
 		return (ERRPARSE_NEWLOCBLK);
+	}
+	int i = 0;
 	for (std::vector<HttpServerConfig*>::iterator it = this->_configs.begin(); it != this->_configs.end(); it++)
 	{
 		if ((*it)->GetServerNames().empty())
+		{
+			std::cerr << FAIL << "[WebServer::Parse] " << RED << "config #" << i+1 << "\tserver name is empty" << std::endl;
 			return (ERRPARSE_NOSRVNAME);
+		}
 		if ((*it)->GetServerPorts().empty())
+		{
+			std::cerr << FAIL << "[WebServer::Parse] " << RED << "config #" << i+1 << "\tserver port is empty" << std::endl;
 			return (ERRPARSE_NOPORT);
+		}
 	}
 	return (ERRPARSE_OK);
 }

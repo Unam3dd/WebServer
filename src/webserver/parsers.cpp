@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:28:25 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/20 06:17:58 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/22 13:48:53 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ t_errcode WebServer::_parseSrvDirective(const std::string& line)
 	HttpServerConfig			*srv;
 	std::vector<std::string>	argv;
 	std::string					arg;
-	int							argc;	
+	int							argc;
+	t_errcode					err;
 
 	if (DEBUG)
 		std::cout << DBG << "[WebServer::_parseSrvDirective] parsing server directive: " << line << std::endl;
@@ -59,12 +60,14 @@ t_errcode WebServer::_parseSrvDirective(const std::string& line)
 	try{
 		HttpServerConfig::t_parseMap callback;
 		callback = srv->GetParseMap().at(arg);
-		t_errcode err = (srv->*callback)(argv);
+		err = (srv->*callback)(argv);
 		if (err != ERRPARSE_OK)
+		{
+			std::cerr << FAIL << "[_parseSrvDirective]" << RED << "line: " << this->_line << "\t" << this->GetErrorStrs().at(err) << RESET << std::endl;
 			return (err);
+		}
 	}catch (std::out_of_range& e){
-		if (DEBUG)
-			std::cerr << FAIL << "[_parseSrvDirective]" << RED << " unknown directive: " << arg << RESET << std::endl;
+		std::cerr << FAIL << "[_parseSrvDirective]" << RED << "line: " << this->_line << "\tunknown directive: " << arg << RESET << std::endl;
 		return (ERRPARSE_UNKNOWN);
 	}
 	return (ERRPARSE_OK);
@@ -75,7 +78,8 @@ t_errcode WebServer::_parseLocDirective(const std::string& line)
 	HttpRequestConfig*			loc = this->_configs.at(this->_nserv - 1)->GetRequestConfigs().back();
 	std::vector<std::string>	argv;
 	std::string					arg;
-	int							argc;	
+	int							argc;
+	t_errcode					err;
 
 	argv = this->_splitDirective(line);
 	arg = argv.at(0);
@@ -104,12 +108,14 @@ t_errcode WebServer::_parseLocDirective(const std::string& line)
 	try{
 		HttpRequestConfig::t_parseMap callback;
 		callback = loc->GetParseMap().at(arg);
-		t_errcode err = (loc->*callback)(argv);
+		err = (loc->*callback)(argv);
 		if (err != ERRPARSE_OK)
+		{
+			std::cerr << FAIL << "[_parseLocDirective]" << RED << "line: " << this->_line << "\t" << this->GetErrorStrs().at(err) << RESET << std::endl;
 			return (err);
+		}
 	}catch (std::out_of_range& e){
-		if (DEBUG)
-			std::cerr << FAIL << "[_parseLocDirective]" << RED << " unknown directive: " << arg << RESET << std::endl;
+		std::cerr << FAIL << "[_parseLocDirective]" << RED << " unknown directive: " << arg << RESET << std::endl;
 		return (ERRPARSE_UNKNOWN);
 	}
 	return (ERRPARSE_OK);

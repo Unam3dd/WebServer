@@ -13,7 +13,7 @@
 //
 /////////////////////////////////
 
-#define VERSION "0.6.9"
+#define VERSION "0.7.0"
 
 #define IS_BAD_IP(x) (check_format_ip(x) == false)
 #define IPV4_BYTES_LEN 0x4
