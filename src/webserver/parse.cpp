@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/22 13:55:48 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/22 14:07:58 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,12 +103,12 @@ t_errcode	WebServer::Parse(void)
 	}
 	if (this->_srvBlk == true)
 	{
-		std::cerr << FAIL << "[WebServer::Parse] " << RED << "line " << _line << "\tnew server block before end of previous one" << std::endl;
+		std::cerr << FAIL << "[WebServer::Parse] " << RED << "line " << _line << "\tunclosed server block" << std::endl;
 		return (ERRPARSE_NEWSRVBLK);
 	}
 	if (this->_locBlk == true)
 	{
-		std::cerr << FAIL << "[WebServer::Parse] " << RED << "line " << _line << "\tnew location block before end of previous one" << std::endl;
+		std::cerr << FAIL << "[WebServer::Parse] " << RED << "line " << _line << "\tunclosed location block" << std::endl;
 		return (ERRPARSE_NEWLOCBLK);
 	}
 	int i = 0;

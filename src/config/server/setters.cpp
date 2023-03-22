@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 18:57:36 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/20 02:20:26 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/22 14:05:34 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ t_errcode	HttpServerConfig::SetRoot(const std::vector<std::string> &root)
 	if (this->_root.at(this->_root.size() - 1) != '/')
 		this->_root += '/';
 	if (DEBUG)
-		std::cout << DBG << "[HttpServerConfig::SetRoot] root set to: " << this->GetRoot() << _root << std::endl;
+		std::cout << DBG << "[HttpServerConfig::SetRoot] root set to: " << this->GetRoot() << std::endl;
 	return (ERRPARSE_OK);
 }
 
