@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/03/21 08:53:28 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/23 12:04:48 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ class WebServer: public File
 		WebServer	&operator=(const WebServer& ws);
 		~WebServer(void);
 
-		int								Parse(const std::string& path);
 		t_errcode						Parse(void);
 
 		inline size_t					GetNumberOfServers(void) const { return (this->_nserv);}

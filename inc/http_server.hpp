@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 11:43:55 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 17:35:57 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/23 12:12:16 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ class HttpServer
 		/* @brief port unsigned short 0-65535 */
 		port_t			_port;
 		Socket			_s;
-		Epoll			_e;
 		bool			_loop;
 };
 

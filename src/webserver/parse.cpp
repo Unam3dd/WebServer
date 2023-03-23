@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/22 14:07:58 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/23 12:04:23 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,6 @@
 #include "http_colors.hpp"
 #include <iostream>
 #include <algorithm>
-
-int	WebServer::Parse(const std::string& path)
-{
-	if (path.empty()) return (1);
-	std::cout << this->getData() << std::endl;
-	return (0);
-}
 
 t_errcode	WebServer::Parse(void)
 {
