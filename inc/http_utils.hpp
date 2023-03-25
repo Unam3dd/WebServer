@@ -13,8 +13,13 @@
 //
 /////////////////////////////////
 
+#ifndef DEBUG
+# define DEBUG 0
+#endif
 #define VERSION "0.7.0"
+#define MAX_EVENT 16
 
+#define FOREACH_VECTOR(type, variable) for(std::vector<type>::iterator it = variable.begin(); it != variable.end(); it++)
 #define IS_BAD_IP(x) (check_format_ip(x) == false)
 #define IPV4_BYTES_LEN 0x4
 #define IPV4_BITS_LEN 0x20
@@ -33,7 +38,6 @@
 /////////////////////////////////
 
 typedef unsigned int	timeout_t;
-typedef unsigned int	errcode_t;
 typedef unsigned int	maxpost_size_t;
 
 //////////////////////////////////
@@ -50,7 +54,7 @@ enum methods_t
 	DELETE = 1 << 3
 };
 
-typedef enum {
+enum t_errcode {
 	ERRPARSE_OK = 0,
 	ERRPARSE_UNKNOWN,
 	ERRPARSE_NEWSRVBLK,
@@ -73,7 +77,13 @@ typedef enum {
 	ERRPARSE_NBARGS,
 	ERRPARSE_NOSRVNAME,
 	ERRPARSE_NOPORT
-} t_errcode;
+};
+
+enum t_status
+{
+	STATUS_OK,
+	STATUS_FAIL
+};
 
 typedef enum {
 	E400 = 0,

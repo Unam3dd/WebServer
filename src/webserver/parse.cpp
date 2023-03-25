@@ -6,11 +6,12 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/23 12:04:23 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/25 21:48:47 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http_config.hpp"
+#include "http_utils.hpp"
 #include "webserver.hpp"
 #include "http_colors.hpp"
 #include <iostream>
@@ -20,6 +21,8 @@ t_errcode	WebServer::Parse(void)
 {
 	std::string line;
 	std::string buffer;
+
+	if (!this->size()) return (ERRPARSE_UNKNOWN);
 
 	buffer = static_cast<std::string>(this->getData());
 	_line = 0;

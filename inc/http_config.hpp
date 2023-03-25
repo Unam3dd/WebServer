@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 12:02:25 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 17:28:36 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/25 21:07:42 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ class HttpServerConfig
 		inline const std::map<std::string, std::string>&	GetCgi(void) const { return (this->_cgi); }
 		inline const std::vector<std::string>&				GetServerNames(void) const { return (this->_names); }
 		inline const std::vector<std::string>&				GetIndexs(void) const { return (this->_indexs); }
-		inline const std::vector<port_t>&					GetServerPorts(void) const { return (this->_ports); }
+		inline std::vector<port_t>&							GetServerPorts(void) { return (this->_ports); }
 		inline const std::vector<redirect_t>&				GetRedirections(void) const { return (this->_redirects); }
 		inline const std::string&							GetRoot(void) const { return (this->_root); }
 		inline const std::string&							GetUploadDir(void) const { return (this->_uploaddir); }

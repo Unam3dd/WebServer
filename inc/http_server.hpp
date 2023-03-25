@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 11:43:55 by stales            #+#    #+#             */
-/*   Updated: 2023/03/23 12:12:16 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/25 22:55:04 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "socket.hpp"
 #include "epoll.hpp"
 #include <ostream>
+#include <vector>
 
 /*
  * @class HttpServer
@@ -98,18 +99,21 @@ class HttpServer
 		*
 		*********************************************************************/
 		port_t			getPort(void) const;
+
+		inline Socket	&getSocket(void) { return (_s); }
+		inline std::vector<Socket*>& getClients(void) { return (_clients); }
 	
 	/*
 	 * @brief Privates Attributes
 	 */
 	private:
-
+		std::vector<Socket*>	_clients;
+		Socket 					_s;
 		/* @brief address like 127.0.0.1 */
-		std::string		_ip;
+		std::string				_ip;
 		/* @brief port unsigned short 0-65535 */
-		port_t			_port;
-		Socket			_s;
-		bool			_loop;
+		port_t					_port;
+		bool					_loop;
 };
 
 #endif

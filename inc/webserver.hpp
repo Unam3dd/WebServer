@@ -6,23 +6,27 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/03/23 12:04:48 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/25 22:42:14 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef WEBSERVER_HPP
 #define WEBSERVER_HPP
 
+#include "http_server.hpp"
 #ifndef DEBUG
 # define DEBUG 0
 #endif
 
+#include "epoll.hpp"
 #include <string>
 #include <vector>
 #include <map>
 #include "file.hpp"
 #include "http_utils.hpp"
 #include "http_config.hpp"
+
+#define MAX_EVENT 16
 
 class WebServer: public File
 {
@@ -34,6 +38,7 @@ class WebServer: public File
 		~WebServer(void);
 
 		t_errcode						Parse(void);
+		t_status						Run(void);
 
 		inline size_t					GetNumberOfServers(void) const { return (this->_nserv);}
 		inline std::vector < HttpServerConfig* >	GetServers(void) const { return (this->_configs); }
@@ -46,6 +51,8 @@ class WebServer: public File
 		 * 	Private members
 		 */
 		std::vector<HttpServerConfig*>	_configs;
+		std::vector<HttpServer*>		_srv;
+		Epoll							_epoll;
 		errcodestr_t					_error;
 		size_t							_nserv;
 		int								_line;
@@ -63,6 +70,10 @@ class WebServer: public File
 		bool							_isEndBlk(const std::string& line);
 		void							_initNewSrvBlk(void);
 		t_errcode						_initNewLocBlk(const std::string& line);
+		t_status						_setupSrvs(void);
+		t_status						_listenSrvs(void);
+		t_status						_setupEpoll(void);
+		t_status						_waitSrvs(void);
 };
 
 #endif

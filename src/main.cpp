@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:41:25 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/21 08:56:32 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/25 21:21:10 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,14 @@
 int main(int ac, char **av)
 {
 	help(ac, av);
+	WebServer	ws(av[1]);
 
-	for (int i = ac - 1; i != 0; i--)
-	{
-		WebServer	ws(av[i]);
-
-		if (DEBUG)
-			std::cout << DBG << "[main] Calling ws.Parse()" << std::endl;
-		ws.Parse();
-	//	t_errcode err = ws.Parse();
-	//	std::cout << DBG << ORANGE << av[i] << ": " << ws.GetErrorStrs().at(err) << std::endl;
-	//	std::cout << ws << std::endl;
+	if (ws.Parse()) {
+		std::cout << "Error during parsing configuration file !" << std::endl;
+		return (1);
 	}
+
+	ws.Run();
+
 	return (0);
 }

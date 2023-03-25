@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:28:15 by stales            #+#    #+#             */
-/*   Updated: 2023/03/03 10:40:32 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/25 23:16:35 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 
 #include <arpa/inet.h>
 #include <cstring>
+#include <netinet/in.h>
 
 /*********************************************************************
 *
@@ -34,7 +35,10 @@
 *********************************************************************/
 int	Socket::SetupSin(int family, const std::string &ip, port_t port)
 {
-	this->_s.sin_addr.s_addr = this->InetAddr(ip.c_str());
+	if (ip == "0.0.0.0")
+		this->_s.sin_addr.s_addr = INADDR_ANY;
+	else
+		this->_s.sin_addr.s_addr = this->InetAddr(ip.c_str());
 	if (!this->_s.sin_addr.s_addr) return (1);
 	this->_s.sin_port = htons(port);
 	this->_s.sin_family = family;

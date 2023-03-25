@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:31:17 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 18:12:21 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/25 21:48:02 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ WebServer::WebServer(void)
 
 WebServer::WebServer(const std::string& path): File(path.c_str(), O_RDONLY, S_IRUSR)
 {
-	if (path.empty()) return ;
+	if (path.empty() || !this->size()) return ;
 	_srvBlk = false;
 	_locBlk = false;
 	_nserv = 0;

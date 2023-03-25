@@ -6,13 +6,15 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 11:47:54 by stales            #+#    #+#             */
-/*   Updated: 2023/03/08 01:36:56 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/25 23:47:35 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http_server.hpp"
 #include "http_utils.hpp"
+#include "http_colors.hpp"
 #include <netinet/in.h>
+#include <iostream>
 
 HttpServer::HttpServer(void): _port(0) {}
 

@@ -6,12 +6,11 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 12:33:12 by stales            #+#    #+#             */
-/*   Updated: 2023/03/03 19:50:00 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/23 12:32:14 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http_utils.hpp"
-
 #include <cstring>
 #include <cstdlib>
 
