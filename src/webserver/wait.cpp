@@ -8,7 +8,7 @@
 
 t_status	WebServer::_waitSrvs(void)
 {
-	char	buf[0x100];
+	char	buf[0x10000];
 	Socket	*client = NULL;
 	epoll_event evs[MAX_EVENT];
 	epoll_event	ev;

@@ -29,7 +29,7 @@ t_status	WebServer::_setupSrvs(void)
 	ports = _getUniquePorts(this->_configs);
 
 	for (std::vector<port_t>::iterator it = ports.begin(); it != ports.end(); it++) {
-		ptr = new (std::nothrow) HttpServer("127.0.0.1", *it);
+		ptr = new (std::nothrow) HttpServer("0.0.0.0", *it);
 		if (!ptr) return (STATUS_FAIL);
 		_srv.push_back(ptr);
 	}
