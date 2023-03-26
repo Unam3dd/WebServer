@@ -29,6 +29,7 @@
 #define PRINT_VECTOR_PORTS(x,y) for (std::vector<port_t>::iterator it = x.begin(); it != x.end(); ++it) y << *it << " ";
 #define PRINT_MAP_STR(x, y) for (std::map<std::string, std::string>::iterator it = x.begin(); it != x.end(); ++it) y << it->first << " -> " << it->second << " ";
 #define LOWERCASE(x) std::transform(x.begin(), x.end(), x.begin(), ::tolower);
+#define UPPERCASE(x) std::transform(x.begin(), x.end(), x.begin(), ::toupper);
 #define MAX_ERR_PAGES 0x8
 
 //////////////////////////////////
