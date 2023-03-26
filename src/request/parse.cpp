@@ -8,7 +8,6 @@ t_status HttpRequest::_parseRequestLine(const std::string &reqline)
 	std::string line = reqline;
 	std::string method;
 	std::string uri;
-	std::string version;
 
 	method = line.substr(0, line.find(" "));
 	if (method != "GET" && method != "POST" && method != "PUT" && method != "DELETE")
@@ -24,7 +23,7 @@ t_status HttpRequest::_parseRequestLine(const std::string &reqline)
 	line = line.substr(line.find(" ") + 1, line.length() - line.find(" "));
 	if (line != "HTTP/1.0" && line != "HTTP/1.1")
 		return (STATUS_FAIL);
-	setVersion(version);
+	setVersion(line);
 	
 	return (STATUS_OK);
 }
@@ -39,8 +38,9 @@ t_status	HttpRequest::_parseHeaders(const std::string &req)
 	std::string::size_type pos = 0;
 	t_status err;
 
-	for (line = buf.substr(0, buf.find("\r\n")); line != ""; buf = buf.substr(0, req.find("\r\n")))
+	for (line = buf.substr(0, buf.find("\r\n")); line != ""; line = buf.substr(0, buf.find("\r\n")))
 	{
+		buf = buf.substr(buf.find("\r\n") + 2, buf.length() - buf.find("\r\n"));
 		pos = line.find(": ");
 		if (pos == std::string::npos)
 			return (STATUS_FAIL);

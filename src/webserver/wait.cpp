@@ -1,3 +1,4 @@
+#include "http_request.hpp"
 #include "http_utils.hpp"
 #include "http_colors.hpp"
 #include "webserver.hpp"
@@ -48,14 +49,13 @@ t_status	WebServer::_waitSrvs(void)
 			if (_acceptClient(&evs[i]) == STATUS_OK)
 				continue ;
 
-			if (DEBUG)
-				std::cout << DBG << "[WebServer::Wait] ON A DE LA DATA A LIRE" << std::endl;
-
 			memset(buf, 0, sizeof(buf));
 			if (::read(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), buf, sizeof(buf)) < 0)
 				return (STATUS_FAIL);
 
-			std::cout << buf << std::endl;
+			HttpRequest req(buf);
+			if (DEBUG)
+				std::cout << DBG << "[WebServer::Wait] Received request: " << std::endl << req << std::endl;
 
 			write(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), "hello world\n", 12);
 

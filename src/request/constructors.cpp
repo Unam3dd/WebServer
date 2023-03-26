@@ -13,10 +13,10 @@ HttpRequest::HttpRequest(const std::string& req)
 	if (status != STATUS_OK)
 		std::cerr << FAIL << "[HttpRequest::HttpRequest] Error parsing request line" << std::endl;
 	
-	req.substr(req.find("\r\n"), req.length());
-	status = _parseHeaders(req);
+	line = req.substr(req.find("\r\n") + 2, req.length() - req.find("\r\n"));
+	status = _parseHeaders(line);
 	if (status != STATUS_OK)
 		std::cerr << FAIL << "[HttpRequest::HttpRequest] Error parsing headers" << std::endl;
 	
-	setBody(req.substr(req.find("\r\n\r\n"), req.length()));
+	setBody(req.substr(req.find("\r\n\r\n") + 4, req.length() - req.find("\r\n\r\n")));
 }
