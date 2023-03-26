@@ -6,15 +6,36 @@
 #include <iostream>
 #include <cstring>
 
+t_status	WebServer::_acceptClient(ev_t *e)
+{
+	Socket	*client = NULL;
+	ev_t	tev;
+
+	if (!e) return (STATUS_FAIL);
+
+	FOREACH_VECTOR(HttpServer*, this->_srv){
+		if (e->data.fd == (*it)->getSocket().Getfd()) {
+			client = (*it)->getSocket().Accept();
+			if (client) {
+				(*it)->getClients().push_back(client);
+				tev.data.ptr = client;
+				tev.events = EPOLLIN;
+				this->_epoll.Ctl(EPOLL_CTL_ADD, client->Getfd(), &tev);
+				std::cout << SUCCESS << "[WebServer::Wait] New client Accepted ! " << client->InetNtoa(client->GetSin()->sin_addr.s_addr) << ":" << client->Ntohs(client->GetSin()->sin_port) << std::endl;
+				return (STATUS_OK);
+			}
+		}
+	}
+
+	return (STATUS_FAIL);
+}
+
 t_status	WebServer::_waitSrvs(void)
 {
 	char	buf[0x10000];
-	Socket	*client = NULL;
 	epoll_event evs[MAX_EVENT];
-	epoll_event	ev;
 	int	nfds = 0;
 	int i = 0;
-	bool accepted = false;
 
 	// TODO: Setup Signals
 
@@ -23,27 +44,9 @@ t_status	WebServer::_waitSrvs(void)
 		nfds = _epoll.Wait(evs, MAX_EVENT, -1);
 
 		for (i = 0; i < nfds; i++) {
-			FOREACH_VECTOR(HttpServer*, this->_srv){
-				if (evs[i].data.fd == (*it)->getSocket().Getfd()) {
-					client = (*it)->getSocket().Accept();
-					if (client) {
-						(*it)->getClients().push_back(client);
-						ev.data.ptr = client;
-						ev.events = EPOLLIN;
-						_epoll.Ctl(EPOLL_CTL_ADD, client->Getfd(), &ev);
-						if (DEBUG)
-							std::cout << DBG << "[WebServer::Wait] New client Accepted ! " << client->InetNtoa(client->GetSin()->sin_addr.s_addr) << ":" << client->Ntohs(client->GetSin()->sin_port) << std::endl;
-					}
 
-					accepted = true;
-					break ;
-				}
-			}
-
-			if (accepted) {
-				accepted = false;
+			if (_acceptClient(&evs[i]) == STATUS_OK)
 				continue ;
-			}
 
 			if (DEBUG)
 				std::cout << DBG << "[WebServer::Wait] ON A DE LA DATA A LIRE" << std::endl;

@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/03/25 22:42:14 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/26 16:56:14 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ class WebServer: public File
 		t_status						_listenSrvs(void);
 		t_status						_setupEpoll(void);
 		t_status						_waitSrvs(void);
+		t_status						_acceptClient(ev_t *ev);
 };
 
 #endif
