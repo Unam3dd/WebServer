@@ -8,7 +8,7 @@ HttpRequest::HttpRequest(const std::string& req)
 	std::string line;
 	t_status	status = STATUS_OK;
 
-	if (req.length() == 0 || req.find("\r\n\r\n") == std::string::npos)
+	if (req.length() == 0 || req.find("\r\n") == std::string::npos)
 	{
 		std::cerr << FAIL << "[HttpRequest::HttpRequest] Received Invalid Request (CRLF mandatory)" << RESET << std::endl;
 		return ;
