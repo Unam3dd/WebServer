@@ -29,9 +29,13 @@ t_status	WebServer::_setupSrvs(void)
 	ports = _getUniquePorts(this->_configs);
 
 	for (std::vector<port_t>::iterator it = ports.begin(); it != ports.end(); it++) {
-		ptr = new (std::nothrow) HttpServer("0.0.0.0", *it);
-		if (!ptr) return (STATUS_FAIL);
-		_srv.push_back(ptr);
+		try {
+			ptr = new HttpServer("0.0.0.0", *it);
+			_srv.push_back(ptr);
+		} catch (std::exception &e) {
+			std::cerr << FAIL << "[WebServer::_setupSrvs] Cannot bind to port: " << *it << RESET << std::endl;
+			return (STATUS_FAIL);
+		}
 	}
 	if (DEBUG)
 	{

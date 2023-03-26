@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 11:47:54 by stales            #+#    #+#             */
-/*   Updated: 2023/03/25 23:47:35 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/26 14:57:23 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ HttpServer::HttpServer(const std::string& ip, port_t port)
 	_port = port;
 	_s.SetupSocket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	_s.SetupSin(AF_INET, this->_ip, this->_port);
-	_s.Bind();
+	if (_s.Bind() == -1)
+		throw std::runtime_error("");
 }
 
 HttpServer::HttpServer(const HttpServer& h)
