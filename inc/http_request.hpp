@@ -1,16 +1,17 @@
 #ifndef HTTP_REQUEST_HPP
 #define HTTP_REQUEST_HPP
 
+#include <netinet/in.h>
 #include <string>
 #include <map>
 #include "http_utils.hpp"
+#include "libsocket/socket.hpp"
 
 class HttpRequest
 {
 	public:
-		typedef t_status (HttpRequest::*t_parseMap)(const std::string &line);
 		HttpRequest(void);
-		HttpRequest(const std::string& req);
+		HttpRequest(const std::string& req, in_port_t port);
 		~HttpRequest(void);
 
 		void setMethod(const std::string& method);
@@ -23,6 +24,7 @@ class HttpRequest
 		inline const std::string& getVersion(void) const { return _version; }
 		inline const std::string& getBody(void) const { return _body; }
 		inline const methods_t&   getMethod(void) const { return _method; }
+		inline const port_t&	  getPort(void) const { return _port; }
 
 		friend std::ostream& operator<<(std::ostream& os, const HttpRequest& req);
 	private:
@@ -31,11 +33,14 @@ class HttpRequest
 
 
 		std::map<std::string, std::string> _header;
-		std::map<std::string, t_parseMap> _parseMap;
 		std::string	_uri;
 		std::string	_version;
 		std::string _body;
 		methods_t	_method;
+		port_t		_port;
+
+
 };
+
 
 #endif

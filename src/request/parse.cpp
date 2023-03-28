@@ -1,6 +1,6 @@
 #include "http_request.hpp"
-#include "http_utils.hpp"
 #include "http_colors.hpp"
+#include "http_utils.hpp"
 #include <iostream>
 
 t_status HttpRequest::_parseRequestLine(const std::string &reqline)
@@ -30,13 +30,11 @@ t_status HttpRequest::_parseRequestLine(const std::string &reqline)
 
 t_status	HttpRequest::_parseHeaders(const std::string &req)
 {
-	HttpRequest::t_parseMap callback;
 	std::string buf = req;
 	std::string key;
 	std::string value;
 	std::string line;
 	std::string::size_type pos = 0;
-	t_status err;
 
 	for (line = buf.substr(0, buf.find("\r\n")); line != ""; line = buf.substr(0, buf.find("\r\n")))
 	{
@@ -47,16 +45,14 @@ t_status	HttpRequest::_parseHeaders(const std::string &req)
 		key = line.substr(0, pos);
 		LOWERCASE(key);
 		value = line.substr(pos + 2, line.length());
-		try{
-			callback = _parseMap.at(key);
-			err = (this->*callback)(value);
-			if (err != STATUS_OK)
-				return (err);
-		}
-		catch (std::exception &e)
+		if (_header.find(key) == _header.end())
 		{
-			std::cerr << WARN << "[HttpRequest::_parseHeaders] Received Invalid Header: " << key << RESET << std::endl;
+			std::cerr << WARN << "[HttpRequest::_parseHeaders] Header " << key << " does not exist" << std::endl;
+			continue ;
 		}
+		_header[key] = value;
+		if (buf.find("\r\n") == std::string::npos)
+			break;
 	}
 	return (STATUS_OK);
 }

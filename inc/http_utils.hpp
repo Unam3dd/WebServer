@@ -19,7 +19,7 @@
 #define VERSION "0.7.0"
 #define MAX_EVENT 16
 
-#define FOREACH_VECTOR(type, variable) for(std::vector<type>::iterator it = variable.begin(); it != variable.end(); it++)
+#define FOREACH_VECTOR(type, variable, it) for(std::vector<type>::iterator it = variable.begin(); it != variable.end(); it++)
 #define IS_BAD_IP(x) (check_format_ip(x) == false)
 #define IPV4_BYTES_LEN 0x4
 #define IPV4_BITS_LEN 0x20
@@ -40,6 +40,14 @@
 
 typedef unsigned int	timeout_t;
 typedef unsigned int	maxpost_size_t;
+
+//////////////////////////////////
+//
+//		   SINGLETONS
+//
+/////////////////////////////////
+class WebServer;
+WebServer *SG_WebServer(const WebServer* ws);
 
 //////////////////////////////////
 //
@@ -79,6 +87,7 @@ enum t_errcode {
 	ERRPARSE_NOSRVNAME,
 	ERRPARSE_NOPORT
 };
+typedef std::map<t_errcode, std::string> errcodestr_t;
 
 enum t_status
 {
@@ -160,13 +169,6 @@ struct redirect_t
 	int				code;
 };
 
-//////////////////////////////////
-///
-///	       MAPS
-///
-/////////////////////////////////
-
-typedef std::map<t_errcode, std::string> errcodestr_t;
 /*
  * @brief Check format of Ipv4 address
  *

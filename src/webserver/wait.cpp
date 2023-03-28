@@ -1,11 +1,14 @@
 #include "http_request.hpp"
 #include "http_utils.hpp"
 #include "http_colors.hpp"
+#include "http_response.hpp"
 #include "webserver.hpp"
+#include <streambuf>
 #include <sys/epoll.h>
 #include <unistd.h>
 #include <iostream>
 #include <cstring>
+#include <fstream>
 
 t_status	WebServer::_acceptClient(ev_t *e)
 {
@@ -14,7 +17,7 @@ t_status	WebServer::_acceptClient(ev_t *e)
 
 	if (!e) return (STATUS_FAIL);
 
-	FOREACH_VECTOR(HttpServer*, this->_srv){
+	FOREACH_VECTOR(HttpServer*, this->_srv, it){
 		if (e->data.fd == (*it)->getSocket().Getfd()) {
 			client = (*it)->getSocket().Accept();
 			if (client) {
@@ -53,11 +56,14 @@ t_status	WebServer::_waitSrvs(void)
 			if (::read(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), buf, sizeof(buf)) < 0)
 				return (STATUS_FAIL);
 
-			HttpRequest req(buf);
-			if (DEBUG)
-				std::cout << DBG << "[WebServer::Wait] Received request: " << std::endl << req << std::endl;
+			HttpRequest req(buf, static_cast<Socket*>(evs[i].data.ptr)->Ntohs(static_cast<Socket*>(evs[i].data.ptr)->GetSin()->sin_port));
+			HttpResponse res(req);
 
-			write(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), "hello world\n", 12);
+
+			if (DEBUG)
+				std::cout << DBG << "[WebServer::Wait] Received and parsed request: " << std::endl << req << std::endl;
+
+			write(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), res.getResponse().c_str(), res.getResponse().size());
 
 			::close(static_cast<Socket*>(evs[i].data.ptr)->Getfd());
 			_epoll.Ctl(EPOLL_CTL_DEL, static_cast<Socket*>(evs[i].data.ptr)->Getfd(), NULL);
