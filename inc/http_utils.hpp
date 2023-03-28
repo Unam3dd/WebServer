@@ -19,7 +19,7 @@
 #define VERSION "0.7.0"
 #define MAX_EVENT 16
 
-#define FOREACH_VECTOR(type, variable, it) for(std::vector<type>::iterator it = variable.begin(); it != variable.end(); it++)
+#define FOREACH_VECTOR(type, variable, it) for(std::vector<type>::iterator it = variable.begin(); it < variable.end(); it++)
 #define IS_BAD_IP(x) (check_format_ip(x) == false)
 #define IPV4_BYTES_LEN 0x4
 #define IPV4_BITS_LEN 0x20

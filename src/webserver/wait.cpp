@@ -74,16 +74,12 @@ t_status	WebServer::_waitSrvs(void)
 				std::cout << DBG << "[WebServer::_wait] _clients.size(): " << _clients.size() << std::endl;
 			FOREACH_VECTOR(Socket*, _clients, it){
 				if (*it == evs[i].data.ptr) _clients.erase(it);
-				if (_clients.empty()) break;
 			}
 			delete static_cast<Socket*>(evs[i].data.ptr);
 		}
 	}
 
-	FOREACH_VECTOR(Socket*, _clients, it) {
-		_clients.erase(it);
-		if (_clients.empty()) break ;
-	}
+	FOREACH_VECTOR(Socket*, _clients, it) _clients.erase(it);
 
 	return (STATUS_OK);
 }
