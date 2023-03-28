@@ -40,7 +40,9 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 {
 	_srvcfg = _getSrvConfig(_request.getHeaders().at("host"), _request.getPort());
 	_reqcfg = _getReqConfig(_srvcfg, _request.getUri());
-	_status = 200;
+	_status = HTTP_OK;
+
+	this->writeResponse("HTTP/1.1 200 OK\r\nContent-Length: 5\r\n\r\nhello\r\n");
 
 	if (DEBUG)
 	{

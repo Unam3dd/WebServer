@@ -3,7 +3,7 @@
 #include "http_colors.hpp"
 #include <iostream>
 
-const char**	get_http_headers()
+const char**	get_http_headers(void)
 {
 	static const char* http_headers[] = {
 		"accept",

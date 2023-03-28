@@ -4,13 +4,20 @@
 #include "http_request.hpp"
 #include "http_request_config.hpp"
 #include "http_config.hpp"
+#include "http_utils.hpp"
+#include <map>
 
 class HttpResponse{
 	public:
 		HttpResponse(const HttpRequest &req);
 		~HttpResponse(void);
 
+		inline http_status_code_t	getStatusCode(void) const { return (_status); }
+		inline const std::string&	getVersion(void) const { return (_version); }
+		inline const std::string&	getBody(void) const { return (_body); }
 		inline const std::string&	getResponse(void) const { return _fullresponse; }
+		size_t						writeResponse(const std::string& str);
+
 
 	private:
 		/*
@@ -19,9 +26,10 @@ class HttpResponse{
 		HttpRequest			_request;
 		HttpServerConfig*	_srvcfg;
 		HttpRequestConfig*	_reqcfg;
+		http_status_code_t	_status;
+		std::string			_version;
 		std::string			_body;
 		std::string			_fullresponse;
-		int					_status;
 
 		/*
 		 * private methods
