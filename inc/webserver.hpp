@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/03/26 18:32:37 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/28 14:15:18 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ class WebServer: public File
 		friend std::ostream				&operator<<(std::ostream& os, const WebServer& ws);
 
 		inline const errcodestr_t&					GetErrorStrs(void) const { return (this->_error); }
+		inline bool									GetRun(void) const { return (this->_run); }
+		inline void									SetRun(bool value) { this->_run = value; }
 	
 	private:
 		/*
@@ -52,12 +54,14 @@ class WebServer: public File
 		 */
 		std::vector<HttpServerConfig*>	_configs;
 		std::vector<HttpServer*>		_srv;
+		std::vector<Socket*>			_clients;
 		Epoll							_epoll;
 		errcodestr_t					_error;
 		size_t							_nserv;
 		int								_line;
 		bool							_srvBlk;
 		bool							_locBlk;
+		bool							_run;
 	
 		/*
 		 * 	Private methods

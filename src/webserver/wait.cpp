@@ -3,6 +3,7 @@
 #include "http_colors.hpp"
 #include "http_response.hpp"
 #include "webserver.hpp"
+#include <signals.hpp>
 #include <streambuf>
 #include <sys/epoll.h>
 #include <unistd.h>
@@ -26,6 +27,7 @@ t_status	WebServer::_acceptClient(ev_t *e)
 				tev.events = EPOLLIN;
 				this->_epoll.Ctl(EPOLL_CTL_ADD, client->Getfd(), &tev);
 				std::cout << SUCCESS << "[WebServer::Wait] New client Accepted ! " << client->InetNtoa(client->GetSin()->sin_addr.s_addr) << ":" << client->Ntohs(client->GetSin()->sin_port) << std::endl;
+				_clients.push_back(client);
 				return (STATUS_OK);
 			}
 		}
@@ -42,8 +44,10 @@ t_status	WebServer::_waitSrvs(void)
 	int i = 0;
 
 	// TODO: Setup Signals
+	sig_setup();
+	this->_run = 1;
 
-	while (1)
+	while (_run)
 	{
 		nfds = _epoll.Wait(evs, MAX_EVENT, -1);
 
@@ -59,7 +63,6 @@ t_status	WebServer::_waitSrvs(void)
 			HttpRequest req(buf, static_cast<Socket*>(evs[i].data.ptr)->Ntohs(static_cast<Socket*>(evs[i].data.ptr)->GetSin()->sin_port));
 			HttpResponse res(req);
 
-
 			if (DEBUG)
 				std::cout << DBG << "[WebServer::Wait] Received and parsed request: " << std::endl << req << std::endl;
 
@@ -67,8 +70,19 @@ t_status	WebServer::_waitSrvs(void)
 
 			::close(static_cast<Socket*>(evs[i].data.ptr)->Getfd());
 			_epoll.Ctl(EPOLL_CTL_DEL, static_cast<Socket*>(evs[i].data.ptr)->Getfd(), NULL);
+			if (DEBUG)
+				std::cout << DBG << "[WebServer::_wait] _clients.size(): " << _clients.size() << std::endl;
+			FOREACH_VECTOR(Socket*, _clients, it){
+				if (*it == evs[i].data.ptr) _clients.erase(it);
+				if (_clients.empty()) break;
+			}
 			delete static_cast<Socket*>(evs[i].data.ptr);
 		}
+	}
+
+	FOREACH_VECTOR(Socket*, _clients, it) {
+		_clients.erase(it);
+		if (_clients.empty()) break ;
 	}
 
 	return (STATUS_OK);
