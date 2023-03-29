@@ -6,15 +6,13 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 16:59:57 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/22 14:05:47 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/29 17:45:23 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http_request_config.hpp"
 #include "http_colors.hpp"
 #include "http_utils.hpp"
-#include "utils.hpp"
-#include "webserver.hpp"
 #include <cstdlib>
 #include <iostream>
 #include <algorithm>

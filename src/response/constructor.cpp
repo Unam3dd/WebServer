@@ -30,7 +30,7 @@ HttpRequestConfig* HttpResponse::_getReqConfig(const HttpServerConfig* cfg, cons
 	std::vector<HttpRequestConfig*> reqs = cfg->GetRequestConfigs();
 
 	FOREACH_VECTOR(HttpRequestConfig*, reqs, req){
-		if (uri.find((*req)->GetScope()) == 0)
+		if (uri.substr(0, (*req)->GetScope().length()) == (*req)->GetScope())
 			return (*req);
 	}
 	return NULL;
@@ -51,6 +51,6 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		std::cout << DBG << "[HttpResponse::HttpResponse()] Uri: " << _request.getUri() << std::endl;
 		std::cout << DBG << "[HttpResponse::HttpResponse()] Server config chosen: "; PRINT_VECTOR_STR(_srvcfg->GetServerNames(), std::cout); std::cout << std::endl;
 		std::cout << DBG << "[HttpResponse::HttpResponse()] Request config chosen: ";
-		_reqcfg == 0 ? std::cout << "none" : std::cout << *_reqcfg; std::cout << std::endl;
+		_reqcfg == NULL ? std::cout << "none" : std::cout << _reqcfg->GetScope(); std::cout << std::endl;
 	}
 }

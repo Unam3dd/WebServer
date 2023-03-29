@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:16:47 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/21 00:13:11 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/29 17:46:34 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	WebServer::_initNewSrvBlk()
 t_errcode	WebServer::_initNewLocBlk(const std::string& line)
 {
 	HttpServerConfig* srv = this->_configs.at(this->_nserv - 1);
-	std::string scope = line.substr(8, line.find_first_of("{") - 8);
+	std::string scope = line.substr(9, line.find_first_of("{") - 9);
 	
 	if (DEBUG)
 		std::cout << DBG << "[WebServer::_initNewLocBlk] scope: " << scope << std::endl;
