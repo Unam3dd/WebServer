@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 17:51:04 by stales            #+#    #+#             */
-/*   Updated: 2023/03/03 11:40:40 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/29 17:15:59 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,9 @@ class	Socket
 		 * @Note	Beta function maybe change later
 		 */
 		inline void		Setfd(int fd) { this->_fd = fd; }
+
+		inline port_t	GetSrvPort(void) const { return (_srvport); }
+		inline void 	SetSrvPort(port_t port) { _srvport = port; }
 
 		/*
 		 * @brief Copy Socket information in a new Socket Object
@@ -287,6 +290,7 @@ class	Socket
 		std::string			to_string(const T & value) { std::ostringstream oss; oss << value; return (oss.str()); }
 		sin_t				_s;
 		int					_fd;
+		port_t				_srvport;
 		bool				_iscreated;
 		bool				_isconnected;
 		bool				_isonlistening;

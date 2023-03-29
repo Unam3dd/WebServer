@@ -1,4 +1,5 @@
 #include "http_request.hpp"
+#include "http_server.hpp"
 #include "http_utils.hpp"
 #include "http_colors.hpp"
 #include "http_response.hpp"
@@ -24,6 +25,7 @@ t_status	WebServer::_acceptClient(ev_t *e)
 			if (client) {
 				(*it)->getClients().push_back(client);
 				tev.data.ptr = client;
+				client->SetSrvPort((*it)->getPort());
 				tev.events = EPOLLIN;
 				this->_epoll.Ctl(EPOLL_CTL_ADD, client->Getfd(), &tev);
 				std::cout << SUCCESS << "[WebServer::Wait] New client Accepted ! " << client->InetNtoa(client->GetSin()->sin_addr.s_addr) << ":" << client->Ntohs(client->GetSin()->sin_port) << std::endl;
@@ -60,7 +62,7 @@ t_status	WebServer::_waitSrvs(void)
 			if (::read(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), buf, sizeof(buf)) < 0)
 				return (STATUS_FAIL);
 
-			HttpRequest req(buf, static_cast<Socket*>(evs[i].data.ptr)->Ntohs(static_cast<Socket*>(evs[i].data.ptr)->GetSin()->sin_port));
+			HttpRequest req(buf, static_cast<Socket*>(evs[i].data.ptr)->GetSrvPort());
 			HttpResponse res(req);
 
 			if (DEBUG)
