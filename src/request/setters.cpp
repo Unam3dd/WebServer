@@ -2,17 +2,14 @@
 
 void HttpRequest::setMethod(const std::string& method)
 {
-	methods_t m = getMethod();
-
 	if (method == "GET")
-		m = GET;
+		_method = GET;
 	else if (method == "POST")
-		m = POST;
+		_method = POST;
 	else if (method == "PUT")
-		m = PUT;
+		_method = PUT;
 	else if (method == "DELETE")
-		m = DELETE;
-	_method = m;
+		_method = DELETE;
 }
 
 void HttpRequest::setUri(const std::string& uri)
