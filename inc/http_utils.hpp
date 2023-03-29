@@ -16,7 +16,7 @@
 #ifndef DEBUG
 # define DEBUG 0
 #endif
-#define VERSION "0.7.0"
+#define VERSION "0.8.5"
 #define MAX_EVENT 16
 
 #define FOREACH_VECTOR(type, variable, it) for(std::vector<type>::iterator it = variable.begin(); it < variable.end(); it++)

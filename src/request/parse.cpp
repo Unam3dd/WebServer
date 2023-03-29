@@ -50,7 +50,10 @@ t_status	HttpRequest::_parseHeaders(const std::string &req)
 			std::cerr << WARN << "[HttpRequest::_parseHeaders] Header " << key << " does not exist" << std::endl;
 			continue ;
 		}
-		_header[key] = value;
+		if (key == "host")
+			_header[key] = value.substr(0, value.find(":"));
+		else
+			_header[key] = value;
 		if (buf.find("\r\n") == std::string::npos)
 			break;
 	}
