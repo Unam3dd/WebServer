@@ -4,7 +4,9 @@
 #include "http_request.hpp"
 #include "http_request_config.hpp"
 #include "http_config.hpp"
+#include "http_status.hpp"
 #include "http_utils.hpp"
+#include "utils.hpp"
 #include <map>
 
 class HttpResponse{
@@ -13,6 +15,8 @@ class HttpResponse{
 		~HttpResponse(void);
 
 		inline http_status_code_t	getStatusCode(void) const { return (_status); }
+		inline const std::string	getStatusCodeStr(http_status_code_t	s) const { return (NumberToString(s)); }
+		inline const std::string	getStatusCodeStr(void) const { return (NumberToString(_status)); }
 		inline const std::string&	getVersion(void) const { return (_version); }
 		inline const std::string&	getBody(void) const { return (_body); }
 		inline const std::string&	getResponse(void) const { return _fullresponse; }

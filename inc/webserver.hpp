@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/03/28 14:15:18 by stales           ###   ########.fr       */
+/*   Updated: 2023/03/29 15:21:49 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,16 @@ class WebServer: public File
 		WebServer	&operator=(const WebServer& ws);
 		~WebServer(void);
 
-		t_errcode						Parse(void);
-		t_status						Run(void);
+		t_errcode								Parse(void);
+		t_status								Run(void);
 
-		inline size_t					GetNumberOfServers(void) const { return (this->_nserv);}
-		inline std::vector < HttpServerConfig* >	GetServers(void) const { return (this->_configs); }
-		friend std::ostream				&operator<<(std::ostream& os, const WebServer& ws);
+		inline size_t							GetNumberOfServers(void) const { return (this->_nserv);}
+		inline std::vector <HttpServerConfig*>	GetServers(void) const { return (this->_configs); }
+		friend std::ostream						&operator<<(std::ostream& os, const WebServer& ws);
 
-		inline const errcodestr_t&					GetErrorStrs(void) const { return (this->_error); }
-		inline bool									GetRun(void) const { return (this->_run); }
-		inline void									SetRun(bool value) { this->_run = value; }
+		inline const errcodestr_t&				GetErrorStrs(void) const { return (this->_error); }
+		inline bool								GetRun(void) const { return (this->_run); }
+		inline void								SetRun(bool value) { this->_run = value; }
 	
 	private:
 		/*
