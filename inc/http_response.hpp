@@ -31,6 +31,7 @@ class HttpResponse{
 		HttpServerConfig*	_srvcfg;
 		HttpRequestConfig*	_reqcfg;
 		http_status_code_t	_status;
+		std::string			_contenttype;
 		std::string			_version;
 		std::string			_body;
 		std::string			_fullresponse;
@@ -40,6 +41,7 @@ class HttpResponse{
 		 */
 		HttpServerConfig*	_getSrvConfig(const std::string& host, port_t port);
 		HttpRequestConfig*	_getReqConfig(const HttpServerConfig* cfg, const std::string& uri);
+		void				_generateResponse(void);
 };
 
 #endif

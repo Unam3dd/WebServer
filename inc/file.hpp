@@ -6,16 +6,18 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:13:34 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/04 21:38:15 by sam0verfl0w      ###   ########.fr       */
+/*   Updated: 2023/03/29 18:43:38 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+#include "http_status.hpp"
 #ifndef FILE_HPP
 #define FILE_HPP
 
 typedef unsigned long long file_size_t;
 
+#include "directory.hpp"
 #include <string>
 #include <fcntl.h>
 
@@ -58,7 +60,17 @@ class File
 		 * @return true if file was opened successfully otherwise is an error
 		 */
 		bool		open(const char *filename, int flags, mode_t mode);
-		
+
+		/*
+		 * @brief open file and reading methods
+		 *
+		 * @param filename: const char *	File to open
+		 * @param mode:		unsigned int	S_IRUSR
+		 *
+		 * @return HTTP_STATUS_OK if file or directory was opened successfully otherwise is an error
+		 */
+		http_status_code_t open(const char *filename, mode_t mode);
+
 		// @brief Read Methods, read from fd and write it on heap memory area pointed by _data
 		file_size_t	read(void);
 
@@ -76,6 +88,9 @@ class File
 		file_size_t			size(void) const;
 
 	private:
+		// @brief Directory object, used in case the path is a directory
+		Directory	*_dir;
+
 		// @brief pointer to heap zone memory, which represent file data
 		char		*_data;
 

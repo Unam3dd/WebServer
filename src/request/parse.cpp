@@ -21,8 +21,6 @@ t_status HttpRequest::_parseRequestLine(const std::string &reqline)
 	setUri(uri);
 
 	line = line.substr(line.find(" ") + 1, line.length() - line.find(" "));
-	if (line != "HTTP/1.0" && line != "HTTP/1.1")
-		return (STATUS_FAIL);
 	setVersion(line);
 	
 	return (STATUS_OK);
