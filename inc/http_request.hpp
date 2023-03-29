@@ -5,7 +5,7 @@
 #include <string>
 #include <map>
 #include "http_utils.hpp"
-#include "libsocket/socket.hpp"
+#include "socket.hpp"
 
 class HttpRequest
 {
@@ -41,6 +41,8 @@ class HttpRequest
 
 
 };
+
+const char	**get_http_headers(void);
 
 
 #endif
