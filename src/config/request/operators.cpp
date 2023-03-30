@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 22:03:40 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/20 05:42:59 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/29 21:30:13 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ std::ostream	&operator<<(std::ostream& os, HttpRequestConfig& sc)
 	os << "\t\t\tUpload: " << sc.GetUploads() << std::endl;
 	os << "\t\t\tUploaddir: " << sc.GetUploadDir() << std::endl;
 	os << "\t\t\tSessionPath: " << sc.GetSessionPath() << std::endl;
-	os << "\t\t\tTimeout: " << sc.GetServerTimeout() << std::endl;
 	os << "\t\t\tMaxPostSize: " << sc.GetMaxPostSize() << std::endl;
 	os << "\t\t\tCookies: " << sc.GetCookies() << std::endl;
 	os << "\t\t\tMethods: "; sc.GetMethods() & GET ? os << "GET " : os; sc.GetMethods() & POST ? os << "POST " : os; sc.GetMethods() & PUT ? os << "PUT " : os; sc.GetMethods() & DELETE ? os << "DELETE " : os; os << std::endl;

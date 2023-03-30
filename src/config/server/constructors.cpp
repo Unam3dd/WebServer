@@ -6,11 +6,10 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:48:26 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 05:21:56 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/29 21:18:18 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "file.hpp"
 #include "http_config.hpp"
 
 HttpServerConfig::HttpServerConfig(void)
@@ -22,7 +21,6 @@ HttpServerConfig::HttpServerConfig(void)
 	_parseMap["errpage"] = &HttpServerConfig::SetErrorPages;
 	_parseMap["docroot"] = &HttpServerConfig::SetRoot;
 	_parseMap["session_path"] = &HttpServerConfig::SetSessionPath;
-	_parseMap["timeout"] = &HttpServerConfig::SetServerTimeout;
 	_parseMap["max_post_size"] = &HttpServerConfig::SetMaxPostSize;
 	_parseMap["cookies"] = &HttpServerConfig::SetCookies;
 	_parseMap["uploads"] = &HttpServerConfig::SetUploads;
@@ -35,7 +33,6 @@ HttpServerConfig::HttpServerConfig(void)
 	_methods = static_cast<methods_t>(GET | POST | PUT | DELETE);
 	_max_size_post = 1000000;
 	_sessionpath = "/tmp";
-	_timeout = 300;
 	_cookies = true;
 	_uploads = true;
 	_uploaddir = "/tmp";

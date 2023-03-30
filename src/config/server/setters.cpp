@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 18:57:36 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/22 14:05:34 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/29 21:19:21 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,18 +163,6 @@ t_errcode	HttpServerConfig::SetSessionPath(const std::vector<std::string> &sessi
 		this->_sessionpath += '/';
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetSessionPath] session path set to: " << this->GetSessionPath() << std::endl;
-	return (ERRPARSE_OK);
-}
-
-t_errcode	HttpServerConfig::SetServerTimeout(const std::vector<std::string> &sessiontimeout)
-{
-	if (DEBUG)
-		std::cout << DBG << "[HttpServerConfig::SetServerTimeout] setting session timeout" << std::endl;
-	if (std::atof(sessiontimeout.at(1).c_str()) < 0 || std::atof(sessiontimeout.at(1).c_str()) > 3600)
-		return (ERRPARSE_TIMEOUT);
-	this->_timeout = std::atof(sessiontimeout.at(1).c_str());
-	if (DEBUG)
-		std::cout << DBG << "[HttpServerConfig::SetServerTimeout] session timeout set to: " << this->GetServerTimeout() << std::endl;
 	return (ERRPARSE_OK);
 }
 

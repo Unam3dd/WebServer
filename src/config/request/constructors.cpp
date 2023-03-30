@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 19:09:58 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 05:44:07 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/29 21:18:23 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ HttpRequestConfig::HttpRequestConfig(const std::string& scope): _scope(scope){
 	_parseMap["errpage"] = &HttpRequestConfig::SetErrorPages;
 	_parseMap["docroot"] = &HttpRequestConfig::SetRoot;
 	_parseMap["session_path"] = &HttpRequestConfig::SetSessionPath;
-	_parseMap["timeout"] = &HttpRequestConfig::SetServerTimeout;
 	_parseMap["max_post_size"] = &HttpRequestConfig::SetMaxPostSize;
 	_parseMap["cookies"] = &HttpRequestConfig::SetCookies;
 	_parseMap["uploads"] = &HttpRequestConfig::SetUploads;
@@ -32,7 +31,6 @@ HttpRequestConfig::HttpRequestConfig(const std::string& scope): _scope(scope){
 	_methods = static_cast<methods_t>(GET | POST | PUT | DELETE);
 	_max_size_post = 1000000;
 	_sessionpath = "/tmp";
-	_timeout = 300;
 	_cookies = true;
 	_uploads = true;
 	_uploaddir = "/tmp";

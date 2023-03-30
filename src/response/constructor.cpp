@@ -62,8 +62,20 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 	_status = HTTP_STATUS_OK;
 	_contenttype = "";
 
-	if (_request.getVersion() != "HTTP/1.1"){
+	methods_t methods;
+	_reqcfg ? methods = _reqcfg->GetMethods() : methods = _srvcfg->GetMethods();
+	if (_request.getVersion() != "HTTP/1.0" && _request.getVersion() != "HTTP/1.1"){
 		_status = HTTP_STATUS_VERSION_NOT_SUPPORTED;
+		this->_contenttype = "";
+		this->_generateResponse();
+		return ;
+	}
+	if ((_request.getMethod() & GET && !(methods & GET)) ||
+		(_request.getMethod() & POST && !(methods & POST)) ||
+		(_request.getMethod() & PUT && !(methods & PUT)) ||
+		(_request.getMethod() & DELETE && !(methods & DELETE)))
+	{
+		_status = HTTP_STATUS_METHOD_NOT_ALLOWED;
 		this->_contenttype = "";
 		this->_generateResponse();
 		return ;
@@ -76,5 +88,6 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		std::cout << DBG << "[HttpResponse::HttpResponse()] Server config chosen: "; PRINT_VECTOR_STR(_srvcfg->GetServerNames(), std::cout); std::cout << std::endl;
 		std::cout << DBG << "[HttpResponse::HttpResponse()] Request config chosen: ";
 		_reqcfg == NULL ? std::cout << "none" : std::cout << _reqcfg->GetScope(); std::cout << std::endl;
+		std::cout << DBG << "[HttpResponse::HttpResponse()] Full response: " << std::endl << _fullresponse << std::endl;
 	}
 }

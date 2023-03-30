@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 17:17:45 by stales            #+#    #+#             */
-/*   Updated: 2023/03/20 17:34:58 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/29 21:18:43 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ class HttpRequestConfig{
 		inline const std::string&						GetSessionPath(void) const { return (this->_sessionpath); }
 		inline const std::string&						GetScope(void) const { return (this->_scope); }
 		inline const std::string&						GetUploadDir(void) const { return (this->_uploaddir); }
-		inline timeout_t								GetServerTimeout(void) const { return (this->_timeout); }
 		inline methods_t								GetMethods(void) const { return (this->_methods); }
 		inline maxpost_size_t							GetMaxPostSize(void) const { return (this->_max_size_post); }
 		inline bool										GetCookies(void) const { return (this->_cookies); }
@@ -50,7 +49,6 @@ class HttpRequestConfig{
 		t_errcode										SetErrorPages(const std::vector<std::string>& errpages);
 		t_errcode										SetRoot(const std::vector<std::string>& root);
 		t_errcode										SetSessionPath(const std::vector<std::string>& sessionpath);
-		t_errcode										SetServerTimeout(const std::vector<std::string>& timeout);
 		t_errcode										SetMethods(const std::vector<std::string>& methods);
 		t_errcode										SetMaxPostSize(const std::vector<std::string>& max_size_post);
 		t_errcode										SetCookies(const std::vector<std::string>& cookies);
@@ -72,7 +70,6 @@ class HttpRequestConfig{
 		std::string							_sessionpath;
 		std::string							_uploaddir;
 		methods_t							_methods;
-		timeout_t							_timeout;
 		maxpost_size_t						_max_size_post;
 		int									_response_code;
 		bool								_cookies;
