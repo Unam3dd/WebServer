@@ -41,7 +41,13 @@ class HttpResponse{
 		 */
 		HttpServerConfig*	_getSrvConfig(const std::string& host, port_t port);
 		HttpRequestConfig*	_getReqConfig(const HttpServerConfig* cfg, const std::string& uri);
+		std::string			_getErrorPageContent(http_status_code_t status);
+		std::string			_getContentType(const std::string& uri);
 		void				_generateResponse(void);
+		void				_prepareGetResponse(void);
+		void				_preparePostResponse(void);
+		void				_preparePutResponse(void);
+		void				_prepareDeleteResponse(void);
 };
 
 #endif

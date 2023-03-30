@@ -1,4 +1,5 @@
 #pragma once
+#include "http_status.hpp"
 #ifndef HTTP_UTILS_HPP
 #define HTTP_UTILS_HPP
 
@@ -6,7 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <map>
-
+#include <unistd.h>
 //////////////////////////////////
 //
 //	       DEFINES
@@ -20,7 +21,9 @@
 #define MAX_EVENT 16
 
 #define FOREACH_VECTOR(type, variable, it) for(std::vector<type>::iterator it = variable.begin(); it < variable.end(); it++)
+#define FOREACH_VECTOR_CONST(type, variable, it) for(std::vector<type>::const_iterator it = variable.begin(); it < variable.end(); it++)
 #define IS_BAD_IP(x) (check_format_ip(x) == false)
+#define FILE_EXISTS(x) (File(x, O_RDONLY, S_IRUSR).getFd() > -1)
 #define IPV4_BYTES_LEN 0x4
 #define IPV4_BITS_LEN 0x20
 #define COUNT_SPACES(x) (std::count(x.begin(), x.end(), ' ') + std::count(x.begin(), x.end(), '\t'))
@@ -31,7 +34,6 @@
 #define LOWERCASE(x) std::transform(x.begin(), x.end(), x.begin(), ::tolower);
 #define UPPERCASE(x) std::transform(x.begin(), x.end(), x.begin(), ::toupper);
 #define MAX_ERR_PAGES 0x8
-
 //////////////////////////////////
 //
 //	       TYPEDEFS
@@ -39,14 +41,6 @@
 /////////////////////////////////
 
 typedef unsigned int	maxpost_size_t;
-
-//////////////////////////////////
-//
-//		   SINGLETONS
-//
-/////////////////////////////////
-class WebServer;
-WebServer *SG_WebServer(const WebServer* ws);
 
 //////////////////////////////////
 //
@@ -104,6 +98,17 @@ typedef enum {
 	E501 = 6,
 	E505 = 7
 } errpagecode_t;
+
+//////////////////////////////////
+//
+//		   SINGLETONS
+//
+/////////////////////////////////
+class WebServer;
+WebServer *SG_WebServer(const WebServer* ws);
+
+std::string	SG_GetContentType(std::string& extension);
+std::string	SG_DefaultErrorPages(errpagecode_t status);
 
 //////////////////////////////////
 //
