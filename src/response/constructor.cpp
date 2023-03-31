@@ -99,14 +99,14 @@ std::string	HttpResponse::_getErrorPageContent(http_status_code_t httpstatus){
 			return (SG_DefaultErrorPages(status));
 		}
 	}
-	if (DEBUG)
-		std::cout << DBG << "[_getErrorPageContent] _srvcfg: " << *_srvcfg << std::endl;
 	if (_srvcfg->GetErrorPages()[status].path == "default")
 		return (SG_DefaultErrorPages(status));
 	root = _srvcfg->GetRoot();
 	path = _srvcfg->GetErrorPages()[status].path;
 	fullpath = root + path;
 	if (!FILE_EXISTS(fullpath.c_str())){
+		if (DEBUG)
+			std::cout << DBG << "[_getErrorPageContent] Error page '" << fullpath << "' not found. Returning default error page." << std::endl;
 		return (SG_DefaultErrorPages(status));
 	}
 	struct stat st;
@@ -129,6 +129,7 @@ std::string HttpResponse::_getContentType(const std::string& path){
 }
 
 void	HttpResponse::_prepareGetResponse(){
+	struct stat st;
 	std::string docroot;
 	std::string path;
 	std::string uri = this->_request.getUri();
@@ -140,34 +141,35 @@ void	HttpResponse::_prepareGetResponse(){
 		docroot = _reqcfg->GetRoot();
 	path = docroot + uri;
 
-	if (path == "/" || path.at(path.length() - 1) == '/')
+	if (*path.rbegin() == '/' && FILE_EXISTS((path.substr(0, path.length() - 1).c_str()))){
+		path = path.substr(0, path.length() - 1);
+		isdir = false;
+	}
+	else if (FILE_EXISTS(path.c_str()))
+		isdir = false;
+	else if (_reqcfg && _reqcfg->GetIndexs().size() > 0)
 	{
-		if (_reqcfg && _reqcfg->GetIndexs().size() > 0)
-		{
-			FOREACH_VECTOR_CONST(std::string, _reqcfg->GetIndexs(), index){
-				if (FILE_EXISTS((path + *index).c_str()))
-				{
-					path += *index;
-					isdir = false;
-					break;
-				}
-			}
-		}
-		else if (_srvcfg->GetIndexs().size() > 0)
-		{
-			FOREACH_VECTOR_CONST(std::string, _srvcfg->GetIndexs(), index){
-				if (FILE_EXISTS((path + *index).c_str()))
-				{
-					path += *index;
-					isdir = false;
-					break;
-				}
+		FOREACH_VECTOR_CONST(std::string, _reqcfg->GetIndexs(), index){
+			if (FILE_EXISTS((path + *index).c_str()))
+			{
+				path += *index;
+				isdir = false;
+				break;
 			}
 		}
 	}
-	else
-		isdir = false;
-	std::cout << "path: " << path << std::endl;
+	else if (_srvcfg->GetIndexs().size() > 0)
+	{
+		FOREACH_VECTOR_CONST(std::string, _srvcfg->GetIndexs(), index){
+			if (FILE_EXISTS((path + *index).c_str()))
+			{
+				path += *index;
+				isdir = false;
+				break;
+			}
+		}
+	}
+
 	if (!isdir){
 		if (DEBUG)
 		{
@@ -175,7 +177,6 @@ void	HttpResponse::_prepareGetResponse(){
 			std::cout << DBG << "[_prepareGetResponse] path: " << path << std::endl;
 			std::cout << DBG << "[_prepareGetResponse] docroot: " << docroot << std::endl;
 		}
-		struct stat st;
 		if (stat(path.c_str(), &st) < 0)
 		{
 			this->_status = HTTP_STATUS_NOT_FOUND;
@@ -183,26 +184,44 @@ void	HttpResponse::_prepareGetResponse(){
 			this->_contenttype = "text/html";
 			return;
 		}
-		if (st.st_mode & S_IRUSR)
-		{
-			File content(path.c_str(), O_RDONLY, S_IRUSR);
-
-			this->_status = HTTP_STATUS_OK;
-			this->_body = content.getData();
-			this->_contenttype = this->_getContentType(path);
-		}
-		else
+		if (!(st.st_mode & S_IRUSR))
 		{
 			this->_status = HTTP_STATUS_FORBIDDEN;
 			this->_body = this->_getErrorPageContent(this->_status);
 			this->_contenttype = "text/html";
+			return;
 		}
+		File content(path.c_str(), O_RDONLY, S_IRUSR);
+		this->_status = HTTP_STATUS_OK;
+		this->_body = content.getData();
+		this->_contenttype = this->_getContentType(path);
 	}
 	else{
 		if (DEBUG)
-		{
 			std::cout << DBG << "[_prepareGetResponse] request: "<< path << " is a directory" << std::endl;
+		if ((_reqcfg && !_reqcfg->GetDirList()) || (!_reqcfg && !_srvcfg->GetDirList()))
+		{
+			this->_status = HTTP_STATUS_FORBIDDEN;
+			this->_body = this->_getErrorPageContent(this->_status);
+			this->_contenttype = "text/html";
+			return;
 		}
+		if (stat(path.c_str(), &st) < 0)
+		{
+			this->_status = HTTP_STATUS_NOT_FOUND;
+			this->_body = this->_getErrorPageContent(this->_status);
+			this->_contenttype = "text/html";
+			return;
+		}
+		Directory dir(path.c_str());
+		std::vector<std::string> files = dir.getFiles();
+		this->_status = HTTP_STATUS_OK;
+		this->_body = "<html><head><title>Index of " + uri + "</title></head><body><h1>Index of " + uri + "</h1><hr><pre>";
+		FOREACH_VECTOR_CONST(std::string, files, file){
+			this->_body += "<a href=\"" + uri + *file + "/\">" + *file + "/</a><br>";
+		}
+		this->_body += "</pre><hr></body></html>";
+		this->_contenttype = "text/html";
 	}
 }
 
@@ -217,44 +236,50 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 	_reqcfg ? methods = _reqcfg->GetMethods() : methods = _srvcfg->GetMethods();
 	if (_request.getVersion() != "HTTP/1.0" && _request.getVersion() != "HTTP/1.1"){
 		_status = HTTP_STATUS_VERSION_NOT_SUPPORTED;
-		this->_contenttype = "";
+		this->_contenttype = "text/html";
+		this->_body = this->_getErrorPageContent(this->_status);
 		this->_generateResponse();
+		if (DEBUG)
+			std::cout << DBG << "[HttpResponse] HTTP version '" << _request.getVersion() << "'not supported" << std::endl;
 		return ;
 	}
 	if ((_request.getMethod() & GET && !(methods & GET)) ||
-		(_request.getMethod() & POST && !(methods & POST)) ||
-		(_request.getMethod() & PUT && !(methods & PUT)) ||
-		(_request.getMethod() & DELETE && !(methods & DELETE)))
+			(_request.getMethod() & POST && !(methods & POST)) ||
+			(_request.getMethod() & PUT && !(methods & PUT)) ||
+			(_request.getMethod() & DELETE && !(methods & DELETE)))
 	{
 		_status = HTTP_STATUS_METHOD_NOT_ALLOWED;
-		this->_contenttype = "";
+		this->_contenttype = "text/html";
+		this->_body = this->_getErrorPageContent(this->_status);
 		this->_generateResponse();
+		if (DEBUG)
+			std::cout << DBG << "[HttpResponse] Method '" << STR_METHOD(_request.getMethod()) << "'not allowed" << std::endl;
 		return ;
 	}
-	
+
 	if (_request.getMethod() & GET){
 		this->_prepareGetResponse();
 		this->_generateResponse();
 	}
 	/*
-	if (_request.getMethod() & POST){
-		this->_preparePostResponse();
-		this->_generateResponse();
-		return ;
-	}
+	   if (_request.getMethod() & POST){
+	   this->_preparePostResponse();
+	   this->_generateResponse();
+	   return ;
+	   }
 
-	if (_request.getMethod() & PUT){
-		this->_preparePutResponse();
-		this->_generateResponse();
-		return ;
-	}
+	   if (_request.getMethod() & PUT){
+	   this->_preparePutResponse();
+	   this->_generateResponse();
+	   return ;
+	   }
 
-	if (_request.getMethod() & DELETE){
-		this->_prepareDeleteResponse();
-		this->_generateResponse();
-		return ;
-	}
-	*/
+	   if (_request.getMethod() & DELETE){
+	   this->_prepareDeleteResponse();
+	   this->_generateResponse();
+	   return ;
+	   }
+	   */
 	if (DEBUG)
 	{
 		std::cout << DBG << "[HttpResponse::HttpResponse()] Host: " << _request.getHeaders().at("host") << std::endl;

@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:32:27 by stales            #+#    #+#             */
-/*   Updated: 2023/03/30 19:30:14 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/03/31 05:34:11 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,5 +146,5 @@ std::string	SG_GetContentType(std::string& extension){
 		return ("text/csv");
 	if (extension == "ics")
 		return ("text/calendar");
-	return ("application/octet-stream");
+	return ("text/html");
 }

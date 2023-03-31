@@ -33,6 +33,7 @@
 #define PRINT_MAP_STR(x, y) for (std::map<std::string, std::string>::iterator it = x.begin(); it != x.end(); ++it) y << it->first << " -> " << it->second << " ";
 #define LOWERCASE(x) std::transform(x.begin(), x.end(), x.begin(), ::tolower);
 #define UPPERCASE(x) std::transform(x.begin(), x.end(), x.begin(), ::toupper);
+#define STR_METHOD(x) (x == GET ? "GET" : x == POST ? "POST" : x == PUT ? "PUT" : x == DELETE ? "DELETE" : "UNKNOWN")
 #define MAX_ERR_PAGES 0x8
 //////////////////////////////////
 //
