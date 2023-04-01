@@ -193,8 +193,8 @@ void	HttpResponse::_prepareGetResponse(){
 		}
 		File content(path.c_str(), O_RDONLY, S_IRUSR);
 		this->_status = HTTP_STATUS_OK;
-		this->_body = content.getData();
 		this->_contenttype = this->_getContentType(path);
+		APPEND_FILE_TO_STRING(this->_body, content);
 	}
 	else{
 		if (DEBUG)
