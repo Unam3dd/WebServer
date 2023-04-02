@@ -218,7 +218,11 @@ void	HttpResponse::_prepareGetResponse(){
 		this->_status = HTTP_STATUS_OK;
 		this->_body = "<html><head><title>Index of " + uri + "</title></head><body><h1>Index of " + uri + "</h1><hr><pre>";
 		FOREACH_VECTOR_CONST(std::string, files, file){
-			this->_body += "<a href=\"" + uri + *file + "/\">" + *file + "/</a><br>";
+			stat((path + *file).c_str(), &st);
+			if (st.st_mode & S_IFDIR)
+				this->_body += "<a href=\"" + uri + *file + "/\">" + *file + "/</a><br>";
+			else
+				this->_body += "<a href=\"" + uri + *file + "\">" + *file + "</a><br>";
 		}
 		this->_body += "</pre><hr></body></html>";
 		this->_contenttype = "text/html";

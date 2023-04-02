@@ -1,5 +1,6 @@
 #include "directory.hpp"
 #include "http_colors.hpp"
+#include <algorithm>
 #include <dirent.h>
 #include <iostream>
 
@@ -14,4 +15,5 @@ Directory::Directory(const char *path): _path(path){
 	} else {
 		std::cerr << WARN << "Could not open directory: " << path << std::endl;
 	}
+	std::sort(_files.begin(), _files.end());
 }
