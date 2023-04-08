@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 19:09:58 by stales            #+#    #+#             */
-/*   Updated: 2023/03/29 21:18:23 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/08 22:50:59 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ HttpRequestConfig::HttpRequestConfig(const std::string& scope): _scope(scope){
 	_uploads = true;
 	_uploaddir = "/tmp";
 	_dirlist = true;
-	_response_code = 0;
+	_response_code = 200;
 	_errpages[E400].code = 400;
 	_errpages[E400].path = "default";
 	_errpages[E401].code = 401;

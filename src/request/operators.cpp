@@ -11,6 +11,5 @@ std::ostream& operator<<(std::ostream& os, const HttpRequest& req)
 	for (std::map<std::string, std::string>::const_iterator it = req.getHeaders().begin(); it != req.getHeaders().end(); ++it)
 		if (it->second != "")
 			os << "\t\t" << it->first << ": " << it->second << std::endl;
-	os << "\tBody: \n" << req.getBody() << std::endl;
 	return os;
 }

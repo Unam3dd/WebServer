@@ -10,8 +10,6 @@ t_status HttpRequest::_parseRequestLine(const std::string &reqline)
 	std::string uri;
 
 	method = line.substr(0, line.find(" "));
-	if (method != "GET" && method != "POST" && method != "PUT" && method != "DELETE")
-		return (STATUS_FAIL);
 	setMethod(method);
 
 	line = line.substr(line.find(" ") + 1, line.length() - line.find(" "));

@@ -67,7 +67,6 @@ t_status	WebServer::_waitSrvs(void)
 
 			if (DEBUG)
 				std::cout << DBG << "[WebServer::Wait] Received and parsed request: " << std::endl << req << std::endl;
-			std::cout << res.getBody() << std::endl;
 			write(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), res.getResponse().c_str(), res.getResponse().size());
 
 			::close(static_cast<Socket*>(evs[i].data.ptr)->Getfd());

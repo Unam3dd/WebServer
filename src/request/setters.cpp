@@ -1,4 +1,5 @@
 #include "http_request.hpp"
+#include "http_utils.hpp"
 
 void HttpRequest::setMethod(const std::string& method)
 {
@@ -10,6 +11,8 @@ void HttpRequest::setMethod(const std::string& method)
 		_method = PUT;
 	else if (method == "DELETE")
 		_method = DELETE;
+	else
+		_method = UNKNOWN;
 }
 
 void HttpRequest::setUri(const std::string& uri)

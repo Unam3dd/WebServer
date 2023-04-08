@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 16:59:57 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/29 21:19:15 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/08 22:57:52 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,9 +239,32 @@ t_errcode	HttpRequestConfig::SetUploadDir(const std::vector<std::string> &upload
 }
 t_errcode	HttpRequestConfig::SetHttpResponseCode(const std::vector<std::string> &argv)
 {
-	(void)argv;
 	if (DEBUG)
 		std::cout << DBG << "[HttpRequestConfig::SetHttpResponseCode] setting http response code" << std::endl;
+	std::string code = argv.at(1);
+	if (code.size() != 3)
+		return (ERRPARSE_HTTPCODE);
+	for (size_t i = 0; i < code.size(); i++)
+	{
+		if (!isdigit(code.at(i)))
+			return (ERRPARSE_HTTPCODE);
+	}
+	this->_response_code = atoi(code.c_str());
+	if (this->_response_code != 100 && this->_response_code != 101 && this->_response_code != 200 &&
+		this->_response_code != 201 && this->_response_code != 202 && this->_response_code != 203 &&
+		this->_response_code != 204 && this->_response_code != 205 && this->_response_code != 206 &&
+		this->_response_code != 300 && this->_response_code != 301 && this->_response_code != 302 &&
+		this->_response_code != 303 && this->_response_code != 304 && this->_response_code != 305 &&
+		this->_response_code != 307 && this->_response_code != 400 && this->_response_code != 401 &&
+		this->_response_code != 402 && this->_response_code != 403 && this->_response_code != 404 &&
+		this->_response_code != 405 && this->_response_code != 406 && this->_response_code != 407 &&
+		this->_response_code != 408 && this->_response_code != 409 && this->_response_code != 410 &&
+		this->_response_code != 411 && this->_response_code != 412 && this->_response_code != 413 &&
+		this->_response_code != 414 && this->_response_code != 415 && this->_response_code != 416 &&
+		this->_response_code != 417 && this->_response_code != 500 && this->_response_code != 501 &&
+		this->_response_code != 502 && this->_response_code != 503 && this->_response_code != 504 &&
+		this->_response_code != 505)
+		return (ERRPARSE_HTTPCODE);
 	return (ERRPARSE_OK);
 }
 

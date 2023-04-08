@@ -22,7 +22,7 @@ HttpRequest::HttpRequest(const std::string& req, in_port_t port): _port(port)
 	status = _parseRequestLine(line);
 	if (status != STATUS_OK)
 	{
-		std::cerr << FAIL << "[HttpRequest::HttpRequest] Error parsing request line" << std::endl;
+		std::cerr << FAIL << "[HttpRequest::HttpRequest] Error parsing request line: " << line << std::endl;
 		return ;
 	}
 	

@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:31:17 by stales            #+#    #+#             */
-/*   Updated: 2023/03/25 21:48:02 by stales           ###   ########.fr       */
+/*   Updated: 2023/04/08 22:59:40 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ WebServer::WebServer(const std::string& path): File(path.c_str(), O_RDONLY, S_IR
 	_error[ERRPARSE_NBARGS] = "Wrong number of arguments";
 	_error[ERRPARSE_NOSRVNAME] = "No server name";
 	_error[ERRPARSE_NOPORT] = "No port";
-
+	_error[ERRPARSE_HTTPCODE] = "Wrong http code, please read the RFC";
 }
 
 WebServer::WebServer(const WebServer& ws): File(ws)

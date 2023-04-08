@@ -1,5 +1,4 @@
 #pragma once
-#include "http_status.hpp"
 #ifndef HTTP_UTILS_HPP
 #define HTTP_UTILS_HPP
 
@@ -24,9 +23,7 @@
 #define FOREACH_VECTOR_CONST(type, variable, it) for(std::vector<type>::const_iterator it = variable.begin(); it < variable.end(); it++)
 #define APPEND_FILE_TO_STRING(str, file) for (file_size_t i = 0; i < file.length(); i++) str += file.getData()[i]; 
 #define IS_BAD_IP(x) (check_format_ip(x) == false)
-#define FILE_EXISTS(x) (File(x, O_RDONLY, S_IRUSR).getFd() > -1)
-#define IPV4_BYTES_LEN 0x4
-#define IPV4_BITS_LEN 0x20
+#define FILE_EXISTS(x) (File(x, O_RDONLY, S_IRUSR).getFd() != -1)
 #define COUNT_SPACES(x) (std::count(x.begin(), x.end(), ' ') + std::count(x.begin(), x.end(), '\t'))
 #define SANITIZE_SPACES(x) x.erase(std::remove(x.begin(), x.end(), ' '), x.end()); x.erase(std::remove(x.begin(), x.end(), '\t'), x.end())
 #define PRINT_VECTOR_STR(x,y) for (std::vector<std::string>::iterator it = x.begin(); it != x.end(); ++it) y << *it << " ";
@@ -36,6 +33,8 @@
 #define UPPERCASE(x) std::transform(x.begin(), x.end(), x.begin(), ::toupper);
 #define STR_METHOD(x) (x == GET ? "GET" : x == POST ? "POST" : x == PUT ? "PUT" : x == DELETE ? "DELETE" : "UNKNOWN")
 #define MAX_ERR_PAGES 0x8
+#define IPV4_BYTES_LEN 0x4
+#define IPV4_BITS_LEN 0x20
 //////////////////////////////////
 //
 //	       TYPEDEFS
@@ -55,7 +54,8 @@ enum methods_t
 	GET = 1 << 0,
 	POST = 1 << 1,
 	PUT = 1 << 2,
-	DELETE = 1 << 3
+	DELETE = 1 << 3,
+	UNKNOWN = 1 << 4
 };
 
 enum t_errcode {
@@ -80,7 +80,8 @@ enum t_errcode {
 	ERRPARSE_UPLOADDIR,
 	ERRPARSE_NBARGS,
 	ERRPARSE_NOSRVNAME,
-	ERRPARSE_NOPORT
+	ERRPARSE_NOPORT,
+	ERRPARSE_HTTPCODE
 };
 typedef std::map<t_errcode, std::string> errcodestr_t;
 
