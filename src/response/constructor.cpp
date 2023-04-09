@@ -4,9 +4,15 @@
 #include "http_status.hpp"
 #include <iostream>
 
-
-
-
+/*
+ * @brief: constructor for the HttpResponse class.
+ * 
+ * @param: req: the HttpRequest object for which to generate the response.
+ *
+ * @return: none. the response is generated and stored in the _fullresponse
+ * attribute. it is gettable with the getResponse() method.
+ *
+ */
 HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 {
 	this->_srvcfg = _getSrvConfig(_request.getHeaders().at("host"), _request.getPort());
@@ -21,9 +27,10 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		this->_body = this->_getErrorPageContent(this->_status);
 		this->_generateResponse();
 		if (DEBUG)
-			std::cout << DBG << "[HttpResponse] HTTP version '" << _request.getVersion() << "'not supported" << std::endl;
+			std::cout << DBG << "[HttpResponse] HTTP version '" << _request.getVersion() << "' not supported" << std::endl;
 		return ;
 	}
+
 	if (!_methodAllowed())
 	{
 		_status = HTTP_STATUS_METHOD_NOT_ALLOWED;
@@ -31,13 +38,11 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		this->_body = this->_getErrorPageContent(this->_status);
 		this->_generateResponse();
 		if (DEBUG)
-			std::cout << DBG << "[HttpResponse] Method '" << STR_METHOD(_request.getMethod()) << "'not allowed" << std::endl;
+			std::cout << DBG << "[HttpResponse] Method '" << STR_METHOD(_request.getMethod()) << "' not allowed" << std::endl;
 		return ;
 	}
 
 	if (_request.getMethod() & GET){
-		if (DEBUG)
-			std::cout << DBG << "[HttpResponse] GET request" << std::endl;
 		this->_prepareGetResponse();
 		if (this->_reqcfg && this->_reqcfg->GetHttpResponseCode() != HTTP_STATUS_OK)
 			this->_status = static_cast<http_status_code_t>(this->_reqcfg->GetHttpResponseCode());
@@ -45,24 +50,30 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 	}
 
 	/*
-if (_request.getMethod() & POST){
+	if (_request.getMethod() & POST){
 	   this->_preparePostResponse();
+		if (this->_reqcfg && this->_reqcfg->GetHttpResponseCode() != HTTP_STATUS_OK)
+			this->_status = static_cast<http_status_code_t>(this->_reqcfg->GetHttpResponseCode());
 	   this->_generateResponse();
 	   return ;
-	   }
+	}
 
-	   if (_request.getMethod() & PUT){
+	if (_request.getMethod() & PUT){
 	   this->_preparePutResponse();
+		if (this->_reqcfg && this->_reqcfg->GetHttpResponseCode() != HTTP_STATUS_OK)
+			this->_status = static_cast<http_status_code_t>(this->_reqcfg->GetHttpResponseCode());
 	   this->_generateResponse();
 	   return ;
-	   }
+	}
 
-	   if (_request.getMethod() & DELETE){
+	if (_request.getMethod() & DELETE){
 	   this->_prepareDeleteResponse();
+		if (this->_reqcfg && this->_reqcfg->GetHttpResponseCode() != HTTP_STATUS_OK)
+			this->_status = static_cast<http_status_code_t>(this->_reqcfg->GetHttpResponseCode());
 	   this->_generateResponse();
 	   return ;
-	   }
-	   */
+	}
+	*/
 	if (DEBUG)
 	{
 		std::cout << DBG << "[HttpResponse::HttpResponse()] Host: " << _request.getHeaders().at("host") << std::endl;
