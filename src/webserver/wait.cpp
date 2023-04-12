@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/12 16:38:09 by stales           ###   ########.fr       */
+/*   Updated: 2023/04/12 20:40:22 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ t_status	WebServer::_waitSrvs(void)
 	sig_setup();
 	this->_run = 1;
 
-	while (_run)
+	while (_run || _clients.size() > 0)
 	{
 		nfds = _epoll.Wait(evs, MAX_EVENT, -1);
 
