@@ -47,10 +47,6 @@ void HttpResponse::_populateCgiEnv(void){
 	std::string query = _getQuery();
 	std::string remoteaddr = this->_request.getIp();
 
-	std::cout << query << std::endl;
-
-	pause();
-
 	command = "export SERVER_SOFTWARE=" + software; 
 	std::system(command.c_str());
 	command = "export SERVER_NAME=" + host; 
