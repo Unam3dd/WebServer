@@ -3,7 +3,7 @@
 #include "http_colors.hpp"
 #include <iostream>
 
-HttpRequest::HttpRequest(const std::string& req, in_port_t port): _port(port)
+HttpRequest::HttpRequest(const std::string& req, in_port_t port, char* ip):_ip(ip),_port(port)
 {
 	const char** http_headers = get_http_headers();
 	for (int i = 0; http_headers[i]; i++)

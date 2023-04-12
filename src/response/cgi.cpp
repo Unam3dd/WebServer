@@ -7,6 +7,7 @@
 #include <sys/ioctl.h>
 #include <iostream>
 #include <sys/stat.h>
+#include <cstring>
 
 static bool	is_valid_cgi(const std::string& path)
 {
@@ -69,7 +70,7 @@ void HttpResponse::_populateCgiEnv(void){
 
 int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 {
-	std::string	command;
+	std::string	command = "";
 	int			len = 0, capacity = 0;
 	int	fd[2] = {0, 0};
 
@@ -105,6 +106,12 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 
 	if (::read(fd[0], const_cast<char*>(_cgibuf.c_str()), len) != (int)len)
 		return (1);
+
+	std::cout << "TA GRAND MERE EN SLIP " << _cgibuf.data() << std::endl;
+
+	_cgibuf.resize(std::strlen(_cgibuf.data()));
+
+	std::cout << _cgibuf.size() << std::endl;
 	
 	close(fd[0]);
 

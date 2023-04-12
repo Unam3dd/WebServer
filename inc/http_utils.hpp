@@ -21,6 +21,8 @@
 
 #define FOREACH_VECTOR(type, variable, it) for(std::vector<type>::iterator it = variable.begin(); it < variable.end(); it++)
 #define FOREACH_VECTOR_CONST(type, variable, it) for(std::vector<type>::const_iterator it = variable.begin(); it < variable.end(); it++)
+#define FOREACH_MAP_STR(x, y) for (std::map<std::string, std::string>::iterator y = x.begin(); y != x.end(); ++y)
+#define FOREACH_MAP_STR_CONST(x, y) for (std::map<std::string, std::string>::const_iterator y = x.begin(); y != x.end(); ++y)
 #define APPEND_FILE_TO_STRING(str, file) for (file_size_t i = 0; i < file.length(); i++) str += file.getData()[i]; 
 #define IS_BAD_IP(x) (check_format_ip(x) == false)
 #define FILE_EXISTS(x) (File(x, O_RDONLY, S_IRUSR).getFd() != -1)

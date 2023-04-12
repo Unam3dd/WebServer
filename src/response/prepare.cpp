@@ -30,7 +30,30 @@ void	HttpResponse::_prepareGetResponse(){
 		docroot = _reqcfg->GetRoot();
 	}
 	path = docroot + uri;
-
+	
+	if (path.find(".") != std::string::npos)
+	{
+		std::string extension = path.substr(path.find_last_of("."), path.length() - path.find_last_of("."));
+		if (_reqcfg && _reqcfg->GetCgi().size() != 0)
+		{
+			FOREACH_MAP_STR_CONST(_reqcfg->GetCgi(), cfgcgi){
+				if (cfgcgi->first == extension){
+					_processCgi(cfgcgi->second, path);
+					this->_fullresponse = _cgibuf;
+					return ;
+				}
+			}
+		}
+		else{
+			FOREACH_MAP_STR_CONST(_srvcfg->GetCgi(), cfgcgi){
+				if (cfgcgi->first == extension){
+					_processCgi(cfgcgi->second, path);
+					this->_fullresponse = _cgibuf;
+					return ;
+				}
+			}
+		}
+	}
 	isdir = _isDirectory(path);
 
 	if (!isdir){
