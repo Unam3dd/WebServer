@@ -2,6 +2,7 @@
 #include "http_utils.hpp"
 #include "http_colors.hpp"
 #include "http_status.hpp"
+#include <cstring>
 #include <iostream>
 
 /*
@@ -44,6 +45,8 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 
 	if (_request.getMethod() & GET){
 		this->_prepareGetResponse();
+		if (strlen(this->_cgibuf.data()) > 0)
+			return ;
 		if (this->_reqcfg && this->_reqcfg->GetHttpResponseCode() != HTTP_STATUS_OK)
 			this->_status = static_cast<http_status_code_t>(this->_reqcfg->GetHttpResponseCode());
 		this->_generateResponse();
