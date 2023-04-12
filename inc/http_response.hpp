@@ -5,7 +5,6 @@
 #include "http_request_config.hpp"
 #include "http_config.hpp"
 #include "http_status.hpp"
-#include "http_utils.hpp"
 #include "utils.hpp"
 #include <map>
 
@@ -48,6 +47,7 @@ class HttpResponse{
 		bool				_versionAllowed(void);
 		bool				_methodAllowed(void);
 		int					_processCgi(const std::string& path, const std::string& file);
+		void 				_populateCgiEnv();
 		void				_generateResponse(void);
 		void				_prepareGetResponse(void);
 		void				_preparePostResponse(void);
