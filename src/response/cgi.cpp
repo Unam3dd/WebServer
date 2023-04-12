@@ -67,8 +67,6 @@ void HttpResponse::_populateCgiEnv(void){
 	std::system(command.c_str());
 	command = "export PATH_TRANSLATED=" + pathtranslated; 
 	std::system(command.c_str());
-	//command = "export SCRIPT_NAME=" + LEBONCGI; 
-	std::system(command.c_str());
 	command = "export QUERY_STRING=" + query; 
 	std::system(command.c_str());
 }
