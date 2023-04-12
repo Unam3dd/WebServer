@@ -43,6 +43,7 @@ class HttpResponse{
 		HttpRequestConfig*	_getReqConfig(const HttpServerConfig* cfg, const std::string& uri);
 		std::string			_getErrorPageContent(http_status_code_t status);
 		std::string			_getContentType(const std::string& uri);
+		std::string			_getQuery(void);
 		bool				_isDirectory(std::string& path);
 		bool				_versionAllowed(void);
 		bool				_methodAllowed(void);

@@ -24,7 +24,7 @@ static bool	is_valid_cgi(const std::string& path)
 	return (true);
 }
 
-void HttpResponse::_populateCgiEnv(){
+void HttpResponse::_populateCgiEnv(void){
 
 	std::string	command;
 	std::string	pathtranslated;
@@ -44,8 +44,12 @@ void HttpResponse::_populateCgiEnv(){
 	else
 		pathtranslated = this->_srvcfg->GetRoot() + this->_request.getUri();
 
-	std::string query = _getQuery(this->_request.getUri());
+	std::string query = _getQuery();
 	std::string remoteaddr = this->_request.getIp();
+
+	std::cout << query << std::endl;
+
+	pause();
 
 	command = "export SERVER_SOFTWARE=" + software; 
 	std::system(command.c_str());
@@ -63,13 +67,11 @@ void HttpResponse::_populateCgiEnv(){
 	std::system(command.c_str());
 	command = "export PATH_TRANSLATED=" + pathtranslated; 
 	std::system(command.c_str());
-	command = "export SCRIPT_NAME=" + LEBONCGI; 
+	//command = "export SCRIPT_NAME=" + LEBONCGI; 
 	std::system(command.c_str());
 	command = "export QUERY_STRING=" + query; 
 	std::system(command.c_str());
 }
-
-
 
 int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 {
