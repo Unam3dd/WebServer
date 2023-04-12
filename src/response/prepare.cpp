@@ -1,5 +1,6 @@
 #include "http_response.hpp"
 #include "http_colors.hpp"
+#include "http_status.hpp"
 #include <cstring>
 #include <iostream>
 #include <cstdlib>
@@ -31,6 +32,8 @@ void	HttpResponse::_prepareGetResponse(){
 	}
 	path = docroot + uri;
 	
+	isdir = _isDirectory(path);
+
 	if (path.find(".") != std::string::npos)
 	{
 		std::string extension = path.substr(path.find_last_of("."), path.length() - path.find_last_of("."));
@@ -38,7 +41,12 @@ void	HttpResponse::_prepareGetResponse(){
 		{
 			FOREACH_MAP_STR_CONST(_reqcfg->GetCgi(), cfgcgi){
 				if (cfgcgi->first == extension){
-					_processCgi(cfgcgi->second, path);
+					if (_processCgi(cfgcgi->second, path))
+					{
+						this->_status = HTTP_STATUS_BAD_GATEWAY;
+						this->_body = _getErrorPageContent(this->_status);
+						this->_contenttype = "text/html";
+					}
 					_generateResponseCgi();
 					return ;
 				}
@@ -47,14 +55,18 @@ void	HttpResponse::_prepareGetResponse(){
 		else{
 			FOREACH_MAP_STR_CONST(_srvcfg->GetCgi(), cfgcgi){
 				if (cfgcgi->first == extension){
-					_processCgi(cfgcgi->second, path);
+					if (_processCgi(cfgcgi->second, path))
+					{
+						this->_status = HTTP_STATUS_BAD_GATEWAY;
+						this->_body = _getErrorPageContent(this->_status);
+						this->_contenttype = "text/html";
+					}
 					_generateResponseCgi();
 					return ;
 				}
 			}
 		}
 	}
-	isdir = _isDirectory(path);
 
 	if (!isdir){
 		if (DEBUG)

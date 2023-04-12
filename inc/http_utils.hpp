@@ -34,7 +34,7 @@
 #define LOWERCASE(x) std::transform(x.begin(), x.end(), x.begin(), ::tolower);
 #define UPPERCASE(x) std::transform(x.begin(), x.end(), x.begin(), ::toupper);
 #define STR_METHOD(x) (x == GET ? "GET" : x == POST ? "POST" : x == PUT ? "PUT" : x == DELETE ? "DELETE" : "UNKNOWN")
-#define MAX_ERR_PAGES 0x8
+#define MAX_ERR_PAGES 0x9
 #define IPV4_BYTES_LEN 0x4
 #define IPV4_BITS_LEN 0x20
 //////////////////////////////////
@@ -101,7 +101,8 @@ typedef enum {
 	E405 = 4,
 	E500 = 5,
 	E501 = 6,
-	E505 = 7
+	E502 = 7,
+	E505 = 8
 } errpagecode_t;
 
 //////////////////////////////////

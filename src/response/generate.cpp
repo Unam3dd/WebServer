@@ -6,11 +6,13 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 19:02:59 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/12 19:42:07 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/12 20:30:53 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http_response.hpp"
+#include "http_status.hpp"
+#include "utils.hpp"
 
 /* *
  * @brief: generate the full http response from the response object. at this 
@@ -38,5 +40,13 @@ void HttpResponse::_generateResponse(void){
 }
 
 void	HttpResponse::_generateResponseCgi(void){
-	this->_fullresponse = this->_cgibuf.data();
+	std::string status;
+	std::string cgiresponse = _cgibuf.data();
+
+	status = cgiresponse.substr(cgiresponse.find("Status: ") + 8, cgiresponse.length() - cgiresponse.find("Status: "));
+	status = status.substr(0, status.find("\r\n"));
+	this->_status = static_cast<http_status_code_t>(atoi(status.c_str()));
+	
+	this->_fullresponse += "HTTP/1.1 " + NumberToString(_status) + " " + get_http_status_msg(_status) + "\r\n";
+	this->_fullresponse += static_cast<std::string>(this->_cgibuf.data());
 }

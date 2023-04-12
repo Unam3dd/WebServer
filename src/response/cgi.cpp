@@ -1,4 +1,5 @@
 #include "http_response.hpp"
+#include "http_colors.hpp"
 #include <cstdlib>
 #include <fcntl.h>
 #include <sys/wait.h>
@@ -81,6 +82,12 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 
 	_cgibuf.clear();
 	command = path + " " + file;
+	
+	if (DEBUG)
+	{
+		std::cout << DBG << "[HttpResponse::_processCgi] Processing File: " << file << std::endl;
+		std::cout << DBG << "[HttpResponse::_processCgi] Cgi Path: " << path << std::endl;
+	}
 
 	if (pipe(fd) < 0)
 		return (1);
@@ -90,7 +97,7 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
 		_populateCgiEnv();
-		std::system(command.c_str());
+		execlp(path.c_str(), path.c_str(), file.c_str(), NULL);
 		exit(1);
 	}
 	close(fd[1]);
@@ -101,15 +108,18 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 
 	capacity = _cgibuf.capacity();
 	
+	_cgibuf.clear();
+	
 	if (len > capacity)
 		_cgibuf.reserve(len+1);
 
-	_cgibuf.clear();
+	std::memset((void*)_cgibuf.data(), 0, len+1);
 
 	if (::read(fd[0], const_cast<char*>(_cgibuf.c_str()), len) != (int)len)
 		return (1);
 
-	std::cout << _cgibuf.data() << std::endl;
+	if (DEBUG)
+		std::cout << DBG << "[HttpResponse::_processCgi] Cgi Output: " << _cgibuf.data() << std::endl;
 
 	close(fd[0]);
 

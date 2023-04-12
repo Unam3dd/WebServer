@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 18:58:55 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/09 19:04:22 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/12 20:17:13 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ std::string	HttpResponse::_getErrorPageContent(http_status_code_t httpstatus){
 		status = E500;
 	else if (httpstatus == HTTP_STATUS_NOT_IMPLEMENTED)
 		status = E501;
+	else if (httpstatus == HTTP_STATUS_BAD_GATEWAY)
+		status = E502;
 	else if (httpstatus == HTTP_STATUS_VERSION_NOT_SUPPORTED)
 		status = E505;
 	if (_reqcfg)

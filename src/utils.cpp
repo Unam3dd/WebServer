@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:32:27 by stales            #+#    #+#             */
-/*   Updated: 2023/03/31 05:34:11 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/12 20:17:49 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ std::string	SG_DefaultErrorPages(errpagecode_t status){
 		return ("<html><head><title>500 Internal Server Error</title></head><body><center><h1>500 Internal Server Error</h1></center></body></html>");
 	if (status == E501)
 		return ("<html><head><title>501 Not Implemented</title></head><body><center><h1>501 Not Implemented</h1></center></body></html>");
+	if (status == E502)
+		return ("<html><head><title>502 Bad Gateway</title></head><body><center><h1>502 Bad Gateway</h1></center></body></html>");
 	if (status == E505)
 		return ("<html><head><title>505 HTTP Version Not Supported</title></head><body><center><h1>505 HTTP Version Not Supported</h1></center></body></html>");
 	return ("<h1>Fatal Server Error. Cannot Recover.</h1>");
