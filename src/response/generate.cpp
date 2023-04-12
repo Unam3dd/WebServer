@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 19:02:59 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/09 19:03:00 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/12 18:46:18 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,8 @@ void HttpResponse::_generateResponse(void){
 	this->_fullresponse += "Connection: close\r\n";
 	this->_fullresponse += "\r\n";
 	this->_fullresponse += this->_body;
+}
+
+void	HttpResponse::_generateResponseCgi(void){
+	this->_fullresponse += this->_cgibuf;
 }

@@ -83,6 +83,6 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		std::cout << DBG << "[HttpResponse::HttpResponse()] Request config chosen: ";
 		this->_reqcfg == NULL ? std::cout << "none" : std::cout << this->_reqcfg->GetScope(); std::cout << std::endl;
 		std::cout << DBG << "[HttpResponse::HttpResponse()] Full response: "; this->_contenttype != "text/html" ? std::cout << BLUE << "Binary File." << RESET << std::endl : std::cout << std::endl << _fullresponse << std::endl;
-		this->_cgibuf.size() != 0 ? std::cout << DBG << "[HttpResponse::HttpResponse()] CGI Buffer content: \n" << _cgibuf.data() << std::endl : std::cout << DBG << "[HttpResponse::HttpResponse()] No CGI." << std::endl;
+		this->_cgibuf.data() ? std::cout << DBG << "[HttpResponse::HttpResponse()] CGI Buffer content: \n" << _cgibuf.data() << std::endl : std::cout << DBG << "[HttpResponse::HttpResponse()] No CGI." << std::endl;
 	}
 }

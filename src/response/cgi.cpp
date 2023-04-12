@@ -104,15 +104,13 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 	if (len > capacity)
 		_cgibuf.reserve(len+1);
 
+	_cgibuf.clear();
+
 	if (::read(fd[0], const_cast<char*>(_cgibuf.c_str()), len) != (int)len)
 		return (1);
 
-	std::cout << "TA GRAND MERE EN SLIP " << _cgibuf.data() << std::endl;
+	std::cout << _cgibuf.data() << std::endl;
 
-	_cgibuf.resize(std::strlen(_cgibuf.data()));
-
-	std::cout << _cgibuf.size() << std::endl;
-	
 	close(fd[0]);
 
 	return (0);

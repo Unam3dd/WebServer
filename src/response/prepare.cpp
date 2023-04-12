@@ -39,7 +39,7 @@ void	HttpResponse::_prepareGetResponse(){
 			FOREACH_MAP_STR_CONST(_reqcfg->GetCgi(), cfgcgi){
 				if (cfgcgi->first == extension){
 					_processCgi(cfgcgi->second, path);
-					this->_fullresponse = _cgibuf;
+					_generateResponseCgi();
 					return ;
 				}
 			}
@@ -48,7 +48,7 @@ void	HttpResponse::_prepareGetResponse(){
 			FOREACH_MAP_STR_CONST(_srvcfg->GetCgi(), cfgcgi){
 				if (cfgcgi->first == extension){
 					_processCgi(cfgcgi->second, path);
-					this->_fullresponse = _cgibuf;
+					_generateResponseCgi();
 					return ;
 				}
 			}
