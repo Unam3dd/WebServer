@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/12 20:51:24 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/12 20:56:37 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ t_status	WebServer::_acceptClient(ev_t *e)
 	ev_t	tev;
 
 	if (!e) return (STATUS_FAIL);
-	if (!this->_run) return (STATUS_OK);
 
 	FOREACH_VECTOR(HttpServer*, this->_srv, it){
 		if (e->data.fd == (*it)->getSocket().Getfd()) {
@@ -62,13 +61,13 @@ t_status	WebServer::_waitSrvs(void)
 	sig_setup();
 	this->_run = 1;
 
-	while (_run || _clients.size() > 0)
+	while (_run)
 	{
 		nfds = _epoll.Wait(evs, MAX_EVENT, -1);
 
 		for (i = 0; i < nfds; i++) {
 
-			if (_acceptClient(&evs[i]) == STATUS_OK && _run)
+			if (_acceptClient(&evs[i]) == STATUS_OK)
 				continue ;
 
 			memset(buf, 0, sizeof(buf));
