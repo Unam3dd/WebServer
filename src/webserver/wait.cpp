@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/12 20:50:29 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/12 20:51:24 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ t_status	WebServer::_waitSrvs(void)
 
 		for (i = 0; i < nfds; i++) {
 
-			if (_acceptClient(&evs[i]) == STATUS_OK)
+			if (_acceptClient(&evs[i]) == STATUS_OK && _run)
 				continue ;
 
 			memset(buf, 0, sizeof(buf));
