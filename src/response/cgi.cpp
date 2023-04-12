@@ -27,6 +27,7 @@ static bool	is_valid_cgi(const std::string& path)
 void HttpResponse::_populateCgiEnv(){
 
 	std::string	command;
+	std::string	pathtranslated;
 
 	// Serv Variables
 	std::string software = "WebServ/" + std::string(VERSION);
@@ -39,11 +40,11 @@ void HttpResponse::_populateCgiEnv(){
 	std::string method = STR_METHOD(this->_request.getMethod());
 	std::string path = "";
 	if (_reqcfg && _reqcfg->GetRoot() != "")
-		std::string pathtranslated = this->_reqcfg->GetRoot() + this->_request.getUri();
+		pathtranslated = this->_reqcfg->GetRoot() + this->_request.getUri();
 	else
-		std::string pathtranslated = this->_srvcfg->GetRoot() + this->_request.getUri();
+		pathtranslated = this->_srvcfg->GetRoot() + this->_request.getUri();
 
-	std::string query = _getQuery();
+	std::string query = _getQuery(this->_request.getUri());
 	std::string remoteaddr = this->_request.getIp();
 
 	command = "export SERVER_SOFTWARE=" + software; 
@@ -52,45 +53,20 @@ void HttpResponse::_populateCgiEnv(){
 	std::system(command.c_str());
 	command = "export GATEWAY_INTERFACE=" + interface; 
 	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
+	command = "export SERVER_PROTOCOL=" + protocol; 
 	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
+	command = "export SERVER_PORT=" + port; 
 	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
+	command = "export REQUEST_METHOD=" + method; 
 	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
+	command = "export PATH_INFO=" + path; 
 	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
+	command = "export PATH_TRANSLATED=" + pathtranslated; 
 	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
+	command = "export SCRIPT_NAME=" + LEBONCGI; 
 	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
+	command = "export QUERY_STRING=" + query; 
 	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
-	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
-	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
-	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
-	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
-	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
-	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
-	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
-	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
-	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
-	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
-	std::system(command.c_str());
-	command = "export SERVER_SOFTWARE=" + software; 
-	std::system(command.c_str());
-
 }
 
 

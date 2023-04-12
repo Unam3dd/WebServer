@@ -47,7 +47,7 @@ class HttpResponse{
 		bool				_versionAllowed(void);
 		bool				_methodAllowed(void);
 		int					_processCgi(const std::string& path, const std::string& file);
-		void 				_populateCgiEnv();
+		void 				_populateCgiEnv(void);
 		void				_generateResponse(void);
 		void				_prepareGetResponse(void);
 		void				_preparePostResponse(void);
