@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/12 20:47:42 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/12 20:50:29 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ t_status	WebServer::_acceptClient(ev_t *e)
 	Socket	*client = NULL;
 	ev_t	tev;
 
-	if (!e || !this->_run) return (STATUS_FAIL);
+	if (!e) return (STATUS_FAIL);
+	if (!this->_run) return (STATUS_OK);
 
 	FOREACH_VECTOR(HttpServer*, this->_srv, it){
 		if (e->data.fd == (*it)->getSocket().Getfd()) {
