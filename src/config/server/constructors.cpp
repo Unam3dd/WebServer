@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:48:26 by stales            #+#    #+#             */
-/*   Updated: 2023/04/12 20:18:22 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/13 12:58:09 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ HttpServerConfig::HttpServerConfig(void)
 {
 	_parseMap["server_name"] = &HttpServerConfig::SetServerNames;
 	_parseMap["server_names"] = &HttpServerConfig::SetServerNames;
+	_parseMap["ip"] = &HttpServerConfig::SetIp;
 	_parseMap["listen"] = &HttpServerConfig::SetServerPorts;
 	_parseMap["index"] = &HttpServerConfig::SetIndexes;
 	_parseMap["errpage"] = &HttpServerConfig::SetErrorPages;

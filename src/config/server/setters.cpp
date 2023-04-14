@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 18:57:36 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/29 21:19:21 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/13 13:00:35 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,20 @@ t_errcode	HttpServerConfig::SetServerNames(const std::vector<std::string> &names
 		if (DEBUG)
 			std::cout << DBG << "[HttpServerConfig::SetServerNames] pushed server_name[" << i - 1<< "]: " << _names.at(i - 1) << std::endl;
 	}
+	return (ERRPARSE_OK);
+}
+
+t_errcode	HttpServerConfig::SetIp(const std::vector<std::string> &ip)
+{
+	if (DEBUG)
+		std::cout << DBG << "[HttpServerConfig::SetIp] setting ip" << std::endl;
+	if (ip.size() != 2)
+		return (ERRPARSE_NBARGS);
+	if (ip.at(1).find_first_of(" \t") != std::string::npos)
+		return (ERRPARSE_SPCORTAB);
+	this->_ip = ip.at(1);
+	if (DEBUG)
+		std::cout << DBG << "[HttpServerConfig::SetIp] set ip: " << _ip << std::endl;
 	return (ERRPARSE_OK);
 }
 

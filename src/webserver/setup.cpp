@@ -23,10 +23,8 @@ static std::vector<port_t> _getUniquePorts(std::vector<HttpServerConfig*>& confi
 
 t_status	WebServer::_setupSrvs(void)
 {
-	std::vector<port_t> ports;
 	HttpServer			*ptr = NULL;
-
-	ports = _getUniquePorts(this->_configs);
+	std::vector<port_t> ports = _getUniquePorts(this->_configs);
 
 	for (std::vector<port_t>::iterator it = ports.begin(); it != ports.end(); it++) {
 		try {
@@ -37,6 +35,7 @@ t_status	WebServer::_setupSrvs(void)
 			return (STATUS_FAIL);
 		}
 	}
+	
 	if (DEBUG)
 	{
 		std::cout << DBG << "[WebServer::_setupSrvs]"; PRINT_VECTOR_PORTS(ports, std::cout); std::cout << std::endl;

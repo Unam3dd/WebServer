@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 12:02:25 by stales            #+#    #+#             */
-/*   Updated: 2023/03/29 21:18:55 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/13 12:59:04 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ class HttpServerConfig
 		inline std::vector<port_t>&							GetServerPorts(void) { return (this->_ports); }
 		inline const std::vector<redirect_t>&				GetRedirections(void) const { return (this->_redirects); }
 		inline const std::string&							GetRoot(void) const { return (this->_root); }
+		inline const std::string&							GetIp(void) const { return (this->_ip); }
 		inline const std::string&							GetUploadDir(void) const { return (this->_uploaddir); }
 		inline const std::string&							GetSessionPath(void) const { return (this->_sessionpath); }
 		inline const errpage_t								*GetErrorPages(void) const { return (this->_errpages); }
@@ -65,6 +66,7 @@ class HttpServerConfig
 		t_errcode											SetDirList(const std::vector<std::string>& dirlist);
 		t_errcode											SetCgi(const std::vector<std::string>& cgi);
 		t_errcode											SetRedirect(const std::vector<std::string>& redirect);
+		t_errcode											SetIp(const std::vector<std::string>& ip);
 	
 		void												initNewLocBlk(const std::string& scope) { 
 																	this->_reqconfig.push_back(new HttpRequestConfig(scope)); \
@@ -80,6 +82,7 @@ class HttpServerConfig
 		std::vector<std::string>			_indexs;
 		std::vector<redirect_t>				_redirects;
 		errpage_t							_errpages[MAX_ERR_PAGES];
+		std::string							_ip;
 		std::string							_root;
 		std::string							_sessionpath;
 		std::string							_uploaddir;
