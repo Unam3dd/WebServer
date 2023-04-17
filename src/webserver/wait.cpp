@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/12 20:56:37 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/17 20:46:26 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ t_status	WebServer::_waitSrvs(void)
 		for (i = 0; i < nfds; i++) {
 
 			if (_acceptClient(&evs[i]) == STATUS_OK)
-				continue ;
+				continue;
 
 			memset(buf, 0, sizeof(buf));
 			if (::read(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), buf, sizeof(buf)) < 0)
@@ -91,8 +91,8 @@ t_status	WebServer::_waitSrvs(void)
 			delete static_cast<Socket*>(evs[i].data.ptr);
 		}
 	}
-
-	FOREACH_VECTOR(Socket*, _clients, it) _clients.erase(it);
+	
+	FOREACH_VECTOR(Socket*, _clients, it){ delete *it; }
 
 	return (STATUS_OK);
 }
