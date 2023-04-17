@@ -6,7 +6,7 @@
 #    By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/03 17:02:32 by stales            #+#    #+#              #
-#    Updated: 2023/04/17 20:22:57 by ldournoi         ###   ########.fr        #
+#    Updated: 2023/04/17 22:59:49 by ldournoi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ TEST_DIR	= tests
 ###################################
 
 CC = c++
-CXXFLAGS =  -std=c++98 -I. -Iinc -Iinc/libsocket -Ofast 
+CXXFLAGS = -Wall -Wextra -Wall -std=c++98 -I. -Iinc -Iinc/libsocket
 TESTFLAGS = -I. -Iinc -Iinc/libsocket -std=c++98
 VERSION = $(shell $(CC) --version | head -n 1)
 
