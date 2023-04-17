@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:32:27 by stales            #+#    #+#             */
-/*   Updated: 2023/04/12 20:17:49 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/17 19:39:28 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,14 @@ WebServer*	SG_WebServer(const WebServer* ws)
 
 	if (ws)
 		_sg = const_cast<WebServer*>(ws);
+	return (_sg);
+}
+
+char**	SG_ENVP(char **envp){
+	static char**	_sg = NULL;
+
+	if (envp)
+		_sg = envp;
 	return (_sg);
 }
 

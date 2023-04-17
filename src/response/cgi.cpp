@@ -1,5 +1,7 @@
 #include "http_response.hpp"
 #include "http_colors.hpp"
+#include "http_status.hpp"
+#include "http_utils.hpp"
 #include <cstdlib>
 #include <fcntl.h>
 #include <sys/wait.h>
@@ -26,47 +28,66 @@ static bool	is_valid_cgi(const std::string& path)
 	return (true);
 }
 
-void HttpResponse::_populateCgiEnv(void){
+void	HttpResponse::_createCgiArgv(const std::string& path, const std::string& file){
+	static std::vector <char*> argv;
+	argv.clear();
+
+	argv.push_back(const_cast<char*>(path.c_str()));
+	argv.push_back(const_cast<char*>(file.c_str()));
+	argv.push_back(NULL);
+	this->_cgiargv = argv;
+
+}
+
+void HttpResponse::_createCgiEnvp(const std::string& file){
+
+	static std::vector<std::string> env;
+	env.clear();
+	char **origenvp = SG_ENVP(NULL);
+	for (int i = 0; origenvp[i]; i++)
+		env.push_back(origenvp[i]);
+	std::vector<char*> envp;
 
 	std::string	command;
 	std::string	pathtranslated;
 
 	// Serv Variables
-	std::string software = "WebServ/" + std::string(VERSION);
-	std::string interface = "CGI/1.1";
-	std::string host = this->_request.getHeaders().at("host");
+	std::string redirect = "REDIRECT_STATUS=301";
+	std::string software = "SERVER_SOFTWARE=" + std::string("WebServ/") + std::string(VERSION);
+	std::string interface = "GATEWAY_INTERFACE=CGI/1.1";
+	std::string host = "SERVER_NAME=" + this->_request.getHeaders().at("host");
+	env.push_back(redirect);
+	env.push_back(software);
+	env.push_back(interface);
+	env.push_back(host);
 
 	// Req Variables
-	std::string protocol = this->getVersion();
-	std::string port = NumberToString(this->_request.getPort());
-	std::string method = STR_METHOD(this->_request.getMethod());
-	std::string path = "";
-	if (_reqcfg && _reqcfg->GetRoot() != "")
-		pathtranslated = this->_reqcfg->GetRoot() + this->_request.getUri();
-	else
-		pathtranslated = this->_srvcfg->GetRoot() + this->_request.getUri();
+	std::string scriptname = "SCRIPT_NAME=" + this->_request.getUri();
+	std::string protocol = "SERVER_PROTOCOL=" + this->getVersion();
+	std::string port = "SERVER_PORT=" + NumberToString(this->_request.getPort());
+	std::string method = "REQUEST_METHOD=" + std::string(STR_METHOD(this->_request.getMethod()));
+	//std::string path = "REQUEST_URI=" + this->_request.getUri();
+	//std::string pathinfo = "PATH_INFO=" + this->_request.getUri();
+	pathtranslated = "PATH_TRANSLATED=" + file;
+	env.push_back(protocol);
+	env.push_back(port);
+	env.push_back(method);
+	env.push_back(pathtranslated);
+	//env.push_back(pathinfo);
+	//env.push_back(path);
 
-	std::string query = _getQuery();
-	std::string remoteaddr = this->_request.getIp();
+	std::string query = "QUERY_STRING=" + _getQuery();
+	std::string remoteaddr = "REMOTE_ADDR=" + this->_request.getIp();
+	env.push_back(query);
+	env.push_back(remoteaddr);
 
-	command = "export SERVER_SOFTWARE=" + software; 
-	std::system(command.c_str());
-	command = "export SERVER_NAME=" + host; 
-	std::system(command.c_str());
-	command = "export GATEWAY_INTERFACE=" + interface; 
-	std::system(command.c_str());
-	command = "export SERVER_PROTOCOL=" + protocol; 
-	std::system(command.c_str());
-	command = "export SERVER_PORT=" + port; 
-	std::system(command.c_str());
-	command = "export REQUEST_METHOD=" + method; 
-	std::system(command.c_str());
-	command = "export PATH_INFO=" + path; 
-	std::system(command.c_str());
-	command = "export PATH_TRANSLATED=" + pathtranslated; 
-	std::system(command.c_str());
-	command = "export QUERY_STRING=" + query; 
-	std::system(command.c_str());
+	envp.reserve(env.size() + 1);
+
+	for (size_t i = 0; i < env.size(); i++)
+		envp.push_back(const_cast<char*>(env[i].data()));
+
+	envp.push_back(NULL);
+	this->_cgienvp = envp;
 }
 
 int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
@@ -91,35 +112,47 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 
 	if (pipe(fd) < 0)
 		return (1);
-
+	
 	if (!fork()) {
 		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
-		_populateCgiEnv();
-		execlp(path.c_str(), path.c_str(), file.c_str(), NULL);
+		_createCgiArgv(path, file);
+		_createCgiEnvp(file);
+		execve(path.c_str(), &this->_cgiargv[0], &this->_cgienvp[0]);
 		exit(1);
 	}
 	close(fd[1]);
 
+	bool datainbuffer = true;
+	while (datainbuffer)
+	{
+		char buf[1024];
+		int ret = read(fd[0], buf, 1024);
+		if (ret > 0)
+		{
+			if (len + ret > capacity)
+			{
+				capacity = len + ret + 1;
+				_cgibuf.resize(capacity);
+			}
+			memcpy(&_cgibuf[len], buf, ret);
+			len += ret;
+		}
+		else
+			datainbuffer = false;
+	}
+	close(fd[0]);
+	
 	wait(NULL);
 
-	ioctl(fd[0], FIONREAD, &len);
-
-	capacity = _cgibuf.capacity();
-	
-	_cgibuf.clear();
-	
-	if (len > capacity)
-		_cgibuf.reserve(len+1);
-
-	std::memset((void*)_cgibuf.data(), 0, len+1);
-
-	if (::read(fd[0], const_cast<char*>(_cgibuf.c_str()), len) != (int)len)
-		return (1);
-
 	if (DEBUG)
-		std::cout << DBG << "[HttpResponse::_processCgi] Cgi Output: " << _cgibuf.data() << std::endl;
+	{
+		if (len < 1000)
+			std::cout << DBG << "[HttpResponse::_processCgi] Cgi Output: " << _cgibuf.data() << std::endl;
+		else
+			std::cout << DBG << "[HttpResponse::_processCgi] Cgi Output not displayed due to big size (>1000 chars)"  << std::endl;
+	}
 
 	close(fd[0]);
 

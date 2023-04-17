@@ -6,12 +6,13 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 19:02:59 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/14 10:34:39 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/17 18:29:06 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http_response.hpp"
 #include "http_status.hpp"
+#include "http_utils.hpp"
 #include "utils.hpp"
 
 /* *
@@ -43,13 +44,21 @@ void	HttpResponse::_generateResponseCgi(void){
 	std::string status;
 	std::string cgiresponse = _cgibuf.data();
 
-	status = cgiresponse.substr(cgiresponse.find("Status: ") + 8, cgiresponse.length() - cgiresponse.find("Status: "));
-	if (cgiresponse.find("Status: ") == std::string::npos && cgiresponse.find("status: ") == std::string::npos)
-		_status = static_cast<http_status_code_t>(200);
-	else{
-		status = status.substr(0, status.find("\r\n"));
-		this->_status = static_cast<http_status_code_t>(atoi(status.c_str()));
+	if (cgiresponse.size() == 0)
+	{
+		_status = HTTP_STATUS_INTERNAL_SERVER_ERROR;
+		_body = _getErrorPageContent(_status);
+		_contenttype = "text/html";
+		_generateResponse();
+		return;
 	}
+	if (cgiresponse.find("Status: ") == std::string::npos && cgiresponse.find("status: ") == std::string::npos)
+		_status = HTTP_STATUS_OK;
+	else{
+		status = cgiresponse.substr(cgiresponse.find("Status: ") + 8, cgiresponse.length() - cgiresponse.find("Status: "));
+		status = status.substr(0, status.find("\r\n"));
+		this->_status = SANITIZE_AND_CAST_INT_TO_HTTP_STATUS(std::atoi(status.c_str()));
+		}
 	this->_fullresponse += "HTTP/1.1 " + NumberToString(_status) + " " + get_http_status_msg(_status) + "\r\n";
 	this->_fullresponse += static_cast<std::string>(this->_cgibuf.data());
 }

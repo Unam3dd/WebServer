@@ -23,17 +23,24 @@
 #define FOREACH_VECTOR_CONST(type, variable, it) for(std::vector<type>::const_iterator it = variable.begin(); it < variable.end(); it++)
 #define FOREACH_MAP_STR(x, y) for (std::map<std::string, std::string>::iterator y = x.begin(); y != x.end(); ++y)
 #define FOREACH_MAP_STR_CONST(x, y) for (std::map<std::string, std::string>::const_iterator y = x.begin(); y != x.end(); ++y)
+
 #define APPEND_FILE_TO_STRING(str, file) for (file_size_t i = 0; i < file.length(); i++) str += file.getData()[i]; 
 #define IS_BAD_IP(x) (check_format_ip(x) == false)
 #define FILE_EXISTS(x) (File(x, O_RDONLY, S_IRUSR).getFd() != -1)
+#define SANITIZE_AND_CAST_INT_TO_HTTP_STATUS(status) ((status < 100 || status > 102) && (status < 200 || status > 208) && (status < 300 || status > 308) && (status < 400 || status > 417) && (status < 500 || status > 505) ? HTTP_STATUS_INTERNAL_SERVER_ERROR : static_cast<http_status_code_t>(status))
+
 #define COUNT_SPACES(x) (std::count(x.begin(), x.end(), ' ') + std::count(x.begin(), x.end(), '\t'))
 #define SANITIZE_SPACES(x) x.erase(std::remove(x.begin(), x.end(), ' '), x.end()); x.erase(std::remove(x.begin(), x.end(), '\t'), x.end())
+
 #define PRINT_VECTOR_STR(x,y) for (std::vector<std::string>::iterator it = x.begin(); it != x.end(); ++it) y << *it << " ";
 #define PRINT_VECTOR_PORTS(x,y) for (std::vector<port_t>::iterator it = x.begin(); it != x.end(); ++it) y << *it << " ";
 #define PRINT_MAP_STR(x, y) for (std::map<std::string, std::string>::iterator it = x.begin(); it != x.end(); ++it) y << it->first << " -> " << it->second << " ";
+
 #define LOWERCASE(x) std::transform(x.begin(), x.end(), x.begin(), ::tolower);
 #define UPPERCASE(x) std::transform(x.begin(), x.end(), x.begin(), ::toupper);
+
 #define STR_METHOD(x) (x == GET ? "GET" : x == POST ? "POST" : x == PUT ? "PUT" : x == DELETE ? "DELETE" : "UNKNOWN")
+
 #define MAX_ERR_PAGES 0x9
 #define IPV4_BYTES_LEN 0x4
 #define IPV4_BITS_LEN 0x20
@@ -116,6 +123,7 @@ WebServer *SG_WebServer(const WebServer* ws);
 std::string	SG_GetContentType(std::string& extension);
 std::string	SG_DefaultErrorPages(errpagecode_t status);
 
+char**	SG_ENVP(char **envp);
 //////////////////////////////////
 //
 //	       STRUCTS

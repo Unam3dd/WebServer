@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 01:41:25 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/04/08 20:13:00 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/17 19:39:02 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,12 @@
 #include "webserver.hpp"
 #include <iostream>
 
-int main(int ac, char **av)
+int main(int ac, char **av, char **envp)
 {
 	help(ac, av);
 	WebServer	ws(av[1]);
 	SG_WebServer(&ws);
+	SG_ENVP(envp);
 
 	if (ws.Parse()) {
 		std::cout << "Error during parsing configuration file !" << std::endl;

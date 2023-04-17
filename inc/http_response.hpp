@@ -29,6 +29,8 @@ class HttpResponse{
 		HttpRequest			_request;
 		HttpServerConfig*	_srvcfg;
 		HttpRequestConfig*	_reqcfg;
+		std::vector<char*>	_cgiargv;
+		std::vector<char*>	_cgienvp;
 		http_status_code_t	_status;
 		std::string			_contenttype;
 		std::string			_version;
@@ -48,13 +50,14 @@ class HttpResponse{
 		bool				_versionAllowed(void);
 		bool				_methodAllowed(void);
 		int					_processCgi(const std::string& path, const std::string& file);
-		void 				_populateCgiEnv(void);
 		void				_generateResponse(void);
 		void				_generateResponseCgi(void);
 		void				_prepareGetResponse(void);
 		void				_preparePostResponse(void);
 		void				_preparePutResponse(void);
 		void				_prepareDeleteResponse(void);
+		void				_createCgiArgv(const std::string& path, const std::string& file);
+		void				_createCgiEnvp(const std::string& file);
 };
 
 #endif

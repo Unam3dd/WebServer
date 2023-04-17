@@ -46,6 +46,8 @@ void	HttpResponse::_prepareGetResponse(){
 						this->_status = HTTP_STATUS_BAD_GATEWAY;
 						this->_body = _getErrorPageContent(this->_status);
 						this->_contenttype = "text/html";
+						_generateResponse();
+						return;
 					}
 					_generateResponseCgi();
 					return ;
@@ -60,6 +62,8 @@ void	HttpResponse::_prepareGetResponse(){
 						this->_status = HTTP_STATUS_BAD_GATEWAY;
 						this->_body = _getErrorPageContent(this->_status);
 						this->_contenttype = "text/html";
+						_generateResponse();
+						return;
 					}
 					_generateResponseCgi();
 					return ;
