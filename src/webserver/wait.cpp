@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/18 18:48:22 by stales           ###   ########.fr       */
+/*   Updated: 2023/04/18 20:16:20 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "http_response.hpp"
 #include "webserver.hpp"
 #include <asm-generic/ioctls.h>
+#include <cstdio>
 #include <new>
 #include <signals.hpp>
 #include <streambuf>
@@ -67,28 +68,29 @@ t_status	WebServer::_waitSrvs(void)
 
 	while (_run)
 	{
-		buf = NULL;
-		size = 0;
 		nfds = _epoll.Wait(evs, MAX_EVENT, -1);
 
 		for (i = 0; i < nfds; i++) {
 
+			buf = NULL;
+			size = 0;
+
 			if (_acceptClient(&evs[i]) == STATUS_OK)
 				continue;
 
-			if (::ioctl(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), FIONBIO, &size) < 0) {
-				std::cerr << WARN << "Error ioctl()" << std::endl;
-				continue ;
-			}
-			buf = new (std::nothrow) char[size];
-			
+			::ioctl(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), FIONREAD, &size);
+
+			if (DEBUG) { std::cout << DBG << "Size: " << size << std::endl; }
+
+			buf = new (std::nothrow) char [size];
+
 			if (!buf) {
-				std::cerr << WARN << "Error allocate memory !" << std::endl;
+				std::cout << WARN << "Bad Alloc" << std::endl;
 				continue ;
 			}
 
 			memset(buf, 0, size);
-			if (::read(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), buf, sizeof(buf)) < 0)
+			if (::read(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), buf, size) != (int)size)
 				return (STATUS_FAIL);
 
 			HttpRequest req(buf, static_cast<Socket*>(evs[i].data.ptr)->GetSrvPort(), const_cast<char*>(static_cast<Socket*>(evs[i].data.ptr)->InetNtoa(static_cast<Socket*>(evs[i].data.ptr)->GetSin()->sin_addr.s_addr).c_str()));
