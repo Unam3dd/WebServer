@@ -29,3 +29,8 @@ void HttpRequest::setBody(const std::string &body)
 {
 	_body = body;
 }
+
+void HttpRequest::setQueryString(const std::string &query_string)
+{
+	_querystring = query_string;
+}

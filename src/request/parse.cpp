@@ -16,7 +16,13 @@ t_status HttpRequest::_parseRequestLine(const std::string &reqline)
 	uri = line.substr(0, line.find(" "));
 	if (uri.length() == 0)
 		return (STATUS_FAIL);
-	setUri(uri);
+	if (uri.find("?") != std::string::npos)
+	{
+		setUri(uri.substr(0, uri.find("?")));
+		setQueryString(uri.substr(uri.find("?") + 1, uri.length() - uri.find("?")));
+	}
+	else
+		setUri(uri);
 
 	line = line.substr(line.find(" ") + 1, line.length() - line.find(" "));
 	setVersion(line);

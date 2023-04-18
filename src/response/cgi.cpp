@@ -1,6 +1,5 @@
 #include "http_response.hpp"
 #include "http_colors.hpp"
-#include "http_status.hpp"
 #include "http_utils.hpp"
 #include <cstdlib>
 #include <fcntl.h>
@@ -46,6 +45,7 @@ void HttpResponse::_createCgiEnvp(const std::string& file){
 	char **origenvp = SG_ENVP(NULL);
 	for (int i = 0; origenvp[i]; i++)
 		env.push_back(origenvp[i]);
+
 	std::vector<char*> envp;
 
 	std::string	command;
@@ -66,21 +66,34 @@ void HttpResponse::_createCgiEnvp(const std::string& file){
 	std::string protocol = "SERVER_PROTOCOL=" + this->getVersion();
 	std::string port = "SERVER_PORT=" + NumberToString(this->_request.getPort());
 	std::string method = "REQUEST_METHOD=" + std::string(STR_METHOD(this->_request.getMethod()));
-	//std::string path = "REQUEST_URI=" + this->_request.getUri();
-	//std::string pathinfo = "PATH_INFO=" + this->_request.getUri();
 	pathtranslated = "PATH_TRANSLATED=" + file;
 	env.push_back(protocol);
 	env.push_back(port);
 	env.push_back(method);
 	env.push_back(pathtranslated);
-	//env.push_back(pathinfo);
-	//env.push_back(path);
 
-	std::string query = "QUERY_STRING=" + _getQuery();
+	std::string query = "QUERY_STRING=" + this->_request.getQueryString();
 	std::string remoteaddr = "REMOTE_ADDR=" + this->_request.getIp();
 	env.push_back(query);
 	env.push_back(remoteaddr);
 
+	std::string cookies = "HTTP_COOKIE=" + this->_request.getHeaders().at("cookie");
+	std::string accept = "HTTP_ACCEPT=" + this->_request.getHeaders().at("accept");
+	std::string acceptlang = "HTTP_ACCEPT_LANGUAGE=" + this->_request.getHeaders().at("accept-language");
+	std::string acceptenc = "HTTP_ACCEPT_ENCODING=" + this->_request.getHeaders().at("accept-encoding");
+	std::string useragent = "HTTP_USER_AGENT=" + this->_request.getHeaders().at("user-agent");
+	std::string referer = "HTTP_REFERER=" + this->_request.getHeaders().at("referer");
+	std::string contenttype = "CONTENT_TYPE=" + this->_request.getHeaders().at("content-type");
+	std::string contentlen = "CONTENT_LENGTH=" + NumberToString(this->_request.getBody().size());
+	env.push_back(cookies);
+	env.push_back(accept);
+	env.push_back(acceptlang);
+	env.push_back(acceptenc);
+	env.push_back(useragent);
+	env.push_back(referer);
+	env.push_back(contenttype);
+	env.push_back(contentlen);
+	
 	envp.reserve(env.size() + 1);
 
 	for (size_t i = 0; i < env.size(); i++)
@@ -142,8 +155,6 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 		else
 			datainbuffer = false;
 	}
-	close(fd[0]);
-	
 	wait(NULL);
 
 	if (DEBUG)

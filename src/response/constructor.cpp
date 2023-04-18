@@ -18,7 +18,7 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 {
 	this->_srvcfg = _getSrvConfig(_request.getHeaders().at("host"), _request.getPort());
 	this->_reqcfg = _getReqConfig(this->_srvcfg, _request.getUri());
-	this->_reqcfg ? this->_status = static_cast<http_status_code_t>(this->_reqcfg->GetHttpResponseCode()) : this->_status = HTTP_STATUS_OK;
+	this->_reqcfg ? this->_status = SANITIZE_AND_CAST_INT_TO_HTTP_STATUS(this->_reqcfg->GetHttpResponseCode()) : this->_status = HTTP_STATUS_OK;
 	this->_contenttype = "";
 
 	
@@ -39,7 +39,7 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		this->_body = this->_getErrorPageContent(this->_status);
 		this->_generateResponse();
 		if (DEBUG)
-			std::cout << DBG << "[HttpResponse] Method '" << STR_METHOD(_request.getMethod()) << "' not allowed" << std::endl;
+			std::cout << DBG << "[HttpResponse] HTTP method '" << _request.getMethod() << "' not allowed" << std::endl;
 		return ;
 	}
 
@@ -52,21 +52,14 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		this->_generateResponse();
 	}
 
-	/*
 	if (_request.getMethod() & POST){
-	   this->_preparePostResponse();
+		this->_preparePostResponse();
+		if (strlen(this->_cgibuf.data()) > 0)
+			return ;
 		if (this->_reqcfg && this->_reqcfg->GetHttpResponseCode() != HTTP_STATUS_OK)
 			this->_status = static_cast<http_status_code_t>(this->_reqcfg->GetHttpResponseCode());
-	   this->_generateResponse();
-	   return ;
-	}
-
-	if (_request.getMethod() & PUT){
-	   this->_preparePutResponse();
-		if (this->_reqcfg && this->_reqcfg->GetHttpResponseCode() != HTTP_STATUS_OK)
-			this->_status = static_cast<http_status_code_t>(this->_reqcfg->GetHttpResponseCode());
-	   this->_generateResponse();
-	   return ;
+		this->_generateResponse();
+		return ;
 	}
 
 	if (_request.getMethod() & DELETE){
@@ -76,7 +69,7 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 	   this->_generateResponse();
 	   return ;
 	}
-	*/
+
 	if (DEBUG)
 	{
 		std::cout << DBG << "[HttpResponse::HttpResponse()] Host: " << _request.getHeaders().at("host") << std::endl;

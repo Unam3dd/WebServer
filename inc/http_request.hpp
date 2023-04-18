@@ -18,12 +18,14 @@ class HttpRequest
 		void setUri(const std::string& uri);
 		void setVersion(const std::string& version);
 		void setBody(const std::string& body);
+		void setQueryString(const std::string &query_string);
 
 		inline const std::map<std::string, std::string>& getHeaders(void) const { return _header; }
 		inline const std::string& getUri(void) const { return _uri; }
 		inline const std::string& getIp(void) const { return _ip; }
 		inline const std::string& getVersion(void) const { return _version; }
 		inline const std::string& getBody(void) const { return _body; }
+		inline const std::string& getQueryString(void) const { return _querystring; }
 		inline const methods_t&   getMethod(void) const { return _method; }
 		inline const port_t&	  getPort(void) const { return _port; }
 
@@ -36,6 +38,7 @@ class HttpRequest
 		std::map<std::string, std::string> _header;
 		std::string _ip;
 		std::string	_uri;
+		std::string _querystring;
 		std::string	_version;
 		std::string _body;
 		methods_t	_method;
