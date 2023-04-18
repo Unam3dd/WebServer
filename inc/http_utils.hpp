@@ -16,7 +16,7 @@
 #ifndef DEBUG
 # define DEBUG 0
 #endif
-#define VERSION "0.9.6"
+#define VERSION "1.0.0"
 #define MAX_EVENT 16
 
 #define FOREACH_VECTOR(type, variable, it) for(std::vector<type>::iterator it = variable.begin(); it < variable.end(); it++)
@@ -41,7 +41,7 @@
 
 #define STR_METHOD(x) (x == GET ? "GET" : x == POST ? "POST" : x == PUT ? "PUT" : x == DELETE ? "DELETE" : "UNKNOWN")
 
-#define MAX_ERR_PAGES 0x9
+#define MAX_ERR_PAGES 0xa
 #define IPV4_BYTES_LEN 0x4
 #define IPV4_BITS_LEN 0x20
 //////////////////////////////////
@@ -106,10 +106,11 @@ typedef enum {
 	E403 = 2,
 	E404 = 3,
 	E405 = 4,
-	E500 = 5,
-	E501 = 6,
-	E502 = 7,
-	E505 = 8
+	E413 = 5,
+	E500 = 6,
+	E501 = 7,
+	E502 = 8,
+	E505 = 9
 } errpagecode_t;
 
 //////////////////////////////////

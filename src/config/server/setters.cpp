@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 18:57:36 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/13 13:00:35 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/18 22:25:51 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,11 +158,35 @@ t_errcode	HttpServerConfig::SetRoot(const std::vector<std::string> &root)
 
 t_errcode	HttpServerConfig::SetMaxPostSize(const std::vector<std::string> &max_size_post)
 {
+	std::string tmp = max_size_post.at(1);
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetMaxPostSize] setting max post size" << std::endl;
-	if (std::atof(max_size_post.at(1).c_str()) < 0 || std::atof(max_size_post.at(1).c_str()) == HUGE_VAL)
+	if (max_size_post.size() != 2 && (std::atof(tmp.c_str()) < 0 || std::atof(tmp.c_str()) == HUGE_VAL))
 		return (ERRPARSE_POST);
-	this->_max_size_post = std::atof(max_size_post.at(1).c_str());
+
+	maxpost_size_t max_size = std::atof(tmp.c_str());
+	if (tmp.find_first_not_of("0123456789") != std::string::npos)
+	{
+		if (tmp.find_first_not_of("0123456789") != tmp.size() - 1)
+			return (ERRPARSE_POST);
+		LOWERCASE(tmp);
+		switch (tmp.at(tmp.size() - 1))
+		{
+			case 'k':
+				max_size *= 1024;
+				break;
+			case 'm':
+				max_size *= 1024 * 1024;
+				break;
+			case 'g':
+				max_size *= 1024 * 1024 * 1024;
+				break;
+			default:
+				return (ERRPARSE_POST);
+		}
+	}
+
+	this->_max_size_post = max_size;
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetMaxPostSize] max post size set to: " << this->GetMaxPostSize() << std::endl;
 	return (ERRPARSE_OK);

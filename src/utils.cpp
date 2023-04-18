@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:32:27 by stales            #+#    #+#             */
-/*   Updated: 2023/04/17 19:39:28 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/18 22:37:26 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ std::string	SG_DefaultErrorPages(errpagecode_t status){
 		return ("<html><head><title>404 Not Found</title></head><body><center><h1>404 Not Found</h1></center></body></html>");
 	if (status == E405)
 		return ("<html><head><title>405 Method Not Allowed</title></head><body><center><h1>405 Method Not Allowed</h1></center></body></html>");
+	if (status == E413)
+		return ("<html><head><title>413 Request Entity Too Large</title></head><body><center><h1>413 Request Entity Too Large</h1></center></body></html>");
 	if (status == E500)
 		return ("<html><head><title>500 Internal Server Error</title></head><body><center><h1>500 Internal Server Error</h1></center></body></html>");
 	if (status == E501)

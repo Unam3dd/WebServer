@@ -6,7 +6,7 @@
 #    By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/03 17:02:32 by stales            #+#    #+#              #
-#    Updated: 2023/04/18 20:53:29 by ldournoi         ###   ########.fr        #
+#    Updated: 2023/04/18 22:41:33 by ldournoi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,11 +19,11 @@
 AUTHORS = Sam0verfl0w, Clinche
 NAME = webserv
 TEST_NAME = tester
-WEBSERVER_VERSION = 0.9.6
+WEBSERVER_VERSION = 1.0.0
 DIST = bin
 INC_GTEST = inc/greatest
 CONTRIB_DIR = contrib
-TEST_DIR	= tests
+TEST_DIR	= tst
 
 ###################################
 #
@@ -89,7 +89,7 @@ OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
 #
 ###################################
 
-TEST_SRCS = $(shell find tests -iname "*.cpp" -print)
+TEST_SRCS = $(shell find tst -iname "*.cpp" -print)
 TEST_OBJS = $(addprefix $(OBJDIR)/, $(TEST_SRCS:.cpp=.o))
 TEST_WSERV_OBJS = $(filter-out obj/main.o, $(OBJS))
 
@@ -234,15 +234,15 @@ $(INC_GTEST) $(CONTRIB_DIR):
 	@fi
 	@rm -rf greatest
 
-obj/tests/%.o: tests/%.cpp
-	@$(CC) $(TESTFLAGS) -Itests -c $< -o $@
+obj/tst/%.o: tst/%.cpp
+	@$(CC) $(TESTFLAGS) -Itst -c $< -o $@
 
 $(TEST_DIR): $(OBJDIR)
 	@mkdir -p $(OBJDIR)/$(TEST_DIR)
 
 $(TEST_NAME): $(INC_GTEST) $(CONTRIB_DIR) BANNER $(DIST)/$(NAME) $(OBJS) $(TEST_DIR) $(TEST_OBJS)
 	@mkdir -p $(DIST)
-	@$(CC) $(TESTFLAGS) -Itests $(TEST_WSERV_OBJS) $(TEST_OBJS) -o $(DIST)/$(TEST_NAME)
+	@$(CC) $(TESTFLAGS) -Itst $(TEST_WSERV_OBJS) $(TEST_OBJS) -o $(DIST)/$(TEST_NAME)
 	@printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] Tester Created at \033[32m$(shell date)\033[00m"
 	@printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] Stored at \033[32m$(DIST)/$(TEST_NAME)\033[00m"
 

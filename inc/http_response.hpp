@@ -52,9 +52,7 @@ class HttpResponse{
 		int					_processCgi(const std::string& path, const std::string& file);
 		void				_generateResponse(void);
 		void				_generateResponseCgi(void);
-		void				_prepareGetResponse(void);
-		void				_preparePostResponse(void);
-		void				_preparePutResponse(void);
+		void				_prepareResponse(void);
 		void				_prepareDeleteResponse(void);
 		void				_createCgiArgv(const std::string& path, const std::string& file);
 		void				_createCgiEnvp(const std::string& file);

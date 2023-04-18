@@ -4,18 +4,10 @@
 #include <cstring>
 #include <iostream>
 #include <cstdlib>
+#include <cstdio>
 #include <sys/stat.h>
 
-/*
- * @brief: prepare the response for a GET request. checks if the request is 
- * a directory or a file. if it's a directory, it checks if directory listing
- * is enabled. if it's a file, it checks if the user has the right to read it.
- * then it populates the response as needed, setting the status code and the 
- * body of the response.
- *
- * @return: void
- */
-void	HttpResponse::_prepareGetResponse(){
+void	HttpResponse::_prepareResponse(){
 	struct stat st;
 	std::string docroot;
 	std::string path;
@@ -31,48 +23,34 @@ void	HttpResponse::_prepareGetResponse(){
 		docroot = _reqcfg->GetRoot();
 	}
 	path = docroot + uri;
-	
+
 	isdir = _isDirectory(path);
 
 	if (path.find(".") != std::string::npos)
 	{
 		std::string extension = path.substr(path.find_last_of("."), path.length() - path.find_last_of("."));
+		std::map<std::string,std::string> cgi;
 		if (_reqcfg && _reqcfg->GetCgi().size() != 0)
-		{
-			FOREACH_MAP_STR_CONST(_reqcfg->GetCgi(), cfgcgi){
-				if (cfgcgi->first == extension){
-					if (_processCgi(cfgcgi->second, path))
-					{
-						this->_status = HTTP_STATUS_BAD_GATEWAY;
-						this->_body = _getErrorPageContent(this->_status);
-						this->_contenttype = "text/html";
-						_generateResponse();
-						return;
-					}
-					_generateResponseCgi();
-					return ;
+			cgi = _reqcfg->GetCgi();
+		else
+			cgi = _srvcfg->GetCgi();
+		FOREACH_MAP_STR(cgi, cfgcgi){
+			if (cfgcgi->first == extension){
+				if (_processCgi(cfgcgi->second, path))
+				{
+					this->_status = HTTP_STATUS_BAD_GATEWAY;
+					this->_body = _getErrorPageContent(this->_status);
+					this->_contenttype = "text/html";
+					_generateResponse();
+					return;
 				}
-			}
-		}
-		else{
-			FOREACH_MAP_STR_CONST(_srvcfg->GetCgi(), cfgcgi){
-				if (cfgcgi->first == extension){
-					if (_processCgi(cfgcgi->second, path))
-					{
-						this->_status = HTTP_STATUS_BAD_GATEWAY;
-						this->_body = _getErrorPageContent(this->_status);
-						this->_contenttype = "text/html";
-						_generateResponse();
-						return;
-					}
-					_generateResponseCgi();
-					return ;
-				}
+				_generateResponseCgi();
+				return ;
 			}
 		}
 	}
 
-	if (!isdir){
+	if (!isdir && (this->_request.getMethod() == GET || this->_request.getMethod() == POST)){
 		if (DEBUG)
 		{
 			std::cout << DBG << "[_prepareGetResponse] request is not a directory" << std::endl;
@@ -98,7 +76,33 @@ void	HttpResponse::_prepareGetResponse(){
 		this->_contenttype = this->_getContentType(path);
 		APPEND_FILE_TO_STRING(this->_body, content);
 	}
-	else{
+	else if (!isdir && this->_request.getMethod() == DELETE){
+		if (stat(path.c_str(), &st) < 0)
+		{
+			this->_status = HTTP_STATUS_NOT_FOUND;
+			this->_body = this->_getErrorPageContent(this->_status);
+			this->_contenttype = "text/html";
+			return;
+		}
+		if (!(st.st_mode & S_IWUSR))
+		{
+			this->_status = HTTP_STATUS_FORBIDDEN;
+			this->_body = this->_getErrorPageContent(this->_status);
+			this->_contenttype = "text/html";
+			return;
+		}
+		if (remove(path.c_str()) < 0)
+		{
+			this->_status = HTTP_STATUS_INTERNAL_SERVER_ERROR;
+			this->_body = this->_getErrorPageContent(this->_status);
+			this->_contenttype = "text/html";
+			return;
+		}
+		this->_status = HTTP_STATUS_NO_CONTENT;
+		this->_body = "";
+		this->_contenttype = "text/html";
+	}
+	else if (isdir && (this->_request.getMethod() == GET || this->_request.getMethod() == POST)){
 		if (stat(path.c_str(), &st) < 0)
 		{
 			this->_status = HTTP_STATUS_NOT_FOUND;
@@ -133,5 +137,30 @@ void	HttpResponse::_prepareGetResponse(){
 		this->_body += "</pre><hr></body></html>";
 		this->_contenttype = "text/html";
 	}
+	else if (isdir && this->_request.getMethod() == DELETE){
+		if (stat(path.c_str(), &st) < 0)
+		{
+			this->_status = HTTP_STATUS_NOT_FOUND;
+			this->_body = this->_getErrorPageContent(this->_status);
+			this->_contenttype = "text/html";
+			return;
+		}
+		if (!(st.st_mode & S_IWUSR))
+		{
+			this->_status = HTTP_STATUS_FORBIDDEN;
+			this->_body = this->_getErrorPageContent(this->_status);
+			this->_contenttype = "text/html";
+			return;
+		}
+		if (rmdir(path.c_str()) < 0)
+		{
+			this->_status = HTTP_STATUS_INTERNAL_SERVER_ERROR;
+			this->_body = this->_getErrorPageContent(this->_status);
+			this->_contenttype = "text/html";
+			return;
+		}
+		this->_status = HTTP_STATUS_NO_CONTENT;
+		this->_body = "";
+		this->_contenttype = "text/html";
+	}
 }
-
