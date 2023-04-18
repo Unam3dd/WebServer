@@ -8,7 +8,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["file"])) {
   $file_name = $_FILES["file"]["name"];
   $file_tmp = $_FILES["file"]["tmp_name"];
 
-  var_dump($_FILES);
   if (is_uploaded_file($file_tmp)) {
 	  echo "File is uploaded.";
   } else {
