@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/17 20:46:26 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/18 18:48:22 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "http_colors.hpp"
 #include "http_response.hpp"
 #include "webserver.hpp"
+#include <asm-generic/ioctls.h>
+#include <new>
 #include <signals.hpp>
 #include <streambuf>
 #include <sys/epoll.h>
@@ -23,6 +25,7 @@
 #include <iostream>
 #include <cstring>
 #include <fstream>
+#include <sys/ioctl.h>
 
 t_status	WebServer::_acceptClient(ev_t *e)
 {
@@ -52,7 +55,8 @@ t_status	WebServer::_acceptClient(ev_t *e)
 
 t_status	WebServer::_waitSrvs(void)
 {
-	char	buf[0x10000];
+	char	*buf = NULL;
+	size_t	size = 0;
 	epoll_event evs[MAX_EVENT];
 	int	nfds = 0;
 	int i = 0;
@@ -63,6 +67,8 @@ t_status	WebServer::_waitSrvs(void)
 
 	while (_run)
 	{
+		buf = NULL;
+		size = 0;
 		nfds = _epoll.Wait(evs, MAX_EVENT, -1);
 
 		for (i = 0; i < nfds; i++) {
@@ -70,7 +76,18 @@ t_status	WebServer::_waitSrvs(void)
 			if (_acceptClient(&evs[i]) == STATUS_OK)
 				continue;
 
-			memset(buf, 0, sizeof(buf));
+			if (::ioctl(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), FIONBIO, &size) < 0) {
+				std::cerr << WARN << "Error ioctl()" << std::endl;
+				continue ;
+			}
+			buf = new (std::nothrow) char[size];
+			
+			if (!buf) {
+				std::cerr << WARN << "Error allocate memory !" << std::endl;
+				continue ;
+			}
+
+			memset(buf, 0, size);
 			if (::read(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), buf, sizeof(buf)) < 0)
 				return (STATUS_FAIL);
 
@@ -89,6 +106,7 @@ t_status	WebServer::_waitSrvs(void)
 				if (*it == evs[i].data.ptr) _clients.erase(it);
 			}
 			delete static_cast<Socket*>(evs[i].data.ptr);
+			delete buf;
 		}
 	}
 	

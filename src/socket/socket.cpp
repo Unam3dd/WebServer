@@ -6,12 +6,13 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:26:18 by stales            #+#    #+#             */
-/*   Updated: 2023/01/23 14:37:35 by stales           ###   ########.fr       */
+/*   Updated: 2023/04/12 19:31:33 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "socket.hpp"
 #include <cstring>
+#include <fcntl.h>
 #include <ostream>
 #include <sys/socket.h>
 
@@ -144,5 +145,6 @@ int	Socket::SetupSocket(int family, int type, int proto)
 	this->_isconnected = false;
 	this->_isbinded = false;
 	this->_isonlistening = false;
+	this->Fcntl(this->_fd, F_SETFD, FD_CLOEXEC);
 	return (0);
 }
