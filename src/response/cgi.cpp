@@ -84,7 +84,8 @@ void HttpResponse::_createCgiEnvp(const std::string& file){
 	std::string useragent = "HTTP_USER_AGENT=" + this->_request.getHeaders().at("user-agent");
 	std::string referer = "HTTP_REFERER=" + this->_request.getHeaders().at("referer");
 	std::string contenttype = "CONTENT_TYPE=" + this->_request.getHeaders().at("content-type");
-	std::string contentlen = "CONTENT_LENGTH=" + NumberToString(this->_request.getBody().size());
+	std::string contentlen;
+	this->_request.getMethod() == POST ? contentlen = "CONTENT_LENGTH=" + NumberToString(this->_request.getBody().size()) : contentlen = "CONTENT_LENGTH=0";
 	env.push_back(cookies);
 	env.push_back(accept);
 	env.push_back(acceptlang);
@@ -107,7 +108,8 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 {
 	std::string	command = "";
 	int			len = 0, capacity = 0;
-	int	fd[2] = {0, 0};
+	int	inputfd[2] = {0, 0};
+	int	outputfd[2] = {0, 0};
 
 	if (path.empty() || file.empty()) return (1);
 
@@ -123,25 +125,43 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 		std::cout << DBG << "[HttpResponse::_processCgi] Cgi Path: " << path << std::endl;
 	}
 
-	if (pipe(fd) < 0)
+	if (pipe(inputfd) < 0 || pipe(outputfd) < 0)
+	{
+		if (DEBUG)
+			std::cout << DBG << FAIL << "[HttpResponse::_processCgi] Pipe Error" << std::endl;
 		return (1);
+	}
 	
+
 	if (!fork()) {
-		close(fd[0]);
-		dup2(fd[1], STDOUT_FILENO);
-		close(fd[1]);
+		close(inputfd[1]);
+		close(outputfd[0]);
+		dup2(inputfd[0], STDIN_FILENO);
+		dup2(outputfd[1], STDOUT_FILENO);
 		_createCgiArgv(path, file);
 		_createCgiEnvp(file);
 		execve(path.c_str(), &this->_cgiargv[0], &this->_cgienvp[0]);
 		exit(1);
 	}
-	close(fd[1]);
+	close(inputfd[0]);
+	close(outputfd[1]);
 
+	if (this->_request.getMethod() == POST)
+	{
+		if (DEBUG)
+			std::cout << DBG << "[HttpResponse::_processCgi] POST Request" << std::endl;
+		if (write(inputfd[1], this->_request.getBody().c_str(), this->_request.getBody().size()) < 0)
+		{
+			if (DEBUG)
+				std::cout << DBG << FAIL << "[HttpResponse::_processCgi] Write Error" << std::endl;
+			return (1);
+		}
+	}
 	bool datainbuffer = true;
 	while (datainbuffer)
 	{
 		char buf[1024];
-		int ret = read(fd[0], buf, 1024);
+		int ret = read(outputfd[0], buf, 1024);
 		if (ret > 0)
 		{
 			if (len + ret > capacity)
@@ -165,7 +185,8 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 			std::cout << DBG << "[HttpResponse::_processCgi] Cgi Output not displayed due to big size (>1000 chars)"  << std::endl;
 	}
 
-	close(fd[0]);
+	close(inputfd[1]);
+	close(outputfd[0]);
 
 	return (0);
 }
