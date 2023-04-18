@@ -30,7 +30,6 @@ void HttpRequest::setBody(const std::string &body)
 {
 	for (size_t i = 0; i < body.size(); i++)
 		_body.push_back(body[i]);
-	std::cout << "body size: " << _body.size() << std::endl;
 }
 
 void HttpRequest::setQueryString(const std::string &query_string)

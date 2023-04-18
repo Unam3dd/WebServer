@@ -6,7 +6,7 @@
 #    By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/03 17:02:32 by stales            #+#    #+#              #
-#    Updated: 2023/04/17 22:59:49 by ldournoi         ###   ########.fr        #
+#    Updated: 2023/04/18 20:53:29 by ldournoi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@
 AUTHORS = Sam0verfl0w, Clinche
 NAME = webserv
 TEST_NAME = tester
-WEBSERVER_VERSION = 0.8.5
+WEBSERVER_VERSION = 0.9.6
 DIST = bin
 INC_GTEST = inc/greatest
 CONTRIB_DIR = contrib

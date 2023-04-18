@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/18 20:16:20 by stales           ###   ########.fr       */
+/*   Updated: 2023/04/18 20:43:39 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ t_status	WebServer::_acceptClient(ev_t *e)
 
 t_status	WebServer::_waitSrvs(void)
 {
-	char	*buf = NULL;
+	std::string buf;
+	char	*tmpbuf = NULL;
 	size_t	size = 0;
 	epoll_event evs[MAX_EVENT];
 	int	nfds = 0;
@@ -72,26 +73,40 @@ t_status	WebServer::_waitSrvs(void)
 
 		for (i = 0; i < nfds; i++) {
 
-			buf = NULL;
+			tmpbuf = NULL;
 			size = 0;
+			buf.clear();
 
 			if (_acceptClient(&evs[i]) == STATUS_OK)
 				continue;
 
-			::ioctl(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), FIONREAD, &size);
+			bool datawaiting = true;
+			while (datawaiting)
+			{
+				if (tmpbuf)
+					delete tmpbuf;
+				tmpbuf = NULL;
+				size = 0;
 
-			if (DEBUG) { std::cout << DBG << "Size: " << size << std::endl; }
+				::ioctl(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), FIONREAD, &size);
+				if (!size)
+					datawaiting = false;
+				
+				tmpbuf = new char[size + 1];
 
-			buf = new (std::nothrow) char [size];
+				if (!tmpbuf) {
+					std::cout << WARN << "[WebServer::_waitSrvs()] Bad Alloc" << std::endl;
+					continue ;
+				}
 
-			if (!buf) {
-				std::cout << WARN << "Bad Alloc" << std::endl;
-				continue ;
+				if (::read(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), tmpbuf, size) != (int)size)
+					return (STATUS_FAIL);
+				
+				buf.reserve(size + 1);
+				for (size_t i = 0; i < size; i++)
+					buf.push_back(tmpbuf[i]);
+				
 			}
-
-			memset(buf, 0, size);
-			if (::read(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), buf, size) != (int)size)
-				return (STATUS_FAIL);
 
 			HttpRequest req(buf, static_cast<Socket*>(evs[i].data.ptr)->GetSrvPort(), const_cast<char*>(static_cast<Socket*>(evs[i].data.ptr)->InetNtoa(static_cast<Socket*>(evs[i].data.ptr)->GetSin()->sin_addr.s_addr).c_str()));
 			HttpResponse res(req);
@@ -108,10 +123,10 @@ t_status	WebServer::_waitSrvs(void)
 				if (*it == evs[i].data.ptr) _clients.erase(it);
 			}
 			delete static_cast<Socket*>(evs[i].data.ptr);
-			delete buf;
+			delete tmpbuf;
 		}
 	}
-	
+
 	FOREACH_VECTOR(Socket*, _clients, it){ delete *it; }
 
 	return (STATUS_OK);

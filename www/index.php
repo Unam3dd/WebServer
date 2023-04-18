@@ -25,6 +25,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["file"])) {
   $_SESSION["file_name"] = $file_name;
 }
 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["SecretValue"])) {
+	$_SESSION["posted_data"]["SecretValue"] = $_POST["SecretValue"];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -66,11 +70,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["file"])) {
   if(isset($_SESSION["file_name"])) {
       echo "<h2>Session Example</h2>";
 	  echo "Uploaded file name is: " . $_SESSION["file_name"];
+  }
   if (isset($_SESSION["posted_data"])) {
 	  echo "<h2>Form Post Example</h2>";
 	  echo "SecretValue is: " . $_SESSION["posted_data"]["SecretValue"];
   }
-  }
+  
   ?>
 
 </body>
