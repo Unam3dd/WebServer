@@ -1,5 +1,6 @@
 #include "http_request.hpp"
 #include "http_utils.hpp"
+#include <iostream>
 
 void HttpRequest::setMethod(const std::string& method)
 {
@@ -27,7 +28,9 @@ void HttpRequest::setVersion(const std::string& version)
 
 void HttpRequest::setBody(const std::string &body)
 {
-	_body = body;
+	for (size_t i = 0; i < body.size(); i++)
+		_body.push_back(body[i]);
+	std::cout << "body size: " << _body.size() << std::endl;
 }
 
 void HttpRequest::setQueryString(const std::string &query_string)

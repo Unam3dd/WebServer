@@ -76,16 +76,24 @@ void HttpResponse::_createCgiEnvp(const std::string& file){
 	std::string remoteaddr = "REMOTE_ADDR=" + this->_request.getIp();
 	env.push_back(query);
 	env.push_back(remoteaddr);
+	
+	std::string cookies;
+	if (   ( this->_reqcfg && this->_reqcfg->GetCookies()) 
+		|| ( this->_srvcfg && this->_srvcfg->GetCookies()) )
+		cookies = "HTTP_COOKIE=" + this->_request.getHeaders().at("cookie");
+	else
+		cookies = "HTTP_COOKIE=";
 
-	std::string cookies = "HTTP_COOKIE=" + this->_request.getHeaders().at("cookie");
 	std::string accept = "HTTP_ACCEPT=" + this->_request.getHeaders().at("accept");
 	std::string acceptlang = "HTTP_ACCEPT_LANGUAGE=" + this->_request.getHeaders().at("accept-language");
 	std::string acceptenc = "HTTP_ACCEPT_ENCODING=" + this->_request.getHeaders().at("accept-encoding");
 	std::string useragent = "HTTP_USER_AGENT=" + this->_request.getHeaders().at("user-agent");
 	std::string referer = "HTTP_REFERER=" + this->_request.getHeaders().at("referer");
 	std::string contenttype = "CONTENT_TYPE=" + this->_request.getHeaders().at("content-type");
+	
 	std::string contentlen;
 	this->_request.getMethod() == POST ? contentlen = "CONTENT_LENGTH=" + NumberToString(this->_request.getBody().size()) : contentlen = "CONTENT_LENGTH=0";
+	
 	env.push_back(cookies);
 	env.push_back(accept);
 	env.push_back(acceptlang);
