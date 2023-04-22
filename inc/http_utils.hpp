@@ -2,11 +2,14 @@
 #ifndef HTTP_UTILS_HPP
 #define HTTP_UTILS_HPP
 
+#include "file.hpp"
 #include <string>
 #include <vector>
 #include <algorithm>
 #include <map>
 #include <unistd.h>
+#include <fcntl.h>
+
 //////////////////////////////////
 //
 //	       DEFINES
@@ -125,6 +128,7 @@ std::string	SG_GetContentType(std::string& extension);
 std::string	SG_DefaultErrorPages(errpagecode_t status);
 
 char**	SG_ENVP(char **envp);
+
 //////////////////////////////////
 //
 //	       STRUCTS
@@ -134,13 +138,6 @@ char**	SG_ENVP(char **envp);
 struct errpage_t
 {
 	std::string		path;
-	int				code;
-};
-
-struct redirect_t
-{
-	std::string		path;
-	std::string		dest;
 	int				code;
 };
 

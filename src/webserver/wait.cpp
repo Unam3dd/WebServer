@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/18 20:43:39 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/22 20:03:56 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,11 @@ t_status	WebServer::_waitSrvs(void)
 				size = 0;
 
 				::ioctl(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), FIONREAD, &size);
-				if (!size)
+				if (!size){
 					datawaiting = false;
+					tmpbuf = NULL;
+					continue;
+				}
 				
 				tmpbuf = new char[size + 1];
 
@@ -100,7 +103,11 @@ t_status	WebServer::_waitSrvs(void)
 				}
 
 				if (::read(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), tmpbuf, size) != (int)size)
-					return (STATUS_FAIL);
+				{
+					if (DEBUG)
+						std::cout << DBG << WARN << "[WebServer::_waitSrvs()] Read error" << std::endl;
+					continue ;
+				}
 				
 				buf.reserve(size + 1);
 				for (size_t i = 0; i < size; i++)
@@ -123,7 +130,8 @@ t_status	WebServer::_waitSrvs(void)
 				if (*it == evs[i].data.ptr) _clients.erase(it);
 			}
 			delete static_cast<Socket*>(evs[i].data.ptr);
-			delete tmpbuf;
+			if (tmpbuf)
+				delete tmpbuf;
 		}
 	}
 

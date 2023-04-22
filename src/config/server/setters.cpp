@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 18:57:36 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/18 22:25:51 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/22 19:43:48 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "http_colors.hpp"
 #include "http_utils.hpp"
 #include "utils.hpp"
-#include "webserver.hpp"
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
@@ -32,20 +31,6 @@ t_errcode	HttpServerConfig::SetServerNames(const std::vector<std::string> &names
 		if (DEBUG)
 			std::cout << DBG << "[HttpServerConfig::SetServerNames] pushed server_name[" << i - 1<< "]: " << _names.at(i - 1) << std::endl;
 	}
-	return (ERRPARSE_OK);
-}
-
-t_errcode	HttpServerConfig::SetIp(const std::vector<std::string> &ip)
-{
-	if (DEBUG)
-		std::cout << DBG << "[HttpServerConfig::SetIp] setting ip" << std::endl;
-	if (ip.size() != 2)
-		return (ERRPARSE_NBARGS);
-	if (ip.at(1).find_first_of(" \t") != std::string::npos)
-		return (ERRPARSE_SPCORTAB);
-	this->_ip = ip.at(1);
-	if (DEBUG)
-		std::cout << DBG << "[HttpServerConfig::SetIp] set ip: " << _ip << std::endl;
 	return (ERRPARSE_OK);
 }
 
@@ -192,18 +177,6 @@ t_errcode	HttpServerConfig::SetMaxPostSize(const std::vector<std::string> &max_s
 	return (ERRPARSE_OK);
 }
 
-t_errcode	HttpServerConfig::SetSessionPath(const std::vector<std::string> &sessionpath)
-{
-	if (DEBUG)
-		std::cout << DBG << "[HttpServerConfig::SetSessionPath] setting session path" << std::endl;
-	this->_sessionpath = sessionpath.at(1);
-	if (this->_sessionpath.at(this->_sessionpath.size() - 1) != '/')
-		this->_sessionpath += '/';
-	if (DEBUG)
-		std::cout << DBG << "[HttpServerConfig::SetSessionPath] session path set to: " << this->GetSessionPath() << std::endl;
-	return (ERRPARSE_OK);
-}
-
 t_errcode	HttpServerConfig::SetCookies(const std::vector<std::string> &cookies)
 {
 	if (DEBUG)
@@ -299,15 +272,5 @@ t_errcode	HttpServerConfig::SetMethods(const std::vector<std::string> &methods)
 	this->_methods = static_cast<methods_t>(tmp);
 	if (DEBUG)
 		std::cout << DBG << "[HttpServerConfig::SetMethods] methods set to: " << this->GetMethods() << std::endl;
-	return (ERRPARSE_OK);
-}
-
-t_errcode	HttpServerConfig::SetUploadDir(const std::vector<std::string> &uploaddir)
-{
-	if (DEBUG)
-		std::cout << DBG << "[HttpServerConfig::SetUploadDir] setting upload dir" << std::endl;
-	this->_uploaddir = uploaddir.at(1);
-	if (DEBUG)
-		std::cout << DBG << "[HttpServerConfig::SetUploadDir] upload dir set to: " << this->GetUploadDir() << std::endl;
 	return (ERRPARSE_OK);
 }

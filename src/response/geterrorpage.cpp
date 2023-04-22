@@ -6,13 +6,14 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 18:58:55 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/19 07:16:39 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/22 19:57:23 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http_response.hpp"
 #include "http_colors.hpp"
 #include "http_status.hpp"
+#include "file.hpp"
 #include <sys/stat.h>
 #include <iostream>
 
@@ -29,7 +30,6 @@
  * default error page.
  * 
  */
-
 std::string	HttpResponse::_getErrorPageContent(http_status_code_t httpstatus){
 	std::string	root;
 	std::string path;
@@ -56,31 +56,26 @@ std::string	HttpResponse::_getErrorPageContent(http_status_code_t httpstatus){
 		status = E502;
 	else if (httpstatus == HTTP_STATUS_VERSION_NOT_SUPPORTED)
 		status = E505;
-	if (_reqcfg)
-	{
-		if (_reqcfg->GetErrorPages()[status].path == "default" && _srvcfg->GetErrorPages()[status].path == "default")
-			return (SG_DefaultErrorPages(status));
-		_reqcfg->GetRoot() == "" ? root = _srvcfg->GetRoot() : root = _reqcfg->GetRoot();
-		_reqcfg->GetErrorPages()[status].path == "default" ? path = _srvcfg->GetErrorPages()[status].path : path = _reqcfg->GetErrorPages()[status].path;
-		fullpath = root + path;
-		if (!FILE_EXISTS(fullpath.c_str())){
-			return (SG_DefaultErrorPages(status));
-		}
-		struct stat st;
-		stat(fullpath.c_str(), &st);
-		if (st.st_mode & S_IRUSR)
-		{
-			File content(fullpath.c_str(), O_RDONLY, S_IRUSR);
-			return (content.getData());
-		}
-		else{
-			return (SG_DefaultErrorPages(status));
-		}
-	}
-	if (_srvcfg->GetErrorPages()[status].path == "default")
+	else
+		status = E500;
+
+	if (this->_reqcfg && this->_reqcfg->GetErrorPages()[status].path == "default" && this->_srvcfg->GetErrorPages()[status].path == "default")
 		return (SG_DefaultErrorPages(status));
-	root = _srvcfg->GetRoot();
-	path = _srvcfg->GetErrorPages()[status].path;
+	else if (!this->_reqcfg && this->_srvcfg->GetErrorPages()[status].path == "default")
+		return (SG_DefaultErrorPages(status));
+	else if (this->_reqcfg && this->_reqcfg->GetErrorPages()[status].path != "default")
+	{
+		if (this->_reqcfg->GetRoot() == "")
+			root = this->_srvcfg->GetRoot();
+		else
+			root = this->_reqcfg->GetRoot();
+		path = this->_reqcfg->GetErrorPages()[status].path;
+	}
+	else if (this->_srvcfg->GetErrorPages()[status].path != "default")
+	{
+		root = this->_srvcfg->GetRoot();
+		path = this->_srvcfg->GetErrorPages()[status].path;
+	}
 	fullpath = root + path;
 	if (!FILE_EXISTS(fullpath.c_str())){
 		if (DEBUG)

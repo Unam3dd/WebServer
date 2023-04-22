@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 22:03:40 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/29 21:30:08 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/22 19:47:34 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,7 @@ std::ostream	&operator<<(std::ostream& os, HttpServerConfig& sc)
 	os << "\t\tIndexes: "; PRINT_VECTOR_STR(tmp, os) os << std::endl;
 	os << "\t\tRoot: " << sc.GetRoot() << std::endl;
 	os << "\t\tUpload: " << sc.GetUploads() << std::endl;
-	os << "\t\tUploaddir: " << sc.GetUploadDir() << std::endl;
 	os << "\t\tMethods: "; sc.GetMethods() & GET ? os << "GET " : os; sc.GetMethods() & POST ? os << "POST " : os; sc.GetMethods() & PUT ? os << "PUT " : os; sc.GetMethods() & DELETE ? os << "DELETE " : os; os << std::endl;
-	//os << "\t\tSessionPath: " << sc.GetSessionPath() << std::endl;
 	os << "\t\tMaxPostSize: " << sc.GetMaxPostSize() << std::endl;
 	os << "\t\tCookies: " << sc.GetCookies() << std::endl;
 	os << "\t\tDir Listing: " << sc.GetDirList() << std::endl;
@@ -39,9 +37,6 @@ std::ostream	&operator<<(std::ostream& os, HttpServerConfig& sc)
 	os << "\t\tError pages: " << std::endl;
 	for (size_t i = 0; i < MAX_ERR_PAGES; i++)
 		os << "\t\t\t" << sc.GetErrorPages()[i].code << " -> " << sc.GetErrorPages()[i].path << std::endl;
-	os << "\t\tRedirections: " << sc.GetRedirections().size() << std::endl;
-	for (size_t i = 0; i < sc.GetRedirections().size(); i++)
-		os << "\t\t\t" << sc.GetRedirections()[i].path << " -> " << sc.GetRedirections()[i].dest << "(" << sc.GetRedirections()[i].code << ")" << std::endl;
 	os << "\t\tNumber of locations: " << locations.size() << std::endl;
 	for (size_t i = 0; i < locations.size(); i++)
 		os << *locations[i];

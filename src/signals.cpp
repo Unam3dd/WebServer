@@ -1,9 +1,8 @@
 #include "signals.hpp"
-#include <signal.h>
 #include "http_utils.hpp"
-#include "utils.hpp"
 #include "webserver.hpp"
 #include <iostream>
+#include <signal.h>
 
 void	sig_handler(int sig)
 {
@@ -17,7 +16,7 @@ void	sig_handler(int sig)
 
 int	sig_setup(void)
 {
-	int	sig[MAX_SIG] = { SIGINT };
+	int	sig[MAX_SIG] = { SIGINT, SIGPIPE };
 
 	for (int i = 0; i < MAX_SIG; i++)
 		signal(sig[i], sig_handler);

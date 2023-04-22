@@ -16,13 +16,21 @@
  */
 HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 {
-	maxpost_size_t maxpost;
-
+	if (this->_request.isBadRequest())
+	{
+		this->_status = HTTP_STATUS_BAD_REQUEST;
+		this->_contenttype = "text/html";
+		this->_body = this->_getErrorPageContent(this->_status);
+		this->_generateResponse();
+		if (DEBUG)
+			std::cout << DBG << "[HttpResponse] Bad request" << std::endl;
+		return ;
+	}
+	
 	this->_srvcfg = _getSrvConfig(_request.getHeaders().at("host"), _request.getPort());
 	this->_reqcfg = _getReqConfig(this->_srvcfg, _request.getUri());
 	this->_reqcfg ? this->_status = SANITIZE_AND_CAST_INT_TO_HTTP_STATUS(this->_reqcfg->GetHttpResponseCode()) : this->_status = HTTP_STATUS_OK;
 	this->_contenttype = "";
-
 	
 	if (!_versionAllowed()){
 		this->_status = HTTP_STATUS_VERSION_NOT_SUPPORTED;
@@ -45,6 +53,7 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		return ;
 	}
 	
+	maxpost_size_t maxpost;
 	if (this->_reqcfg && this->_reqcfg->GetMaxPostSize())
 		maxpost = this->_reqcfg->GetMaxPostSize();
 	else

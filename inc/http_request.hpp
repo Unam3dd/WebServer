@@ -28,6 +28,7 @@ class HttpRequest
 		inline const std::string& getQueryString(void) const { return _querystring; }
 		inline const methods_t&   getMethod(void) const { return _method; }
 		inline const port_t&	  getPort(void) const { return _port; }
+		inline const bool&		  isBadRequest(void) const { return _badrequest; }
 
 		friend std::ostream& operator<<(std::ostream& os, const HttpRequest& req);
 	private:
@@ -43,7 +44,7 @@ class HttpRequest
 		std::string _body;
 		methods_t	_method;
 		port_t		_port;
-
+		bool		_badrequest;
 
 };
 

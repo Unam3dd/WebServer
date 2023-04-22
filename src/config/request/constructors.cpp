@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 19:09:58 by stales            #+#    #+#             */
-/*   Updated: 2023/04/12 20:18:10 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/22 19:41:33 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,19 @@ HttpRequestConfig::HttpRequestConfig(const std::string& scope): _scope(scope){
 	_parseMap["index"] = &HttpRequestConfig::SetIndexes;
 	_parseMap["errpage"] = &HttpRequestConfig::SetErrorPages;
 	_parseMap["docroot"] = &HttpRequestConfig::SetRoot;
-	_parseMap["session_path"] = &HttpRequestConfig::SetSessionPath;
 	_parseMap["max_post_size"] = &HttpRequestConfig::SetMaxPostSize;
 	_parseMap["cookies"] = &HttpRequestConfig::SetCookies;
 	_parseMap["uploads"] = &HttpRequestConfig::SetUploads;
-	_parseMap["upload_dir"] = &HttpRequestConfig::SetUploadDir;
 	_parseMap["dirlist"] = &HttpRequestConfig::SetDirList;
 	_parseMap["cgi"] = &HttpRequestConfig::SetCgi;
 	_parseMap["methods"] = &HttpRequestConfig::SetMethods;
-	_parseMap["redirect"] = &HttpRequestConfig::SetRedirect;
 	_parseMap["http_response_code"] = &HttpRequestConfig::SetHttpResponseCode;
 
 	_root = "/var/www/html";
 	_methods = static_cast<methods_t>(GET | POST | PUT | DELETE);
 	_max_size_post = 1000000;
-	_sessionpath = "/tmp";
 	_cookies = true;
 	_uploads = true;
-	_uploaddir = "/tmp";
 	_dirlist = true;
 	_response_code = 200;
 	_errpages[E400].code = 400;

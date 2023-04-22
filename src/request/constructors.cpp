@@ -5,6 +5,7 @@
 
 HttpRequest::HttpRequest(const std::string& req, in_port_t port, char* ip):_ip(ip),_port(port)
 {
+	this->_badrequest = false;
 	const char** http_headers = get_http_headers();
 	for (int i = 0; http_headers[i]; i++)
 		_header[http_headers[i]] = "";
@@ -15,6 +16,7 @@ HttpRequest::HttpRequest(const std::string& req, in_port_t port, char* ip):_ip(i
 	if (req.length() == 0 || req.find("\r\n") == std::string::npos)
 	{
 		std::cerr << FAIL << "[HttpRequest::HttpRequest] Received Invalid Request (CRLF mandatory)" << RESET << std::endl;
+		this->_badrequest = true;
 		return ;
 	}
 
@@ -23,6 +25,7 @@ HttpRequest::HttpRequest(const std::string& req, in_port_t port, char* ip):_ip(i
 	if (status != STATUS_OK)
 	{
 		std::cerr << FAIL << "[HttpRequest::HttpRequest] Error parsing request line: " << line << std::endl;
+		this->_badrequest = true;
 		return ;
 	}
 	
@@ -31,6 +34,7 @@ HttpRequest::HttpRequest(const std::string& req, in_port_t port, char* ip):_ip(i
 	if (status != STATUS_OK)
 	{
 		std::cerr << FAIL << "[HttpRequest::HttpRequest] Error parsing headers" << std::endl;
+		this->_badrequest = true;
 		return ;
 	}
 	

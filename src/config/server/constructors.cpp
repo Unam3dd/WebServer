@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:48:26 by stales            #+#    #+#             */
-/*   Updated: 2023/04/13 12:58:09 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/22 19:41:06 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,13 @@ HttpServerConfig::HttpServerConfig(void)
 {
 	_parseMap["server_name"] = &HttpServerConfig::SetServerNames;
 	_parseMap["server_names"] = &HttpServerConfig::SetServerNames;
-	_parseMap["ip"] = &HttpServerConfig::SetIp;
 	_parseMap["listen"] = &HttpServerConfig::SetServerPorts;
 	_parseMap["index"] = &HttpServerConfig::SetIndexes;
 	_parseMap["errpage"] = &HttpServerConfig::SetErrorPages;
 	_parseMap["docroot"] = &HttpServerConfig::SetRoot;
-	_parseMap["session_path"] = &HttpServerConfig::SetSessionPath;
 	_parseMap["max_post_size"] = &HttpServerConfig::SetMaxPostSize;
 	_parseMap["cookies"] = &HttpServerConfig::SetCookies;
 	_parseMap["uploads"] = &HttpServerConfig::SetUploads;
-	_parseMap["upload_dir"] = &HttpServerConfig::SetUploadDir;
 	_parseMap["dirlist"] = &HttpServerConfig::SetDirList;
 	_parseMap["cgi"] = &HttpServerConfig::SetCgi;
 	_parseMap["methods"] = &HttpServerConfig::SetMethods;
@@ -33,10 +30,8 @@ HttpServerConfig::HttpServerConfig(void)
 	_root = "/var/www/html";
 	_methods = static_cast<methods_t>(GET | POST | PUT | DELETE);
 	_max_size_post = 1000000;
-	_sessionpath = "/tmp";
 	_cookies = true;
 	_uploads = true;
-	_uploaddir = "/tmp";
 	_dirlist = true;
 	_errpages[E400].code = 400;
 	_errpages[E400].path = "default";

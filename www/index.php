@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["file"])) {
   }
   // Move the file to the uploads directory
   if (move_uploaded_file($file_tmp, "uploads/" . $file_name)) {
-	  echo "File uploaded successfully.";
+	  echo "File uploaded successfully to url /uploads/" . $file_name . "";
   } else {
 	  echo "File upload failed, please try again.";
   }
@@ -63,12 +63,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["SecretValue"])) {
 	<input type="text" name="SecretValue" id="SecretValue">
 	<br>
 	<input type="submit" value="Submit">
-  
+  </form>
+
   <?php
   // Check if the session variable is set
   if(isset($_SESSION["file_name"])) {
       echo "<h2>Session Example</h2>";
 	  echo "Uploaded file name is: " . $_SESSION["file_name"];
+	  echo "<br>";
+	  echo "<a href='/uploads/" . $_SESSION["file_name"] . "'><button>Download File</button></a>";
   }
   if (isset($_SESSION["posted_data"])) {
 	  echo "<h2>Form Post Example</h2>";

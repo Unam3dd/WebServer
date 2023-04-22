@@ -115,7 +115,7 @@ void HttpResponse::_createCgiEnvp(const std::string& file){
 int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 {
 	std::string	command = "";
-	int			len = 0, capacity = 0;
+	int	len = 0, capacity = 0;
 	int	inputfd[2] = {0, 0};
 	int	outputfd[2] = {0, 0};
 
@@ -187,10 +187,10 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 
 	if (DEBUG)
 	{
-		if (len < 1000)
+		if (len < 10000)
 			std::cout << DBG << "[HttpResponse::_processCgi] Cgi Output: " << _cgibuf.data() << std::endl;
 		else
-			std::cout << DBG << "[HttpResponse::_processCgi] Cgi Output not displayed due to big size (>1000 chars)"  << std::endl;
+			std::cout << DBG << "[HttpResponse::_processCgi] Cgi Output not displayed due to big size (>10000 chars)"  << std::endl;
 	}
 
 	close(inputfd[1]);

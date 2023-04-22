@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 16:59:57 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/08 22:57:52 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/22 19:43:18 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,25 +108,37 @@ t_errcode	HttpRequestConfig::SetRoot(const std::vector<std::string> &root)
 
 t_errcode	HttpRequestConfig::SetMaxPostSize(const std::vector<std::string> &max_size_post)
 {
+	std::string tmp = max_size_post.at(1);
 	if (DEBUG)
 		std::cout << DBG << "[HttpRequestConfig::SetMaxPostSize] setting max post size" << std::endl;
-	if (std::atof(max_size_post.at(1).c_str()) < 0 || std::atof(max_size_post.at(1).c_str()) == HUGE_VAL)
+	if (max_size_post.size() != 2 && (std::atof(tmp.c_str()) < 0 || std::atof(tmp.c_str()) == HUGE_VAL))
 		return (ERRPARSE_POST);
-	this->_max_size_post = std::atof(max_size_post.at(1).c_str());
-	if (DEBUG)
-		std::cout << DBG << "[HttpRequestConfig::SetMaxPostSize] max post size set to: " << this->GetMaxPostSize() << std::endl;
-	return (ERRPARSE_OK);
-}
 
-t_errcode	HttpRequestConfig::SetSessionPath(const std::vector<std::string> &sessionpath)
-{
+	maxpost_size_t max_size = std::atof(tmp.c_str());
+	if (tmp.find_first_not_of("0123456789") != std::string::npos)
+	{
+		if (tmp.find_first_not_of("0123456789") != tmp.size() - 1)
+			return (ERRPARSE_POST);
+		LOWERCASE(tmp);
+		switch (tmp.at(tmp.size() - 1))
+		{
+			case 'k':
+				max_size *= 1024;
+				break;
+			case 'm':
+				max_size *= 1024 * 1024;
+				break;
+			case 'g':
+				max_size *= 1024 * 1024 * 1024;
+				break;
+			default:
+				return (ERRPARSE_POST);
+		}
+	}
+
+	this->_max_size_post = max_size;
 	if (DEBUG)
-		std::cout << DBG << "[HttpRequestConfig::SetSessionPath] setting session path" << std::endl;
-	this->_sessionpath = sessionpath.at(1);
-	if (this->_sessionpath.at(this->_sessionpath.size() - 1) != '/')
-		this->_sessionpath += '/';
-	if (DEBUG)
-		std::cout << DBG << "[HttpRequestConfig::SetSessionPath] session path set to: " << this->GetSessionPath() << std::endl;
+		std::cout << DBG << "[HttpRequestConfig::SetMaxPostSize] max post size set to (in bytes): " << this->GetMaxPostSize() << std::endl;
 	return (ERRPARSE_OK);
 }
 
@@ -228,15 +240,6 @@ t_errcode	HttpRequestConfig::SetMethods(const std::vector<std::string> &methods)
 	return (ERRPARSE_OK);
 }
 
-t_errcode	HttpRequestConfig::SetUploadDir(const std::vector<std::string> &uploaddir)
-{
-	if (DEBUG)
-		std::cout << DBG << "[HttpRequestConfig::SetUploadDir] setting upload dir" << std::endl;
-	this->_uploaddir = uploaddir.at(1);
-	if (DEBUG)
-		std::cout << DBG << "[HttpRequestConfig::SetUploadDir] upload dir set to: " << this->GetUploadDir() << std::endl;
-	return (ERRPARSE_OK);
-}
 t_errcode	HttpRequestConfig::SetHttpResponseCode(const std::vector<std::string> &argv)
 {
 	if (DEBUG)
@@ -265,13 +268,5 @@ t_errcode	HttpRequestConfig::SetHttpResponseCode(const std::vector<std::string> 
 		this->_response_code != 502 && this->_response_code != 503 && this->_response_code != 504 &&
 		this->_response_code != 505)
 		return (ERRPARSE_HTTPCODE);
-	return (ERRPARSE_OK);
-}
-
-t_errcode	HttpRequestConfig::SetRedirect(const std::vector<std::string> &argv)
-{
-	(void)argv;
-	if (DEBUG)
-		std::cout << DBG << "[HttpRequestConfig::SetRedirect] setting redirect" << std::endl;
 	return (ERRPARSE_OK);
 }
