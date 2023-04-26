@@ -29,6 +29,13 @@ HttpRequest::HttpRequest(const std::string& req, in_port_t port, char* ip):_ip(i
 		return ;
 	}
 	
+	if (req.find("\r\n") == std::string::npos)
+	{
+		std::cerr << FAIL << "[HttpRequest::HttpRequest] Received Invalid Request (CRLF mandatory)" << RESET << std::endl;
+		this->_badrequest = true;
+		return ;
+	}
+	
 	line = req.substr(req.find("\r\n") + 2, req.length() - req.find("\r\n"));
 	status = _parseHeaders(line);
 	if (status != STATUS_OK)
@@ -37,7 +44,6 @@ HttpRequest::HttpRequest(const std::string& req, in_port_t port, char* ip):_ip(i
 		this->_badrequest = true;
 		return ;
 	}
-	
-	setBody(req.substr(req.find("\r\n\r\n") + 4, req.length() - req.find("\r\n\r\n")));
-
+	if (req.find("\r\n\r\n") != std::string::npos && req.find("\r\n\r\n") + 4 < req.length())
+		setBody(req.substr(req.find("\r\n\r\n") + 4, req.length() - req.find("\r\n\r\n")));
 }
