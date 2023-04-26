@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 02:27:43 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/26 16:34:29 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/26 20:38:42 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 #define SUCCESS "[\033[32m SUCCESS \033[00m]"
 #define DBG 	"[\033[36m DEBUG \033[00m]"
 #define WARN	"[\033[33m WARNING \033[00m]"
+#define INFO	"[\033[36m INFO \033[00m]"
 #define FAIL	"[\033[31m FAIL \033[00m]"
 #define TICK	"\n[\033[0;32m\xE2\x9C\x94\033[0m]"
 
