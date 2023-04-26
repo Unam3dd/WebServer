@@ -10,12 +10,12 @@
 static std::vector<port_t> _getUniquePorts(std::vector<HttpServerConfig*>& configs){
 	std::vector<port_t> ports;
 
-	for (std::vector<HttpServerConfig*>::iterator it = configs.begin(); it != configs.end(); it++)
+	FOREACH_VECTOR(HttpServerConfig*, configs, cfg)
 	{
-		for (std::vector<port_t>::iterator itp = (*it)->GetServerPorts().begin(); itp != (*it)->GetServerPorts().end(); itp++)
+		FOREACH_VECTOR(port_t, (*cfg)->GetServerPorts(), port)
 		{
-			if (std::find(ports.begin(), ports.end(), *itp) == ports.end())
-				ports.push_back(*itp);
+			if (std::find(ports.begin(), ports.end(), *port) == ports.end())
+				ports.push_back(*port);
 		}
 	}
 	return (ports);
@@ -26,19 +26,17 @@ t_status	WebServer::_setupSrvs(void)
 	HttpServer			*ptr = NULL;
 	std::vector<port_t> ports = _getUniquePorts(this->_configs);
 
-	for (std::vector<port_t>::iterator it = ports.begin(); it != ports.end(); it++) {
+	FOREACH_VECTOR(port_t, ports, port){
 		try {
-			ptr = new HttpServer("0.0.0.0", *it);
+			ptr = new HttpServer("0.0.0.0", *port);
 			_srv.push_back(ptr);
 		} catch (std::exception &e) {
-			std::cerr << FAIL << "[WebServer::_setupSrvs] Cannot bind to port: " << *it << RESET << std::endl;
+			std::cerr << FAIL << "[WebServer::_setupSrvs] Cannot bind to port: " << *port << RESET << std::endl;
 			return (STATUS_FAIL);
 		}
 	}
 	
 	if (DEBUG)
-	{
 		std::cout << DBG << "[WebServer::_setupSrvs]"; PRINT_VECTOR_PORTS(ports, std::cout); std::cout << std::endl;
-	}
 	return (STATUS_OK);
 }

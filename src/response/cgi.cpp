@@ -92,7 +92,8 @@ void HttpResponse::_createCgiEnvp(const std::string& file){
 	std::string contenttype = "CONTENT_TYPE=" + this->_request.getHeaders().at("content-type");
 	
 	std::string contentlen;
-	this->_request.getMethod() == POST ? contentlen = "CONTENT_LENGTH=" + NumberToString(this->_request.getBody().size()) : contentlen = "CONTENT_LENGTH=0";
+	this->_request.getMethod() == POST ? contentlen = "CONTENT_LENGTH=" + NumberToString(this->_request.getBody().size()) 
+									   : contentlen = "CONTENT_LENGTH=0";
 	
 	env.push_back(cookies);
 	env.push_back(accept);

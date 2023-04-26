@@ -13,11 +13,11 @@ t_status	WebServer::_setupEpoll(void)
 
 	memset(&ev, 0, sizeof(ev));
 
-	for (std::vector<HttpServer*>::iterator it = this->_srv.begin(); it != this->_srv.end(); it++) {
+	FOREACH_VECTOR(HttpServer*, this->_srv, srv) {
 		ev.events = EPOLLIN;
-		ev.data.fd = (*it)->getSocket().Getfd();
-		fcntl((*it)->getSocket().Getfd(), F_SETFD, FD_CLOEXEC);
-		_epoll.Ctl(EPOLL_CTL_ADD, (*it)->getSocket().Getfd(), &ev);
+		ev.data.fd = (*srv)->getSocket().Getfd();
+		fcntl((*srv)->getSocket().Getfd(), F_SETFD, FD_CLOEXEC);
+		_epoll.Ctl(EPOLL_CTL_ADD, (*srv)->getSocket().Getfd(), &ev);
 	}
 
 	return (STATUS_OK);

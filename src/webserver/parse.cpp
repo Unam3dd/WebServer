@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/03/25 21:48:47 by stales           ###   ########.fr       */
+/*   Updated: 2023/04/25 16:59:02 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ t_errcode	WebServer::Parse(void)
 		return (ERRPARSE_NEWLOCBLK);
 	}
 	int i = 0;
-	for (std::vector<HttpServerConfig*>::iterator it = this->_configs.begin(); it != this->_configs.end(); it++)
+	FOREACH_VECTOR(HttpServerConfig*, this->_configs, it)
 	{
 		if ((*it)->GetServerNames().empty())
 		{

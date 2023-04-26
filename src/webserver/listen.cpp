@@ -3,7 +3,7 @@
 
 t_status	WebServer::_listenSrvs(void)
 {
-	for (std::vector<HttpServer*>::iterator it = this->_srv.begin(); it != this->_srv.end(); it++)
-		(*it)->Listen(SOMAXCONN);
+	FOREACH_VECTOR(HttpServer*, this->_srv, srv)
+		(*srv)->Listen(SOMAXCONN);
 	return (STATUS_OK);
 }

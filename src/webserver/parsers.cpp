@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:28:25 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/03/22 13:48:53 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/04/25 16:54:53 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,12 @@ t_errcode WebServer::_parseSrvDirective(const std::string& line)
 			}
 			return (ERRPARSE_SINGLEARG);
 	}
-	if (arg == "/" || arg == "//" || arg == "#" || arg == "/*")
+	if (arg.at(0) == '/' || arg.at(0) == '#')
+	{
+		if (DEBUG)
+			std::cout << DBG << "[_parseLocDirective] directive: " << arg << " is a comment" << std::endl;
 		return (ERRPARSE_OK);
+	}
 	if (argv.back() == "}"){
 		argv.pop_back();
 		argc--;
@@ -96,8 +100,12 @@ t_errcode WebServer::_parseLocDirective(const std::string& line)
 			}
 			return (ERRPARSE_SINGLEARG);
 	}
-	if (arg == "/" || arg == "//" || arg == "#" || arg == "/*")
+	if (arg.at(0) == '/' || arg.at(0) == '#')
+	{
+		if (DEBUG)
+			std::cout << DBG << "[_parseLocDirective] directive: " << arg << " is a comment" << std::endl;
 		return (ERRPARSE_OK);
+	}
 	if (argv.back() == "}"){
 		argv.pop_back();
 		argc--;
