@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 18:48:26 by stales            #+#    #+#             */
-/*   Updated: 2023/04/22 19:41:06 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/22 23:17:01 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ HttpServerConfig::HttpServerConfig(void)
 	_errpages[E404].path = "default";
 	_errpages[E405].code = 405;
 	_errpages[E405].path = "default";
+	_errpages[E408].code = 408;
+	_errpages[E408].path = "default";
 	_errpages[E500].code = 500;
 	_errpages[E500].path = "default";
 	_errpages[E501].code = 501;

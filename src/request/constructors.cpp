@@ -3,6 +3,8 @@
 #include "http_colors.hpp"
 #include <iostream>
 
+HttpRequest::HttpRequest(){}
+
 HttpRequest::HttpRequest(const std::string& req, in_port_t port, char* ip):_ip(ip),_port(port)
 {
 	this->_badrequest = false;

@@ -2,6 +2,7 @@
 #include "http_utils.hpp"
 #include "http_colors.hpp"
 #include "http_status.hpp"
+#include "http_request.hpp"
 #include <cstring>
 #include <iostream>
 
@@ -87,4 +88,13 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		std::cout << DBG << "[HttpResponse::HttpResponse()] Full response: "; this->_contenttype != "text/html" ? std::cout << BLUE << "Binary File." << RESET << std::endl : std::cout << std::endl << _fullresponse << std::endl;
 		this->_cgibuf.data() ? std::cout << DBG << "[HttpResponse::HttpResponse()] CGI Buffer content: \n" << _cgibuf.data() << std::endl : std::cout << DBG << "[HttpResponse::HttpResponse()] No CGI." << std::endl;
 	}
+}
+
+HttpResponse::HttpResponse(int status) : _request(HttpRequest()){
+	if (DEBUG)
+		std::cout << DBG << "[HttpResponse] Creating forced error response (via constructor surcharge)" << std::endl;
+	this->_status = SANITIZE_AND_CAST_INT_TO_HTTP_STATUS(status);
+	this->_contenttype = "text/html";
+	this->_body = this->_getErrorPageContent(this->_status);
+	this->_generateResponse();
 }

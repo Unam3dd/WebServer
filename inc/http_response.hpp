@@ -10,6 +10,7 @@
 
 class HttpResponse{
 	public:
+		HttpResponse(int status);
 		HttpResponse(const HttpRequest &req);
 		~HttpResponse(void);
 

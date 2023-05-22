@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 18:58:55 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/22 19:57:23 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/22 23:19:41 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ std::string	HttpResponse::_getErrorPageContent(http_status_code_t httpstatus){
 		status = E404;
 	else if (httpstatus == HTTP_STATUS_METHOD_NOT_ALLOWED)
 		status = E405;
+	else if (httpstatus == HTTP_STATUS_REQUEST_TIMEOUT)
+		return (SG_DefaultErrorPages(E408));
 	else if (httpstatus == HTTP_STATUS_PAYLOAD_TOO_LARGE)
 		status = E413;
 	else if (httpstatus == HTTP_STATUS_INTERNAL_SERVER_ERROR)

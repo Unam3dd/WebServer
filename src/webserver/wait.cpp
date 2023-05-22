@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/22 20:03:56 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/23 00:43:24 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,20 @@ t_status	WebServer::_acceptClient(ev_t *e)
 
 	if (!e) return (STATUS_FAIL);
 
-	FOREACH_VECTOR(HttpServer*, this->_srv, it){
-		if (e->data.fd == (*it)->getSocket().Getfd()) {
-			client = (*it)->getSocket().Accept();
-			if (client) {
-				(*it)->getClients().push_back(client);
+	FOREACH_VECTOR(HttpServer*, this->_srv, srv)
+	{
+		if (e->data.fd == (*srv)->getSocket().Getfd())
+		{
+			client = (*srv)->getSocket().Accept();
+			if (client) 
+			{
 				tev.data.ptr = client;
-				client->SetSrvPort((*it)->getPort());
 				tev.events = EPOLLIN;
 				this->_epoll.Ctl(EPOLL_CTL_ADD, client->Getfd(), &tev);
-				std::cout << SUCCESS << "[WebServer::Wait] New client Accepted ! " << client->InetNtoa(client->GetSin()->sin_addr.s_addr) << ":" << client->Ntohs(client->GetSin()->sin_port) << std::endl;
+				client->SetSrvPort((*srv)->getPort());
+				(*srv)->getClients().push_back(client);
 				_clients.push_back(client);
+				std::cout << SUCCESS << "[WebServer::Wait] New client Accepted ! " << client->InetNtoa(client->GetSin()->sin_addr.s_addr) << ":" << client->Ntohs(client->GetSin()->sin_port) << std::endl;
 				return (STATUS_OK);
 			}
 		}
@@ -56,12 +59,14 @@ t_status	WebServer::_acceptClient(ev_t *e)
 
 t_status	WebServer::_waitSrvs(void)
 {
-	std::string buf;
-	char	*tmpbuf = NULL;
+	std::string	bufs[MAX_EVENT];
+	char		*tmpbufs[MAX_EVENT] = {NULL};
+
 	size_t	size = 0;
 	epoll_event evs[MAX_EVENT];
 	int	nfds = 0;
 	int i = 0;
+	int sock_fd = 0;
 
 	// TODO: Setup Signals
 	sig_setup();
@@ -73,69 +78,139 @@ t_status	WebServer::_waitSrvs(void)
 
 		for (i = 0; i < nfds; i++) {
 
-			tmpbuf = NULL;
-			size = 0;
-			buf.clear();
-
 			if (_acceptClient(&evs[i]) == STATUS_OK)
 				continue;
 
-			bool datawaiting = true;
-			while (datawaiting)
-			{
-				if (tmpbuf)
-					delete tmpbuf;
-				tmpbuf = NULL;
-				size = 0;
-
-				::ioctl(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), FIONREAD, &size);
+			if (evs[i].events & EPOLLIN) {
+				sock_fd = static_cast<Socket*>(evs[i].data.ptr)->Getfd();
+				::ioctl(sock_fd, FIONREAD, &size);
 				if (!size){
-					datawaiting = false;
-					tmpbuf = NULL;
 					continue;
 				}
 				
-				tmpbuf = new char[size + 1];
+				if (DEBUG)
+					std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : size of request: " << size << std::endl;
 
-				if (!tmpbuf) {
+				tmpbufs[sock_fd % MAX_EVENT] = new char[size + 1];
+
+				if (!tmpbufs[sock_fd % MAX_EVENT]) {
 					std::cout << WARN << "[WebServer::_waitSrvs()] Bad Alloc" << std::endl;
 					continue ;
 				}
 
-				if (::read(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), tmpbuf, size) != (int)size)
+				if (::read(sock_fd, tmpbufs[sock_fd % MAX_EVENT], size) != (int)size)
 				{
 					if (DEBUG)
 						std::cout << DBG << WARN << "[WebServer::_waitSrvs()] Read error" << std::endl;
 					continue ;
 				}
-				
-				buf.reserve(size + 1);
-				for (size_t i = 0; i < size; i++)
-					buf.push_back(tmpbuf[i]);
-				
+
+				bufs[sock_fd % MAX_EVENT].reserve(size + 1);
+				for (size_t j = 0; j < size; j++)
+					bufs[sock_fd % MAX_EVENT].push_back(tmpbufs[sock_fd % MAX_EVENT][j]);
+
+				if (DEBUG)
+				{
+					std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : request size now of: " << bufs[sock_fd % MAX_EVENT].size() << std::endl;
+					std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : request: " << std::endl << bufs[sock_fd % MAX_EVENT] << std::endl;
+				}
+
+				delete[] tmpbufs[sock_fd % MAX_EVENT];
+				tmpbufs[sock_fd % MAX_EVENT] = NULL;
+
+				if (   bufs[sock_fd % MAX_EVENT].find("\r\n\r\n") != std::string::npos
+					|| bufs[sock_fd % MAX_EVENT].find("\n\n") != std::string::npos) {
+					if (DEBUG)
+						std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : End of header received. Setting EPOLLOUT" << std::endl;
+					evs[i].events = EPOLLOUT;
+					_epoll.Ctl(EPOLL_CTL_MOD, sock_fd, &evs[i]);
+				}
+			}
+			if (evs[i].events & EPOLLOUT) {
+				if (DEBUG)
+					std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLOUT : Sending response" << std::endl;
+
+				HttpRequest req(bufs[sock_fd % MAX_EVENT], static_cast<Socket*>(evs[i].data.ptr)->GetSrvPort(), const_cast<char*>(static_cast<Socket*>(evs[i].data.ptr)->InetNtoa(static_cast<Socket*>(evs[i].data.ptr)->GetSin()->sin_addr.s_addr).c_str()));
+				HttpResponse res(req);
+
+				if (DEBUG)
+					std::cout << DBG << "[WebServer::Wait] Received and parsed request: " << std::endl << req << std::endl;
+				write(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), res.getResponse().c_str(), res.getResponse().size());
+
+				::close(static_cast<Socket*>(evs[i].data.ptr)->Getfd());
+				_epoll.Ctl(EPOLL_CTL_DEL, static_cast<Socket*>(evs[i].data.ptr)->Getfd(), NULL);
+				if (DEBUG)
+					std::cout << DBG << "[WebServer::_wait] _clients.size(): " << _clients.size() << std::endl;
+				FOREACH_VECTOR(Socket*, _clients, it){
+					if (*it == evs[i].data.ptr) _clients.erase(it);
+				}
+				delete static_cast<Socket*>(evs[i].data.ptr);
+				bufs[sock_fd % MAX_EVENT].clear();
+
 			}
 
-			HttpRequest req(buf, static_cast<Socket*>(evs[i].data.ptr)->GetSrvPort(), const_cast<char*>(static_cast<Socket*>(evs[i].data.ptr)->InetNtoa(static_cast<Socket*>(evs[i].data.ptr)->GetSin()->sin_addr.s_addr).c_str()));
-			HttpResponse res(req);
 
-			if (DEBUG)
-				std::cout << DBG << "[WebServer::Wait] Received and parsed request: " << std::endl << req << std::endl;
-			write(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), res.getResponse().c_str(), res.getResponse().size());
 
-			::close(static_cast<Socket*>(evs[i].data.ptr)->Getfd());
-			_epoll.Ctl(EPOLL_CTL_DEL, static_cast<Socket*>(evs[i].data.ptr)->Getfd(), NULL);
-			if (DEBUG)
-				std::cout << DBG << "[WebServer::_wait] _clients.size(): " << _clients.size() << std::endl;
-			FOREACH_VECTOR(Socket*, _clients, it){
-				if (*it == evs[i].data.ptr) _clients.erase(it);
-			}
-			delete static_cast<Socket*>(evs[i].data.ptr);
-			if (tmpbuf)
-				delete tmpbuf;
+			/*
+			   bool datawaiting = true;
+			   while (datawaiting)
+			   {
+			   if (tmpbuf)
+			   delete tmpbuf;
+			   tmpbuf = NULL;
+			   size = 0;
+
+			   ::ioctl(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), FIONREAD, &size);
+			   if (!size){
+			   datawaiting = false;
+			   tmpbuf = NULL;
+			   continue;
+			   }
+
+			   tmpbuf = new char[size + 1];
+
+			   if (!tmpbuf) {
+			   std::cout << WARN << "[WebServer::_waitSrvs()] Bad Alloc" << std::endl;
+			   continue ;
+			   }
+
+			   if (::read(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), tmpbuf, size) != (int)size)
+			   {
+			   if (DEBUG)
+			   std::cout << DBG << WARN << "[WebServer::_waitSrvs()] Read error" << std::endl;
+			   continue ;
+			   }
+
+			   buf.reserve(size + 1);
+			   for (size_t i = 0; i < size; i++)
+			   buf.push_back(tmpbuf[i]);
+
+			   }
+
+			   HttpRequest req(buf, static_cast<Socket*>(evs[i].data.ptr)->GetSrvPort(), const_cast<char*>(static_cast<Socket*>(evs[i].data.ptr)->InetNtoa(static_cast<Socket*>(evs[i].data.ptr)->GetSin()->sin_addr.s_addr).c_str()));
+			   HttpResponse res(req);
+
+			   if (DEBUG)
+			   std::cout << DBG << "[WebServer::Wait] Received and parsed request: " << std::endl << req << std::endl;
+			   write(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), res.getResponse().c_str(), res.getResponse().size());
+
+			   ::close(static_cast<Socket*>(evs[i].data.ptr)->Getfd());
+			   _epoll.Ctl(EPOLL_CTL_DEL, static_cast<Socket*>(evs[i].data.ptr)->Getfd(), NULL);
+			   if (DEBUG)
+			   std::cout << DBG << "[WebServer::_wait] _clients.size(): " << _clients.size() << std::endl;
+			   FOREACH_VECTOR(Socket*, _clients, it){
+			   if (*it == evs[i].data.ptr) _clients.erase(it);
+			   }
+			   delete static_cast<Socket*>(evs[i].data.ptr);
+			   if (tmpbuf)
+			   delete tmpbuf;
+			   */
 		}
 	}
 
 	FOREACH_VECTOR(Socket*, _clients, it){ delete *it; }
-
+	for (int i = 0; i < MAX_EVENT; i++)
+		if (tmpbufs[i])
+			delete tmpbufs[i];
 	return (STATUS_OK);
 }

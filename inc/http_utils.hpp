@@ -44,7 +44,7 @@
 
 #define STR_METHOD(x) (x == GET ? "GET" : x == POST ? "POST" : x == PUT ? "PUT" : x == DELETE ? "DELETE" : "UNKNOWN")
 
-#define MAX_ERR_PAGES 0xa
+#define MAX_ERR_PAGES 0xb
 #define IPV4_BYTES_LEN 0x4
 #define IPV4_BITS_LEN 0x20
 //////////////////////////////////
@@ -109,11 +109,12 @@ typedef enum {
 	E403 = 2,
 	E404 = 3,
 	E405 = 4,
-	E413 = 5,
-	E500 = 6,
-	E501 = 7,
-	E502 = 8,
-	E505 = 9
+	E408 = 5,
+	E413 = 6,
+	E500 = 7,
+	E501 = 8,
+	E502 = 9,
+	E505 = 10
 } errpagecode_t;
 
 //////////////////////////////////
