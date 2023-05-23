@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/23 17:00:09 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/23 17:32:26 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,30 @@
 #include <fstream>
 #include <sys/ioctl.h>
 #include <sys/timerfd.h>
+#include <string>
+
+static unsigned long long	lowest_heap_address(void)
+{
+	std::stringstream	ss;
+	std::ifstream		regions("/proc/self/maps");
+	std::string			line;
+	std::string			addr;
+	unsigned long long	ret = 0;
+
+	while (std::getline(regions, line))
+	{
+		if (line.find("[heap]") != std::string::npos)
+		{
+			addr = line.substr(0, line.find("-"));
+			ss << std::hex << addr;
+			ss >> ret;
+			break;
+		}
+	}
+	if (!ret)
+		return (0xFFFFFF);
+	return (ret);
+}
 
 t_status	WebServer::_acceptClient(ev_t *e)
 {
@@ -100,7 +124,7 @@ t_status	WebServer::_waitSrvs(void)
 				continue;
 
 			if (evs[i].events & EPOLLIN) {
-				if (evs[i].data.fd < 0xFFFF) { //black magic: epoll_event.data is union, so if we store an fd instead on a ptr, it will always be inferior to a memory address
+				if ((unsigned long long)evs[i].data.fd < lowest_heap_address()) { //black magic: epoll_event.data is union, so if we store an fd instead on a ptr, it will always be inferior to a memory address
 					if (DEBUG)
 						std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : timerfd" << std::endl;
 					::read(evs[i].data.fd, &size, sizeof(size));
@@ -198,10 +222,7 @@ t_status	WebServer::_waitSrvs(void)
 				this->_timerfds.erase(static_cast<Socket*>(evs[i].data.ptr)->Getfd());
 				delete static_cast<Socket*>(evs[i].data.ptr);
 				bufs[sock_fd % MAX_EVENT].clear();
-
 			}
-
-
 
 			/*
 			   bool datawaiting = true;
