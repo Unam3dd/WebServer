@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/23 14:22:51 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/23 17:00:09 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ t_status	WebServer::_acceptClient(ev_t *e)
 				tfd = timerfd_create(CLOCK_MONOTONIC, 0);
 				timerfd_settime(tfd, 0, &its, NULL);
 				this->_timerfds.insert(std::pair<int, int>(client->Getfd(), tfd));
+				tev.events = EPOLLIN | EPOLLET;
 				tev.data.fd = tfd;
 				this->_epoll.Ctl(EPOLL_CTL_ADD, tfd, &tev);
 				client->SetTfd(tfd);
@@ -99,21 +100,20 @@ t_status	WebServer::_waitSrvs(void)
 				continue;
 
 			if (evs[i].events & EPOLLIN) {
-				if (evs[i].data.ptr < (void*)0xFFFF) { //black magic: epoll_event.data is union, so if we store an fd instead on a ptr, it will always be inferior to a memory address
+				if (evs[i].data.fd < 0xFFFF) { //black magic: epoll_event.data is union, so if we store an fd instead on a ptr, it will always be inferior to a memory address
 					if (DEBUG)
 						std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : timerfd" << std::endl;
 					::read(evs[i].data.fd, &size, sizeof(size));
 					HttpResponse timeout(HTTP_STATUS_REQUEST_TIMEOUT);
 					FOREACH_VECTOR(Socket*, _clients, client){
-						if ((*client)->GetTfd() == this->_timerfds[(*client)->Getfd()]){
+						if (evs[i].data.fd == this->_timerfds[(*client)->Getfd()]){
 							::write((*client)->Getfd(), timeout.getResponse().c_str(), timeout.getResponse().size());
 							::close((*client)->Getfd());
 							this->_epoll.Ctl(EPOLL_CTL_DEL, (*client)->Getfd(), NULL);
 							this->_timerfds.erase((*client)->Getfd());
 							this->_epoll.Ctl(EPOLL_CTL_DEL, (*client)->GetTfd(), NULL);
 							bufs[(*client)->Getfd() % MAX_EVENT].clear();
-							_clients.erase(client);
-							delete *client;
+							break;
 						}
 					}
 					this->_timerfds.erase(evs[i].data.fd);
@@ -260,7 +260,7 @@ t_status	WebServer::_waitSrvs(void)
 		}
 	}
 
-	FOREACH_VECTOR(Socket*, _clients, it){ delete *it; }
+	FOREACH_VECTOR(Socket*, this->_clients, it){ delete *it; }
 	for (int i = 0; i < MAX_EVENT; i++)
 		if (tmpbufs[i])
 			delete tmpbufs[i];
