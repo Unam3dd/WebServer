@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/23 19:43:43 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:49:13 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,8 +220,10 @@ t_status	WebServer::_waitSrvs(void)
 				new_value.it_interval.tv_nsec = 0;
 				timerfd_settime(this->_timerfds[sock_fd], 0, &new_value, NULL);
 
-				if (bufs[sock_fd % MAX_EVENT].find("\r\n\r\n") != std::string::npos)
+				if (!(evs[i].events & EPOLLOUT) && bufs[sock_fd % MAX_EVENT].find("\r\n\r\n") != std::string::npos)
 				{
+					if (DEBUG)
+						std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : Found end of header (\\r\\n\\r\\n). Setting EPOLLOUT. If there's data to be read, it should be read before going to EPOLLOUT" << std::endl;
 					evs[i].events = EPOLLIN | EPOLLOUT;
 					this->_epoll.Ctl(EPOLL_CTL_MOD, sock_fd, &evs[i]);
 				}
