@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/23 00:43:24 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/23 14:22:51 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,21 @@
 #include <cstring>
 #include <fstream>
 #include <sys/ioctl.h>
+#include <sys/timerfd.h>
 
 t_status	WebServer::_acceptClient(ev_t *e)
 {
 	Socket	*client = NULL;
 	ev_t	tev;
+	int		tfd = 0;
 
 	if (!e) return (STATUS_FAIL);
+
+	struct itimerspec its;
+	its.it_value.tv_sec = 5;
+	its.it_value.tv_nsec = 0;
+	its.it_interval.tv_sec = 0;
+	its.it_interval.tv_nsec = 0;
 
 	FOREACH_VECTOR(HttpServer*, this->_srv, srv)
 	{
@@ -42,11 +50,20 @@ t_status	WebServer::_acceptClient(ev_t *e)
 			client = (*srv)->getSocket().Accept();
 			if (client) 
 			{
+				client->SetSrvPort((*srv)->getPort());
+				(*srv)->getClients().push_back(client);
+				
 				tev.data.ptr = client;
 				tev.events = EPOLLIN;
 				this->_epoll.Ctl(EPOLL_CTL_ADD, client->Getfd(), &tev);
-				client->SetSrvPort((*srv)->getPort());
-				(*srv)->getClients().push_back(client);
+
+				tfd = timerfd_create(CLOCK_MONOTONIC, 0);
+				timerfd_settime(tfd, 0, &its, NULL);
+				this->_timerfds.insert(std::pair<int, int>(client->Getfd(), tfd));
+				tev.data.fd = tfd;
+				this->_epoll.Ctl(EPOLL_CTL_ADD, tfd, &tev);
+				client->SetTfd(tfd);
+
 				_clients.push_back(client);
 				std::cout << SUCCESS << "[WebServer::Wait] New client Accepted ! " << client->InetNtoa(client->GetSin()->sin_addr.s_addr) << ":" << client->Ntohs(client->GetSin()->sin_port) << std::endl;
 				return (STATUS_OK);
@@ -82,6 +99,29 @@ t_status	WebServer::_waitSrvs(void)
 				continue;
 
 			if (evs[i].events & EPOLLIN) {
+				if (evs[i].data.ptr < (void*)0xFFFF) { //black magic: epoll_event.data is union, so if we store an fd instead on a ptr, it will always be inferior to a memory address
+					if (DEBUG)
+						std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : timerfd" << std::endl;
+					::read(evs[i].data.fd, &size, sizeof(size));
+					HttpResponse timeout(HTTP_STATUS_REQUEST_TIMEOUT);
+					FOREACH_VECTOR(Socket*, _clients, client){
+						if ((*client)->GetTfd() == this->_timerfds[(*client)->Getfd()]){
+							::write((*client)->Getfd(), timeout.getResponse().c_str(), timeout.getResponse().size());
+							::close((*client)->Getfd());
+							this->_epoll.Ctl(EPOLL_CTL_DEL, (*client)->Getfd(), NULL);
+							this->_timerfds.erase((*client)->Getfd());
+							this->_epoll.Ctl(EPOLL_CTL_DEL, (*client)->GetTfd(), NULL);
+							bufs[(*client)->Getfd() % MAX_EVENT].clear();
+							_clients.erase(client);
+							delete *client;
+						}
+					}
+					this->_timerfds.erase(evs[i].data.fd);
+					this->_epoll.Ctl(EPOLL_CTL_DEL, evs[i].data.fd, NULL);
+					::close(evs[i].data.fd);
+					continue;
+				}
+
 				sock_fd = static_cast<Socket*>(evs[i].data.ptr)->Getfd();
 				::ioctl(sock_fd, FIONREAD, &size);
 				if (!size){
@@ -89,7 +129,7 @@ t_status	WebServer::_waitSrvs(void)
 				}
 				
 				if (DEBUG)
-					std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : size of request: " << size << std::endl;
+					std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : size of packet: " << size << std::endl;
 
 				tmpbufs[sock_fd % MAX_EVENT] = new char[size + 1];
 
@@ -112,18 +152,27 @@ t_status	WebServer::_waitSrvs(void)
 				if (DEBUG)
 				{
 					std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : request size now of: " << bufs[sock_fd % MAX_EVENT].size() << std::endl;
-					std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : request: " << std::endl << bufs[sock_fd % MAX_EVENT] << std::endl;
+					std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : request: " << std::endl << bufs[sock_fd % MAX_EVENT];
 				}
 
 				delete[] tmpbufs[sock_fd % MAX_EVENT];
 				tmpbufs[sock_fd % MAX_EVENT] = NULL;
 
 				if (   bufs[sock_fd % MAX_EVENT].find("\r\n\r\n") != std::string::npos
-					|| bufs[sock_fd % MAX_EVENT].find("\n\n") != std::string::npos) {
+					|| bufs[sock_fd % MAX_EVENT].find("\n\n") 	  != std::string::npos) {
 					if (DEBUG)
 						std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : End of header received. Setting EPOLLOUT" << std::endl;
 					evs[i].events = EPOLLOUT;
 					_epoll.Ctl(EPOLL_CTL_MOD, sock_fd, &evs[i]);
+				} else { //we reset the timerfd
+					if (DEBUG)
+						std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : Resetting timerfd" << std::endl;
+					struct itimerspec new_value;
+					new_value.it_value.tv_sec = 5;
+					new_value.it_value.tv_nsec = 0;
+					new_value.it_interval.tv_sec = 0;
+					new_value.it_interval.tv_nsec = 0;
+					timerfd_settime(this->_timerfds[sock_fd], 0, &new_value, NULL);
 				}
 			}
 			if (evs[i].events & EPOLLOUT) {
@@ -144,6 +193,9 @@ t_status	WebServer::_waitSrvs(void)
 				FOREACH_VECTOR(Socket*, _clients, it){
 					if (*it == evs[i].data.ptr) _clients.erase(it);
 				}
+				::close(static_cast<Socket*>(evs[i].data.ptr)->GetTfd());
+				_epoll.Ctl(EPOLL_CTL_DEL, static_cast<Socket*>(evs[i].data.ptr)->GetTfd(), NULL);
+				this->_timerfds.erase(static_cast<Socket*>(evs[i].data.ptr)->Getfd());
 				delete static_cast<Socket*>(evs[i].data.ptr);
 				bufs[sock_fd % MAX_EVENT].clear();
 
