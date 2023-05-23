@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 17:08:48 by stales            #+#    #+#             */
-/*   Updated: 2023/04/19 17:15:03 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/23 22:20:41 by sam0verfl0w      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	generate_config(void){
 	file << "server {" << std::endl;
 	file << "\tlisten 8080" << std::endl;
 	file << "\tserver_name localhost" << std::endl;
-	file << "\troot /var/www/" << std::endl;
+	file << "\tdocroot /var/www/" << std::endl;
 	file << "\tindex index.html" << std::endl;
 	file << "\tlocation /onlyget {" << std::endl;
 	file << "\t\tmethods GET" << std::endl;
