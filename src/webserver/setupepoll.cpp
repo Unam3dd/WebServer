@@ -16,7 +16,7 @@ t_status	WebServer::_setupEpoll(void)
 	FOREACH_VECTOR(HttpServer*, this->_srv, srv) {
 		ev.events = EPOLLIN;
 		ev.data.fd = (*srv)->getSocket().Getfd();
-		fcntl((*srv)->getSocket().Getfd(), F_SETFD, FD_CLOEXEC);
+		fcntl((*srv)->getSocket().Getfd(), F_SETFD, FD_CLOEXEC | O_NONBLOCK);
 		_epoll.Ctl(EPOLL_CTL_ADD, (*srv)->getSocket().Getfd(), &ev);
 	}
 

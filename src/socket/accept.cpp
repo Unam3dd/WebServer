@@ -6,12 +6,13 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:29:07 by stales            #+#    #+#             */
-/*   Updated: 2023/01/19 18:38:46 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:12:19 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "socket.hpp"
 #include <cstddef>
+#include <fcntl.h>
 #include <new>
 #include <iostream>
 
@@ -37,6 +38,7 @@ Socket	*Socket::Accept(void)
 	if (n == NULL) return (NULL);
 	n->Setfd(fd);
 	n->CopySin(&s);
+	n->Fcntl(F_SETFD, FD_CLOEXEC | O_NONBLOCK);
 	return (n);
 }
 
@@ -62,5 +64,6 @@ Socket	*Socket::Accept(int fd)
 	if (n == NULL) return (NULL);
 	n->Setfd(fdc);
 	n->CopySin(&s);
+	n->Fcntl(F_SETFD, FD_CLOEXEC | O_NONBLOCK);
 	return (n);
 }

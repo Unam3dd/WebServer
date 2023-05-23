@@ -6,12 +6,13 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/23 17:32:26 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:43:43 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http_request.hpp"
 #include "http_server.hpp"
+#include "http_status.hpp"
 #include "http_utils.hpp"
 #include "http_colors.hpp"
 #include "http_response.hpp"
@@ -62,7 +63,7 @@ t_status	WebServer::_acceptClient(ev_t *e)
 	if (!e) return (STATUS_FAIL);
 
 	struct itimerspec its;
-	its.it_value.tv_sec = 5;
+	its.it_value.tv_sec = 10;
 	its.it_value.tv_nsec = 0;
 	its.it_interval.tv_sec = 0;
 	its.it_interval.tv_nsec = 0;
@@ -76,9 +77,10 @@ t_status	WebServer::_acceptClient(ev_t *e)
 			{
 				client->SetSrvPort((*srv)->getPort());
 				(*srv)->getClients().push_back(client);
-				
+
 				tev.data.ptr = client;
 				tev.events = EPOLLIN;
+				fcntl(client->Getfd(), F_SETFL, fcntl(client->Getfd(), F_GETFL, 0) | O_NONBLOCK);
 				this->_epoll.Ctl(EPOLL_CTL_ADD, client->Getfd(), &tev);
 
 				tfd = timerfd_create(CLOCK_MONOTONIC, 0);
@@ -126,12 +128,39 @@ t_status	WebServer::_waitSrvs(void)
 			if (evs[i].events & EPOLLIN) {
 				if ((unsigned long long)evs[i].data.fd < lowest_heap_address()) { //black magic: epoll_event.data is union, so if we store an fd instead on a ptr, it will always be inferior to a memory address
 					if (DEBUG)
-						std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : timerfd" << std::endl;
+						std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : timerfd. Sending timeout response." << std::endl;
 					::read(evs[i].data.fd, &size, sizeof(size));
 					HttpResponse timeout(HTTP_STATUS_REQUEST_TIMEOUT);
+					FOREACH_VECTOR(Socket*, _clients, client)
+					{
+						if (evs[i].data.fd == this->_timerfds[(*client)->Getfd()])
+						{
+							write((*client)->Getfd(), timeout.getResponse().c_str(), timeout.getResponse().size());
+							::close((*client)->Getfd());
+							this->_epoll.Ctl(EPOLL_CTL_DEL, (*client)->Getfd(), NULL);
+							this->_epoll.Ctl(EPOLL_CTL_DEL, this->_timerfds[(*client)->Getfd()], NULL);
+							this->_timerfds.erase((*client)->Getfd());
+							bufs[(*client)->Getfd() % MAX_EVENT].clear();
+							break;
+						}
+					}
+					::close(evs[i].data.fd);
+					continue;
+					/*
+					if (DEBUG)
+						std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : timerfd. /!\\ Processing request without waiting for new data !!" << std::endl;
+					::read(evs[i].data.fd, &size, sizeof(size));
 					FOREACH_VECTOR(Socket*, _clients, client){
 						if (evs[i].data.fd == this->_timerfds[(*client)->Getfd()]){
-							::write((*client)->Getfd(), timeout.getResponse().c_str(), timeout.getResponse().size());
+							HttpRequest req(bufs[sock_fd % MAX_EVENT], (*client)->GetSrvPort(), const_cast<char*>((*client)->InetNtoa((*client)->GetSin()->sin_addr.s_addr).c_str()));
+							if (DEBUG)
+								std::cout << DBG << "[WebServer::Wait] Parsed request: " << std::endl << req << std::endl;
+
+							HttpResponse res(req);
+							if (DEBUG)
+								std::cout << DBG << "[WebServer::Wait] Generated response, status code: " << res.getStatusCodeStr() << std::endl;
+
+							write((*client)->Getfd(), res.getResponse().c_str(), res.getResponse().size());
 							::close((*client)->Getfd());
 							this->_epoll.Ctl(EPOLL_CTL_DEL, (*client)->Getfd(), NULL);
 							this->_timerfds.erase((*client)->Getfd());
@@ -144,6 +173,7 @@ t_status	WebServer::_waitSrvs(void)
 					this->_epoll.Ctl(EPOLL_CTL_DEL, evs[i].data.fd, NULL);
 					::close(evs[i].data.fd);
 					continue;
+					*/
 				}
 
 				sock_fd = static_cast<Socket*>(evs[i].data.ptr)->Getfd();
@@ -151,7 +181,7 @@ t_status	WebServer::_waitSrvs(void)
 				if (!size){
 					continue;
 				}
-				
+
 				if (DEBUG)
 					std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : size of packet: " << size << std::endl;
 
@@ -168,7 +198,6 @@ t_status	WebServer::_waitSrvs(void)
 						std::cout << DBG << WARN << "[WebServer::_waitSrvs()] Read error" << std::endl;
 					continue ;
 				}
-
 				bufs[sock_fd % MAX_EVENT].reserve(size + 1);
 				for (size_t j = 0; j < size; j++)
 					bufs[sock_fd % MAX_EVENT].push_back(tmpbufs[sock_fd % MAX_EVENT][j]);
@@ -176,38 +205,37 @@ t_status	WebServer::_waitSrvs(void)
 				if (DEBUG)
 				{
 					std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : request size now of: " << bufs[sock_fd % MAX_EVENT].size() << std::endl;
-					std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : request: " << std::endl << bufs[sock_fd % MAX_EVENT];
 				}
 
 				delete[] tmpbufs[sock_fd % MAX_EVENT];
 				tmpbufs[sock_fd % MAX_EVENT] = NULL;
 
-				if (   bufs[sock_fd % MAX_EVENT].find("\r\n\r\n") != std::string::npos
-					|| bufs[sock_fd % MAX_EVENT].find("\n\n") 	  != std::string::npos) {
-					if (DEBUG)
-						std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : End of header received. Setting EPOLLOUT" << std::endl;
-					evs[i].events = EPOLLOUT;
-					_epoll.Ctl(EPOLL_CTL_MOD, sock_fd, &evs[i]);
-				} else { //we reset the timerfd
-					if (DEBUG)
-						std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : Resetting timerfd" << std::endl;
-					struct itimerspec new_value;
-					new_value.it_value.tv_sec = 5;
-					new_value.it_value.tv_nsec = 0;
-					new_value.it_interval.tv_sec = 0;
-					new_value.it_interval.tv_nsec = 0;
-					timerfd_settime(this->_timerfds[sock_fd], 0, &new_value, NULL);
+				 //we reset the timerfd
+				if (DEBUG)
+					std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : Resetting timerfd" << std::endl;
+				struct itimerspec new_value;
+				new_value.it_value.tv_sec = 10;
+				new_value.it_value.tv_nsec = 0;
+				new_value.it_interval.tv_sec = 0;
+				new_value.it_interval.tv_nsec = 0;
+				timerfd_settime(this->_timerfds[sock_fd], 0, &new_value, NULL);
+
+				if (bufs[sock_fd % MAX_EVENT].find("\r\n\r\n") != std::string::npos)
+				{
+					evs[i].events = EPOLLIN | EPOLLOUT;
+					this->_epoll.Ctl(EPOLL_CTL_MOD, sock_fd, &evs[i]);
 				}
 			}
-			if (evs[i].events & EPOLLOUT) {
-				if (DEBUG)
-					std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLOUT : Sending response" << std::endl;
+			else if (evs[i].events & EPOLLOUT) {
 
 				HttpRequest req(bufs[sock_fd % MAX_EVENT], static_cast<Socket*>(evs[i].data.ptr)->GetSrvPort(), const_cast<char*>(static_cast<Socket*>(evs[i].data.ptr)->InetNtoa(static_cast<Socket*>(evs[i].data.ptr)->GetSin()->sin_addr.s_addr).c_str()));
-				HttpResponse res(req);
-
 				if (DEBUG)
-					std::cout << DBG << "[WebServer::Wait] Received and parsed request: " << std::endl << req << std::endl;
+					std::cout << DBG << "[WebServer::Wait] Parsed request: " << std::endl << req << std::endl;
+
+				HttpResponse res(req);
+				if (DEBUG)
+					std::cout << DBG << "[WebServer::Wait] Generated response, status code: " << res.getStatusCodeStr() << std::endl;
+
 				write(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), res.getResponse().c_str(), res.getResponse().size());
 
 				::close(static_cast<Socket*>(evs[i].data.ptr)->Getfd());
@@ -222,6 +250,8 @@ t_status	WebServer::_waitSrvs(void)
 				this->_timerfds.erase(static_cast<Socket*>(evs[i].data.ptr)->Getfd());
 				delete static_cast<Socket*>(evs[i].data.ptr);
 				bufs[sock_fd % MAX_EVENT].clear();
+				if (DEBUG)
+					std::cout << DBG << "[WebServer::_wait] response sent and cleanup done." << std::endl;
 			}
 
 			/*
