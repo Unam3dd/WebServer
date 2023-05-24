@@ -14,28 +14,31 @@
 #ifndef HTTP_COLORS_HPP
 #define HTTP_COLORS_HPP
 
-#define GREY	"\033[30m"
-#define RED		"\033[31m"
-#define GREEN	"\033[32m"
-#define ORANGE	"\033[33m"
-#define BLUE	"\033[34m"
-#define PURPLE	"\033[35m"
-#define CYAN	"\033[36m"
-#define WHITE	"\033[37m"
-#define RESET	"\033[00m"
-#define BGBLACK "\033[40m"
-#define	BGREG	"\033[41m"
-#define BGGREEN "\033[42m"
-#define BGBROW	"\033[43m"
-#define BGBLUE	"\033[44m"
-#define BGPURPLE "\033[45m"
-#define BGCYAN	 "\033[46m"
-#define BGGREY	"\033[47m"
-#define SUCCESS "[\033[32m SUCCESS \033[00m]"
-#define DBG 	"[\033[36m DEBUG \033[00m]"
-#define WARN	"[\033[33m WARNING \033[00m]"
-#define INFO	"[\033[36m INFO \033[00m]"
-#define FAIL	"[\033[31m FAIL \033[00m]"
-#define TICK	"\n[\033[0;32m\xE2\x9C\x94\033[0m]"
+#define ESC				"\x1b"
+
+#define GREY			ESC "[30m"
+#define RED				ESC "[31m"
+#define GREEN			ESC "[32m"
+#define ORANGE			ESC "[33m"
+#define BLUE			ESC "[34m"
+#define PURPLE			ESC "[35m"
+#define CYAN			ESC "[36m"
+#define WHITE			ESC "[37m"
+#define RESET			ESC "[00m"
+#define BGBLACK 		ESC "[40m"
+#define	BGREG			ESC "[41m"
+#define BGGREEN 		ESC "[42m"
+#define BGBROW			ESC "[43m"
+#define BGBLUE			ESC "[44m"
+#define BGPURPLE		ESC "[45m"
+#define BGCYAN			ESC "[46m"
+#define BGGREY			ESC "[47m"
+#define GOTO_COL		ESC "[13G"
+#define SUCCESS 		"[" GREEN	" SUCCESS "		RESET "]" GOTO_COL
+#define DBG 			"[" CYAN	" DEBUG "		RESET "]" GOTO_COL
+#define WARN			"[" ORANGE	" WARNING "		RESET "]" GOTO_COL
+#define INFO			"[" CYAN	" INFO "		RESET "]" GOTO_COL
+#define FAIL			"[" RED		" FAIL "		RESET "]" GOTO_COL
+#define TICK			"\n[" GREEN	"\xE2\x9C\x94"	RESET "]"
 
 #endif
