@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:32:27 by stales            #+#    #+#             */
-/*   Updated: 2023/05/24 02:43:13 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/24 19:43:45 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "http_utils.hpp"
 #include "webserver.hpp"
 #include <cstdlib>
+#include <cstring>
 
 bool	check_overflow_port(const std::string &str)
 {
@@ -70,97 +71,70 @@ std::string	SG_DefaultErrorPages(errpagecode_t status){
 	return ("<h1>Fatal Server Error. Cannot Recover.</h1>");
 }
 
-std::string	SG_GetContentType(std::string& extension){
+static mime_content_type_t	*SG_mime_content_type(size_t *len)
+{
+	static mime_content_type_t	mimes[0x30] = {
+		{ { "html", "htm"}, "text/html", 2},
+		{ { "css" }, "text/css", 1},
+		{ { "js" }, "text/javascript", 1},
+		{ { "png" }, "image/png", 1},
+		{ { "jpg", "jpeg" }, "image/jpeg", 1},
+		{ { "gif" }, "image/gif", 1},
+		{ { "svg" }, "image/svg+xml", 1},
+		{ { "ico" }, "image/x-icon", 1},
+		{ { "json"}, "application/json", 1},
+		{ { "pdf" }, "application/pdf", 1},
+		{ { "zip" }, "application/zip", 1},
+		{ { "xml" }, "application/xml", 1},
+		{ { "txt" }, "text/plain", 1},
+		{ { "mp3" }, "audio/mpeg", 1},
+		{ { "mp4" }, "video/mp4", 1},
+		{ { "mpeg" }, "video/mpeg", 1},
+		{ { "ogg" }, "video/ogg", 1},
+		{ { "webm"}, "video/webm", 1},
+		{ { "flv" }, "video/x-flv", 1},
+		{ { "avi" }, "video/x-msvideo", 1},
+		{ { "wmv" }, "video/x-ms-wmv", 1},
+		{ { "mpg"}, "video/x-mpeg", 1},
+		{ { "wav"}, "audio/x-wav", 1},
+		{ { "wma"}, "audio-x-ms-wma", 1},
+		{ { "flac"}, "audio/x-flac", 1},
+		{ { "aac"}, "audio/aac", 1},
+		{ { "m4a"}, "audio/x-m4a", 1},
+		{ { "m4v"}, "audio/x-m4v", 1},
+		{ { "mov"}, "video/quicktime", 1},
+		{ { "qt"}, "video/quicktime", 1},
+		{ { "3gp"}, "video/3gpp", 1},
+		{ { "3g2"}, "video/3gpp2", 1},
+		{ { "3gpp"}, "video/3gpp", 1},
+		{ { "3gpp2"}, "video/3gpp2", 1},
+		{ { "mkv"}, "video/x-matroska", 1},
+		{ { "webp"}, "image/webp", 1},
+		{ { "woff"}, "font/woff", 1},
+		{ { "woff2"}, "font/woff2", 1},
+		{ { "ttf"}, "font/ttf", 1},
+		{ { "eot"}, "application/vnd.ms-fontobject", 1},
+		{ { "otf"}, "font/otf", 1},
+		{ { "sfnt"}, "application/font-sfnt", 1},
+		{ { "vtt"}, "text/vtt", 1},
+		{ { "csv"}, "text/csv", 1},
+		{ { "ics"}, "text/calendar", 1}
+	};
+
+	if (len)
+		*len = sizeof(mimes)/sizeof(mime_content_type_t);
+	return (mimes);
+}
+
+std::string	SG_GetContentType(std::string& extension)
+{
+	size_t	len = 0;
 	extension = extension.substr(1);
-	if (extension == "html" || extension == "htm")
-		return ("text/html");
-	if (extension == "css")
-		return ("text/css");
-	if (extension == "js")
-		return ("text/javascript");
-	if (extension == "png")
-		return ("image/png");
-	if (extension == "jpg" || extension == "jpeg")
-		return ("image/jpeg");
-	if (extension == "gif")
-		return ("image/gif");
-	if (extension == "svg")
-		return ("image/svg+xml");
-	if (extension == "ico")
-		return ("image/x-icon");
-	if (extension == "json")
-		return ("application/json");
-	if (extension == "pdf")
-		return ("application/pdf");
-	if (extension == "zip")
-		return ("application/zip");
-	if (extension == "xml")
-		return ("application/xml");
-	if (extension == "txt")
-		return ("text/plain");
-	if (extension == "mp3")
-		return ("audio/mpeg");
-	if (extension == "mp4")
-		return ("video/mp4");
-	if (extension == "mpeg")
-		return ("video/mpeg");
-	if (extension == "ogg")
-		return ("video/ogg");
-	if (extension == "webm")
-		return ("video/webm");
-	if (extension == "flv")
-		return ("video/x-flv");
-	if (extension == "avi")
-		return ("video/x-msvideo");
-	if (extension == "wmv")
-		return ("video/x-ms-wmv");
-	if (extension == "mpg")
-		return ("video/x-mpeg");
-	if (extension == "wav")
-		return ("audio/x-wav");
-	if (extension == "wma")
-		return ("audio/x-ms-wma");
-	if (extension == "flac")
-		return ("audio/x-flac");
-	if (extension == "aac")
-		return ("audio/aac");
-	if (extension == "m4a")
-		return ("audio/x-m4a");
-	if (extension == "m4v")
-		return ("video/x-m4v");
-	if (extension == "mov")
-		return ("video/quicktime");
-	if (extension == "qt")
-		return ("video/quicktime");
-	if (extension == "3gp")
-		return ("video/3gpp");
-	if (extension == "3g2")
-		return ("video/3gpp2");
-	if (extension == "3gpp")
-		return ("video/3gpp");
-	if (extension == "3gpp2")
-		return ("video/3gpp2");
-	if (extension == "mkv")
-		return ("video/x-matroska");
-	if (extension == "webp")
-		return ("image/webp");
-	if (extension == "woff")
-		return ("font/woff");
-	if (extension == "woff2")
-		return ("font/woff2");
-	if (extension == "ttf")
-		return ("font/ttf");
-	if (extension == "eot")
-		return ("application/vnd.ms-fontobject");
-	if (extension == "otf")
-		return ("font/otf");
-	if (extension == "sfnt")
-		return ("application/font-sfnt");
-	if (extension == "vtt")
-		return ("text/vtt");
-	if (extension == "csv")
-		return ("text/csv");
-	if (extension == "ics")
-		return ("text/calendar");
+	mime_content_type_t	*m = SG_mime_content_type(&len);
+	for (size_t i = 0; i < len; i++) {
+		for (size_t j = 0; j < m[i].ext_len; j++)
+			if (!std::strcmp(extension.c_str(), m[i].ext[j]))
+				return (m[i].str);
+	}
 	return ("text/html");
 }
