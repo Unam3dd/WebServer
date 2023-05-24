@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/24 16:39:46 by stales           ###   ########.fr       */
+/*   Updated: 2023/05/24 17:47:28 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,9 +171,9 @@ t_status	WebServer::_waitSrvs(void)
 					continue ;
 				}
 				bufs[sock_fd % MAX_EVENT].reserve(size);
-				for (size_t j = 0; j < size; j++)
+				for (size_t j = 0; j < size; j++) {
 					bufs[sock_fd % MAX_EVENT].push_back(tmpbufs[sock_fd % MAX_EVENT][j]);
-
+				}
 					#if DEBUG
 					std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : request size now of: " << bufs[sock_fd % MAX_EVENT].size() << std::endl;
 					#endif
@@ -255,7 +255,7 @@ t_status	WebServer::_waitSrvs(void)
 
 				HttpRequest req(bufs[sock_fd % MAX_EVENT], static_cast<Socket*>(evs[i].data.ptr)->GetSrvPort(), const_cast<char*>(static_cast<Socket*>(evs[i].data.ptr)->InetNtoa(static_cast<Socket*>(evs[i].data.ptr)->GetSin()->sin_addr.s_addr).c_str()));
 					#if DEBUG
-					std::cout << DBG << "[WebServer::Wait] Parsed request: " << std::endl << req << std::endl
+					std::cout << DBG << "[WebServer::Wait] Parsed request: " << std::endl << req << std::endl;
 					#endif
 
 				HttpResponse res(req);
