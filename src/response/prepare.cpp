@@ -51,12 +51,13 @@ void	HttpResponse::_prepareResponse(){
 	}
 
 	if (!isdir && (this->_request.getMethod() == GET || this->_request.getMethod() == POST)){
-		if (DEBUG)
+		#if DEBUG
 		{
 			std::cout << DBG << "[_prepareGetResponse] request is not a directory" << std::endl;
 			std::cout << DBG << "[_prepareGetResponse] path: " << path << std::endl;
 			std::cout << DBG << "[_prepareGetResponse] docroot: " << docroot << std::endl;
 		}
+		#endif
 		if (stat(path.c_str(), &st) < 0)
 		{
 			this->_status = HTTP_STATUS_NOT_FOUND;
@@ -110,8 +111,9 @@ void	HttpResponse::_prepareResponse(){
 			this->_contenttype = "text/html";
 			return;
 		}
-		if (DEBUG)
+		#if DEBUG
 			std::cout << DBG << "[_prepareGetResponse] request: "<< path << " is a directory" << std::endl;
+		#endif
 		if ((_reqcfg && !_reqcfg->GetDirList()) || (!_reqcfg && !_srvcfg->GetDirList()))
 		{
 			if (DEBUG)
@@ -121,8 +123,9 @@ void	HttpResponse::_prepareResponse(){
 			this->_contenttype = "text/html";
 			return;
 		}
-		if (DEBUG)
+		#if DEBUG
 			std::cout << DBG << "[_prepareGetResponse] directory listing is enabled" << std::endl;
+		#endif
 		Directory dir(path.c_str());
 		std::vector<std::string> files = dir.getFiles();
 		this->_status = HTTP_STATUS_OK;

@@ -128,16 +128,16 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 	_cgibuf.clear();
 	command = path + " " + file;
 	
-	if (DEBUG)
-	{
+	#if DEBUG
 		std::cout << DBG << "[HttpResponse::_processCgi] Processing File: " << file << std::endl;
 		std::cout << DBG << "[HttpResponse::_processCgi] Cgi Path: " << path << std::endl;
-	}
+	#endif
 
 	if (pipe(inputfd) < 0 || pipe(outputfd) < 0)
 	{
-		if (DEBUG)
+		#if DEBUG
 			std::cout << DBG << FAIL << "[HttpResponse::_processCgi] Pipe Error" << std::endl;
+		#endif
 		return (1);
 	}
 	
@@ -157,12 +157,14 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 
 	if (this->_request.getMethod() == POST)
 	{
-		if (DEBUG)
+		#if DEBUG
 			std::cout << DBG << "[HttpResponse::_processCgi] POST Request" << std::endl;
+		#endif
 		if (write(inputfd[1], this->_request.getBody().c_str(), this->_request.getBody().size()) < 0)
 		{
-			if (DEBUG)
+			#if DEBUG
 				std::cout << DBG << FAIL << "[HttpResponse::_processCgi] Write Error" << std::endl;
+			#endif
 			return (1);
 		}
 	}
@@ -186,13 +188,12 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 	}
 	wait(NULL);
 
-	if (DEBUG)
-	{
+	#if DEBUG
 		if (len < 10000)
 			std::cout << DBG << "[HttpResponse::_processCgi] Cgi Output: " << _cgibuf.data() << std::endl;
 		else
 			std::cout << DBG << "[HttpResponse::_processCgi] Cgi Output not displayed due to big size (>10000 chars)"  << std::endl;
-	}
+	#endif
 
 	close(inputfd[1]);
 	close(outputfd[0]);

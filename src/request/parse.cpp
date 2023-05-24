@@ -38,8 +38,9 @@ t_status HttpRequest::_parseRequestLine(const std::string &reqline)
 	for (int i = 0; i < (int)uri.length(); i++){
 		if (uri[i] == '%')
 		{
-			if (DEBUG)
+			#if DEBUG
 				std::cout << DBG << "[HttpRequest::_parseRequestLine] Found URI-Encoded string at " << &uri[i] << std::endl;
+			#endif
 			if (i + 2 >= (int)uri.length())
 				return (STATUS_FAIL);
 			tmp = uri.substr(i + 1, 2);

@@ -28,8 +28,9 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		this->_contenttype = "text/html";
 		this->_body = this->_getErrorPageContent(this->_status);
 		this->_generateResponse();
-		if (DEBUG)
+		#if DEBUG
 			std::cout << DBG << "[HttpResponse] Bad request" << std::endl;
+		#endif
 		return ;
 	}
 	
@@ -38,8 +39,9 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		this->_contenttype = "text/html";
 		this->_body = this->_getErrorPageContent(this->_status);
 		this->_generateResponse();
-		if (DEBUG)
+		#if DEBUG
 			std::cout << DBG << "[HttpResponse] HTTP version '" << _request.getVersion() << "' not supported" << std::endl;
+		#endif
 		return ;
 	}
 
@@ -49,8 +51,9 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		this->_contenttype = "text/html";
 		this->_body = this->_getErrorPageContent(this->_status);
 		this->_generateResponse();
-		if (DEBUG)
+		#if DEBUG
 			std::cout << DBG << "[HttpResponse] HTTP method '" << _request.getMethod() << "' not allowed" << std::endl;
+		#endif
 		return ;
 	}
 	
@@ -65,8 +68,9 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		this->_contenttype = "text/html";
 		this->_body = this->_getErrorPageContent(this->_status);
 		this->_generateResponse();
-		if (DEBUG)
+		#if DEBUG
 			std::cout << DBG << "[HttpResponse] POST body too large" << std::endl;
+		#endif
 		return ;
 	}
 
@@ -77,8 +81,7 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		this->_status = SANITIZE_AND_CAST_INT_TO_HTTP_STATUS(this->_reqcfg->GetHttpResponseCode());
 	this->_generateResponse();
 
-	if (DEBUG)
-	{
+	#if DEBUG
 		std::cout << DBG << "[HttpResponse::HttpResponse()] Host: " << _request.getHeaders().at("host") << std::endl;
 		std::cout << DBG << "[HttpResponse::HttpResponse()] Port: " << _request.getPort() << std::endl;
 		std::cout << DBG << "[HttpResponse::HttpResponse()] Uri: " << _request.getUri() << std::endl;
@@ -87,12 +90,13 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		this->_reqcfg == NULL ? std::cout << "none" : std::cout << this->_reqcfg->GetScope(); std::cout << std::endl;
 		std::cout << DBG << "[HttpResponse::HttpResponse()] Full response: "; this->_contenttype != "text/html" ? std::cout << BLUE << "Binary File." << RESET << std::endl : std::cout << std::endl << _fullresponse << std::endl;
 		this->_cgibuf.data() ? std::cout << DBG << "[HttpResponse::HttpResponse()] CGI Buffer content: \n" << _cgibuf.data() << std::endl : std::cout << DBG << "[HttpResponse::HttpResponse()] No CGI." << std::endl;
-	}
+	#endif
 }
 
 HttpResponse::HttpResponse(int status) : _request(HttpRequest()), _srvcfg(NULL), _reqcfg(NULL){
-	if (DEBUG)
+	#if DEBUG
 		std::cout << DBG << "[HttpResponse] Creating forced error response (via constructor surcharge)" << std::endl;
+	#endif
 	this->_status = SANITIZE_AND_CAST_INT_TO_HTTP_STATUS(status);
 	this->_contenttype = "text/html";
 	this->_body = this->_getErrorPageContent(this->_status);

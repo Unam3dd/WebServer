@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 19:17:04 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/09 19:20:44 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/24 17:39:03 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,9 @@ HttpServerConfig*	HttpResponse::_getSrvConfig(const std::string& host, port_t po
 HttpRequestConfig* HttpResponse::_getReqConfig(const HttpServerConfig* cfg, const std::string& uri){
 	std::vector<HttpRequestConfig*> reqs = cfg->GetRequestConfigs();
 
-	if (DEBUG)
+	#if DEBUG
 		std::cout << DBG << "[_getReqConfig] uri: " << uri << std::endl;
+	#endif
 	FOREACH_VECTOR(HttpRequestConfig*, reqs, req){
 		if (uri.substr(0, (*req)->GetScope().length()) == (*req)->GetScope())
 			return (*req);

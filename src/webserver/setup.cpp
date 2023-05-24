@@ -36,7 +36,8 @@ t_status	WebServer::_setupSrvs(void)
 		}
 	}
 	
-	if (DEBUG){
-		std::cout << DBG << "[WebServer::_setupSrvs]"; PRINT_VECTOR_PORTS(ports, std::cout); std::cout << std::endl;}
+	#if DEBUG
+		std::cout << DBG << "[WebServer::_setupSrvs]"; PRINT_VECTOR_PORTS(ports, std::cout); std::cout << std::endl;
+	#endif
 	return (STATUS_OK);
 }

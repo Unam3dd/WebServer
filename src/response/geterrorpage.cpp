@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 18:58:55 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/24 02:41:49 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/24 17:36:48 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,9 @@ std::string	HttpResponse::_getErrorPageContent(http_status_code_t httpstatus){
 	}
 	fullpath = root + path;
 	if (!FILE_EXISTS(fullpath.c_str())){
-		if (DEBUG)
+		#if DEBUG
 			std::cout << DBG << "[_getErrorPageContent] Error page '" << fullpath << "' not found. Returning default error page." << std::endl;
+		#endif
 		return (SG_DefaultErrorPages(status));
 	}
 	struct stat st;

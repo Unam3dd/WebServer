@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 15:28:25 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/04/25 16:54:53 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/24 16:52:41 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,30 +28,34 @@ t_errcode WebServer::_parseSrvDirective(const std::string& line)
 	int							argc;
 	t_errcode					err;
 
-	if (DEBUG)
-		std::cout << DBG << "[WebServer::_parseSrvDirective] parsing server directive: " << line << std::endl;
+	#if DEBUG
+	std::cout << DBG << "[WebServer::_parseSrvDirective] parsing server directive: " << line << std::endl;
+	#endif
 	srv = this->_configs.at(this->_nserv - 1);
 	argv = this->_splitDirective(line);
 	arg = argv.at(0);
 	argc = argv.size();
-	if (DEBUG)
-		std::cout << DBG << "[WebServer::_parseSrvDirective] arg: " << arg << "\targc: " << argc << std::endl;
+	#if DEBUG
+	std::cout << DBG << "[WebServer::_parseSrvDirective] arg: " << arg << "\targc: " << argc << std::endl;
+	#endif
 	switch (argc){
 		case 0:
 			return (ERRPARSE_OK);
 		case 1:
 			if (argv.at(0) == "}")
 			{
-				if (DEBUG)
+				#if DEBUG
 					std::cout << DBG << "[_parseSrvDirective] end of server block" << std::endl;
+				#endif
 				return (ERRPARSE_OK);
 			}
 			return (ERRPARSE_SINGLEARG);
 	}
 	if (arg.at(0) == '/' || arg.at(0) == '#')
 	{
-		if (DEBUG)
+		#if DEBUG
 			std::cout << DBG << "[_parseLocDirective] directive: " << arg << " is a comment" << std::endl;
+		#endif
 		return (ERRPARSE_OK);
 	}
 	if (argv.back() == "}"){
@@ -102,8 +106,9 @@ t_errcode WebServer::_parseLocDirective(const std::string& line)
 	}
 	if (arg.at(0) == '/' || arg.at(0) == '#')
 	{
-		if (DEBUG)
+		#if (DEBUG)
 			std::cout << DBG << "[_parseLocDirective] directive: " << arg << " is a comment" << std::endl;
+		#endif
 		return (ERRPARSE_OK);
 	}
 	if (argv.back() == "}"){
