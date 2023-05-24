@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:32:22 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/29 18:42:11 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/24 13:27:03 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,20 +52,23 @@ http_status_code_t	File::open(const char *filename, mode_t mode){
 	struct stat s;
 
 	if (!filename) {
-		if (DEBUG)
+			#if DEBUG==1
 			std::cerr << WARN << "[File::open()] filename is empty !" << std::endl;
+			#endif
 		return (HTTP_STATUS_NOT_FOUND);
 	}
 
 	if (stat(filename, &s) < 0) {
-		if (DEBUG)
+			#if DEBUG==1
 			std::cerr << WARN << "[File::open()] to execute stat on " << filename << std::endl;
+			#endif
 		return (HTTP_STATUS_NOT_FOUND);
 	}
 
 	if (s.st_mode & S_IFDIR) {
-		if (DEBUG)
+			#if DEBUG==1
 			std::cerr << WARN << "[File::open] '" << filename << "' is a directory/folder ! Populating directory list" << std::endl;
+			#endif
 		_dir = new Directory(filename);
 		return (HTTP_STATUS_OK);
 	}
@@ -73,13 +76,14 @@ http_status_code_t	File::open(const char *filename, mode_t mode){
 	_fd = ::open(filename, O_RDONLY, mode);
 
 	if (_fd < 0) {
-		if (DEBUG)
+			#if DEBUG==1
 			std::cerr << WARN << "[File::open()] opening " << filename << " failed due to error permissions !" << std::endl;
+			#endif
 		return (HTTP_STATUS_FORBIDDEN);
 	}
-
-	if (DEBUG)
+		#if DEBUG==1
 		std::cout << SUCCESS << "[File::open()] " << filename << " was opened successfully !" << std::endl;
+		#endif
 	_filename = const_cast<char *>(filename);
 	return (HTTP_STATUS_OK);
 }

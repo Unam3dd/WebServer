@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/04/25 16:59:02 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/24 13:20:06 by stales           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,14 @@ t_errcode	WebServer::Parse(void)
 			buffer = buffer.substr(buffer.find("\n") + 1);
 			continue;
 		}
-		if (DEBUG)
+		#if DEBUG==1
 		{
 			std::cout << DBG << "[WebServer::Parse]";
 			this->_srvBlk ? std::cout << GREEN << "srvblk::" << RESET: std::cout << RED << "!srvblk::" << RESET;
 			this->_locBlk ? std::cout << GREEN << "locblk\t" << RESET: std::cout << RED << "!locblk\t" << RESET;
 			std::cout << BGBLACK << line << RESET << std::endl;
 		}
+		#endif
 		if (this->_isSrvBlk(line))
 		{
 			if (this->_srvBlk == true)
