@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 18:58:55 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/22 23:19:41 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/24 02:41:49 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ std::string	HttpResponse::_getErrorPageContent(http_status_code_t httpstatus){
 	else if (httpstatus == HTTP_STATUS_METHOD_NOT_ALLOWED)
 		status = E405;
 	else if (httpstatus == HTTP_STATUS_REQUEST_TIMEOUT)
-		return (SG_DefaultErrorPages(E408));
+		status = E408;
+	else if (httpstatus == HTTP_STATUS_LENGTH_REQUIRED)
+		status = E411;
 	else if (httpstatus == HTTP_STATUS_PAYLOAD_TOO_LARGE)
 		status = E413;
 	else if (httpstatus == HTTP_STATUS_INTERNAL_SERVER_ERROR)
@@ -60,6 +62,9 @@ std::string	HttpResponse::_getErrorPageContent(http_status_code_t httpstatus){
 		status = E505;
 	else
 		status = E500;
+
+	if (!this->_srvcfg)
+		return (SG_DefaultErrorPages(status));
 
 	if (this->_reqcfg && this->_reqcfg->GetErrorPages()[status].path == "default" && this->_srvcfg->GetErrorPages()[status].path == "default")
 		return (SG_DefaultErrorPages(status));

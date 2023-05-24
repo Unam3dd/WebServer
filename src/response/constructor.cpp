@@ -90,7 +90,7 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 	}
 }
 
-HttpResponse::HttpResponse(int status) : _request(HttpRequest()){
+HttpResponse::HttpResponse(int status) : _request(HttpRequest()), _srvcfg(NULL), _reqcfg(NULL){
 	if (DEBUG)
 		std::cout << DBG << "[HttpResponse] Creating forced error response (via constructor surcharge)" << std::endl;
 	this->_status = SANITIZE_AND_CAST_INT_TO_HTTP_STATUS(status);

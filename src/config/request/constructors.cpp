@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 19:09:58 by stales            #+#    #+#             */
-/*   Updated: 2023/05/22 23:17:17 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/24 02:42:49 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ HttpRequestConfig::HttpRequestConfig(const std::string& scope): _scope(scope){
 	_errpages[E405].path = "default";
 	_errpages[E408].code = 408;
 	_errpages[E408].path = "default";
+	_errpages[E411].code = 411;
+	_errpages[E411].path = "default";
 	_errpages[E500].code = 500;
 	_errpages[E500].path = "default";
 	_errpages[E501].code = 501;

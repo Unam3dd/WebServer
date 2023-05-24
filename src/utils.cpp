@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:32:27 by stales            #+#    #+#             */
-/*   Updated: 2023/05/22 22:57:25 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/24 02:43:13 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ std::string	SG_DefaultErrorPages(errpagecode_t status){
 		return ("<html><head><title>405 Method Not Allowed</title></head><body><center><h1>405 Method Not Allowed</h1></center></body></html>");
 	if (status == E408)
 		return ("<html><head><title>408 Request Timeout</title></head><body><center><h1>408 Request Timeout</h1></center></body></html>");
+	if (status == E411)
+		return ("<html><head><title>411 Length Required</title></head><body><center><h1>411 Length Required</h1></center></body></html>");
 	if (status == E413)
 		return ("<html><head><title>413 Request Entity Too Large</title></head><body><center><h1>413 Request Entity Too Large</h1></center></body></html>");
 	if (status == E500)

@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/23 19:49:13 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/24 03:06:08 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,7 @@ t_status	WebServer::_waitSrvs(void)
 						std::cout << DBG << WARN << "[WebServer::_waitSrvs()] Read error" << std::endl;
 					continue ;
 				}
-				bufs[sock_fd % MAX_EVENT].reserve(size + 1);
+				bufs[sock_fd % MAX_EVENT].reserve(size);
 				for (size_t j = 0; j < size; j++)
 					bufs[sock_fd % MAX_EVENT].push_back(tmpbufs[sock_fd % MAX_EVENT][j]);
 
@@ -222,6 +222,50 @@ t_status	WebServer::_waitSrvs(void)
 
 				if (!(evs[i].events & EPOLLOUT) && bufs[sock_fd % MAX_EVENT].find("\r\n\r\n") != std::string::npos)
 				{
+					if (bufs[sock_fd % MAX_EVENT].substr(0, 4) == "POST")
+					{
+						if (DEBUG)
+							std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : Found end of header (\\r\\n\\r\\n), but method POST. Searching content-length..." << std::endl;
+						if (   bufs[sock_fd % MAX_EVENT].find("Content-Length: ") > bufs[sock_fd % MAX_EVENT].find("\r\n\r\n")
+							&& bufs[sock_fd % MAX_EVENT].find("content-length: ") > bufs[sock_fd % MAX_EVENT].find("\r\n\r\n"))
+						{
+							if (DEBUG)
+								std::cout << DBG << "[WebServer::_waitSrvs()] No content-length found. Returning 411" << std::endl;
+							HttpResponse res(411);
+							::write(sock_fd, res.getResponse().c_str(), res.getResponse().size());
+							::close(sock_fd);
+							this->_epoll.Ctl(EPOLL_CTL_DEL, sock_fd, NULL);
+							this->_epoll.Ctl(EPOLL_CTL_DEL, this->_timerfds[sock_fd], NULL);
+							this->_timerfds.erase(sock_fd);
+							bufs[sock_fd % MAX_EVENT].clear();
+							continue;
+						}
+						else
+						{
+							if (DEBUG)
+								std::cout << DBG << "[WebServer::_waitSrvs()] Content-length found. parsing value..." << std::endl;
+							size_t pos = bufs[sock_fd % MAX_EVENT].find("Content-Length:");
+							if (pos == std::string::npos)
+								pos = bufs[sock_fd % MAX_EVENT].find("content-length:");
+							size_t pos2 = bufs[sock_fd % MAX_EVENT].find("\r\n", pos);
+							std::string content_length = bufs[sock_fd % MAX_EVENT].substr(pos + 15, pos2 - pos - 15);
+							if (DEBUG)
+								std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : Content-length parsed. Content-length: " << content_length << std::endl;
+							if (StringToNumber<unsigned long>(content_length) > bufs[sock_fd % MAX_EVENT].size() - bufs[sock_fd % MAX_EVENT].find("\r\n\r\n") - 4)
+							{
+								if (DEBUG)
+									std::cout << DBG << "[WebServer::_waitSrvs()] Content-length is bigger than what we have. Keeping EPOLLIN and rolling again!" << std::endl;
+								continue;
+							} else
+							{
+								if (DEBUG)
+									std::cout << DBG << "[WebServer::_waitSrvs()] Content-length is smaller than what we have (" <<  bufs[sock_fd % MAX_EVENT].size() - bufs[sock_fd % MAX_EVENT].find("\r\n") - 4 << "). Setting EPOLLOUT." << std::endl;
+								evs[i].events = EPOLLIN | EPOLLOUT;
+								this->_epoll.Ctl(EPOLL_CTL_MOD, sock_fd, &evs[i]);
+								continue ;
+							}
+						}
+					}
 					if (DEBUG)
 						std::cout << DBG << "[WebServer::_waitSrvs()] EPOLLIN : Found end of header (\\r\\n\\r\\n). Setting EPOLLOUT. If there's data to be read, it should be read before going to EPOLLOUT" << std::endl;
 					evs[i].events = EPOLLIN | EPOLLOUT;
