@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/24 03:06:08 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/24 15:15:07 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,7 +220,7 @@ t_status	WebServer::_waitSrvs(void)
 				new_value.it_interval.tv_nsec = 0;
 				timerfd_settime(this->_timerfds[sock_fd], 0, &new_value, NULL);
 
-				if (!(evs[i].events & EPOLLOUT) && bufs[sock_fd % MAX_EVENT].find("\r\n\r\n") != std::string::npos)
+				if (!(evs[i].events & EPOLLOUT) && (bufs[sock_fd % MAX_EVENT].find("\r\n\r\n") != std::string::npos || bufs[sock_fd % MAX_EVENT].find("\n\n") != std::string::npos))
 				{
 					if (bufs[sock_fd % MAX_EVENT].substr(0, 4) == "POST")
 					{
