@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/05/24 16:08:32 by stales           ###   ########.fr       */
+/*   Updated: 2023/05/27 00:09:32 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_errcode WebServer::Parse(void)
 	if (!this->size())
 		return (ERRPARSE_UNKNOWN);
 
-	buffer = static_cast<std::string>(this->getData());
+	buffer = static_cast<std::string>(this->_cfgfile.getData());
 	_line = 0;
 	while (!buffer.empty())
 	{
