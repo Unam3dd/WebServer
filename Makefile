@@ -185,9 +185,10 @@ $(OBJDIR)/%.o: %.cpp
 $(DIST)/$(NAME): $(OBJDIR) $(OBJS)
 	printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] WebServer Created at $(GOTO_COL)\033[32m$(shell date)\033[00m"
 	printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] Version Build	$(GOTO_COL)\033[32m$(DIST)\033[00m"
-	printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] Version WServer	$(GOTO_COL)\033[32m$(WEBSERVER_VERSION)\033[00m"
+	printf "\n[\033[0;32m\xE2\x9C\x94\033[0m] Version WServer	$(GOTO_COL)\033[32m$(WEBSERVER_VERSION)\033[00m\n"
 	mkdir -p $(DIST)
 	$(CC) $(CXXFLAGS) $(OBJS) -o $(DIST)/$(NAME)
+	[ "$$?" != "0" ] && return
 	echo -ne "\n[\033[0;32m\xE2\x9C\x94\033[0m] Sha1sum 		$(GOTO_COL)\033[32m"
 	sha1sum $(DIST)/$(NAME) | cut -d ' ' -f1 | tr '\n' ' '
 	echo -ne "\e[00m"
@@ -210,6 +211,13 @@ fclean: clean
 	rm -rf bin dbg
 
 re: fclean all
+
+run:
+ifeq ($(ARG),)
+	./$(DIST)/$(NAME)
+else
+	./$(DIST)/$(NAME) $(ARG)
+endif
 
 .ONESHELL:
 $(INC_GTEST) $(CONTRIB_DIR):
