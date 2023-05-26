@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:31:17 by stales            #+#    #+#             */
-/*   Updated: 2023/04/08 22:59:40 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/26 22:44:36 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ WebServer::WebServer(void)
 	_error[ERRPARSE_NOPORT] = "No port";
 }
 
-WebServer::WebServer(const std::string& path): File(path.c_str(), O_RDONLY, S_IRUSR)
+WebServer::WebServer(const std::string& path): _cfgfile(path.c_str(), O_RDONLY, S_IRUSR)
 {
-	if (path.empty() || !this->size()) return ;
+	if (path.empty() || !this->_cfgfile.size()) return ;
 	_srvBlk = false;
 	_locBlk = false;
 	_nserv = 0;
@@ -73,7 +73,7 @@ WebServer::WebServer(const std::string& path): File(path.c_str(), O_RDONLY, S_IR
 	_error[ERRPARSE_HTTPCODE] = "Wrong http code, please read the RFC";
 }
 
-WebServer::WebServer(const WebServer& ws): File(ws)
+WebServer::WebServer(const WebServer& ws): _cfgfile(ws._cfgfile)
 {
 	if (this == &ws) return ;
 	_srvBlk = false;

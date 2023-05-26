@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/05/23 13:30:57 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/26 22:44:12 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 
 #define MAX_EVENT 16
 
-class WebServer: public File
+class WebServer
 {
 	public:
 		WebServer(void);
@@ -52,6 +52,7 @@ class WebServer: public File
 		/*
 		 * 	Private members
 		 */
+		File							_cfgfile;
 		std::map<int, int>				_timerfds;
 		std::vector<HttpServerConfig*>	_configs;
 		std::vector<HttpServer*>		_srv;
