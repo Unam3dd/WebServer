@@ -13,16 +13,18 @@
 #include "http_config.hpp"
 #include "http_utils.hpp"
 #include "webserver.hpp"
-#include "http_colors.hpp"
 #include <iostream>
 #include <algorithm>
 
-t_errcode	WebServer::Parse(void)
+t_errcode WebServer::Parse(void)
 {
 	std::string line;
 	std::string buffer;
+	std::string tmp;
+	std::string red_line;
 
-	if (!this->size()) return (ERRPARSE_UNKNOWN);
+	if (!this->size())
+		return (ERRPARSE_UNKNOWN);
 
 	buffer = static_cast<std::string>(this->getData());
 	_line = 0;
@@ -30,34 +32,33 @@ t_errcode	WebServer::Parse(void)
 	{
 		line = buffer.substr(0, buffer.find("\n"));
 		_line++;
+		red_line = "line ";
+		red_line += R + logz.itoa(_line) + RST;
 		line.erase(0, line.find_first_not_of(" \t"));
 		if (line.empty() || line.size() == 0)
 		{
 			buffer = buffer.substr(buffer.find("\n") + 1);
 			continue;
 		}
-		#if DEBUG
-		{
-			std::cout << DBG << "[WebServer::Parse]";
-			this->_srvBlk ? std::cout << GREEN << "srvblk::" << RESET: std::cout << RED << "!srvblk::" << RESET;
-			this->_locBlk ? std::cout << GREEN << "locblk\t" << RESET: std::cout << RED << "!locblk\t" << RESET;
-			std::cout << BGBLACK << line << RESET << std::endl;
-		}
-		#endif
+		tmp = this->_srvBlk ? ANSI_FMT(G, "srvblk::") : ANSI_FMT(R, "!srvblk::");
+		tmp += this->_locBlk ? ANSI_FMT(G, "locblk") : ANSI_FMT(R, "!locblk");
+		tmp += " " + line;
+		logz.log(1, tmp);
 		if (this->_isSrvBlk(line))
 		{
 			if (this->_srvBlk == true)
 			{
-				std::cerr << FAIL << "[WebServer::Parse] " << RED << "line " << _line << "\tnew server block before end of previous one" << std::endl;
+				logz.log(2, red_line + " new server block before end of previous one");
 				return (ERRPARSE_NEWSRVBLK);
 			}
 			this->_srvBlk = true;
 			this->_initNewSrvBlk();
 		}
-		else if (this->_srvBlk && this->_isLocBlk(line))  
+		else if (this->_srvBlk && this->_isLocBlk(line))
 		{
-			if (this->_locBlk == true){
-				std::cerr << FAIL << "[WebServer::Parse] " << RED << "line " << _line << "\tnew location block before end of previous one" << std::endl;
+			if (this->_locBlk == true)
+			{
+				logz.log(2, red_line + " new location block before end of previous one");
 				return (ERRPARSE_NEWLOCBLK);
 			}
 			this->_locBlk = true;
@@ -81,7 +82,7 @@ t_errcode	WebServer::Parse(void)
 		}
 		else if (!this->_srvBlk && !this->_locBlk && this->_isEndBlk(line))
 		{
-			std::cerr << FAIL << "[WebServer::Parse] " << RED << "line " << _line << "\tend of block without any block opened" << std::endl;
+			logz.log(2, red_line + " end of block without any block opened");
 			return (ERRPARSE_ENDBLK);
 		}
 		else if (this->_srvBlk && !this->_locBlk && (!line.empty() || line.find_first_not_of(" \t") != std::string::npos))
@@ -100,25 +101,26 @@ t_errcode	WebServer::Parse(void)
 	}
 	if (this->_srvBlk == true)
 	{
-		std::cerr << FAIL << "[WebServer::Parse] " << RED << "line " << _line << "\tunclosed server block" << std::endl;
+		logz.log(2, red_line + " unclosed server block");
 		return (ERRPARSE_NEWSRVBLK);
 	}
 	if (this->_locBlk == true)
 	{
-		std::cerr << FAIL << "[WebServer::Parse] " << RED << "line " << _line << "\tunclosed location block" << std::endl;
+		logz.log(2, red_line + " unclosed location block");
 		return (ERRPARSE_NEWLOCBLK);
 	}
 	int i = 0;
-	FOREACH_VECTOR(HttpServerConfig*, this->_configs, it)
+	FOREACH_VECTOR(HttpServerConfig *, this->_configs, it)
 	{
+		tmp = R "config #" RST + logz.itoa(i + 1);
 		if ((*it)->GetServerNames().empty())
 		{
-			std::cerr << FAIL << "[WebServer::Parse] " << RED << "config #" << i+1 << "\tserver name is empty" << std::endl;
+			logz.log(2, tmp + " server name is empty");
 			return (ERRPARSE_NOSRVNAME);
 		}
 		if ((*it)->GetServerPorts().empty())
 		{
-			std::cerr << FAIL << "[WebServer::Parse] " << RED << "config #" << i+1 << "\tserver port is empty" << std::endl;
+			logz.log(2, tmp + " server port is empty");
 			return (ERRPARSE_NOPORT);
 		}
 	}

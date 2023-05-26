@@ -18,18 +18,16 @@
 int main(int ac, char **av, char **envp)
 {
 	SG_ENVP(envp);
-	
+
 	help(ac, av);
 
-	WebServer	ws(av[1]);
+	WebServer	ws(av[1] ? av[1] : DEFAULT_CONF);
 	SG_WebServer(&ws);
-	
+
 	if (ws.Parse()) {
 		std::cout << "Error during parsing configuration file !" << std::endl;
 		return (1);
 	}
-
 	ws.Run();
-
 	return (0);
 }

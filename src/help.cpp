@@ -55,21 +55,21 @@ void	generate_config(void){
 *
 * @brief    show_usage		Show usage of this program
 *
-* @param    path:	const char * which is argv[0] 
+* @param    path:	const char * which is argv[0]
 *
 *********************************************************************/
 
-void	show_usage(const char *path)
-{
-	std::cerr << "usage: " << path << " [config] --help/-h" << std::endl;
-	exit(1);
-}
+// void	show_usage(const char *path)
+// {
+// 	std::cerr << "usage: " << path << " [config] --help/-h" << std::endl;
+// 	exit(1);
+// }
 
 /*********************************************************************
 *
 * @brief    show_help		Show help of this program
 *
-* @param    path:	const char * which is argv[0] 
+* @param    path:	const char * which is argv[0]
 *
 *********************************************************************/
 
@@ -99,14 +99,14 @@ void	show_version(void)
 *
 * @brief    show_usage		Show usage of this program
 *
-* @param    path:	const char * which is argv[0] 
+* @param    path:	const char * which is argv[0]
 *
 *********************************************************************/
 
 void	help(int ac, char **av)
 {
 	(void)ac;
-	if (ac != 2) show_usage(av[0]);
+	// if (ac != 2) show_usage(av[0]);
 
 	if (av[1] && (!std::strcmp(av[1], "--help") || !std::strcmp(av[1], "-h")))
 		show_help(av[0]);

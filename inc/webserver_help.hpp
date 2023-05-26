@@ -14,7 +14,7 @@
 #ifndef WEBSERVER_HELP_HPP
 #define WEBSERVER_HELP_HPP
 
-void	show_usage(const char *path);
+// void	show_usage(const char *path);
 void	show_help(const char *path);
 void	show_version(void);
 void	help(int ac, char **av);

@@ -18,6 +18,7 @@
 # define DEBUG 0
 #endif
 
+#include "logger.hpp"
 #include "epoll.hpp"
 #include <string>
 #include <vector>
@@ -27,6 +28,7 @@
 #include "http_config.hpp"
 
 #define MAX_EVENT 16
+#define DEFAULT_CONF "./cfg/all_configs.conf"
 
 class WebServer: public File
 {
@@ -47,7 +49,7 @@ class WebServer: public File
 		inline const errcodestr_t&				GetErrorStrs(void) const { return (this->_error); }
 		inline bool								GetRun(void) const { return (this->_run); }
 		inline void								SetRun(bool value) { this->_run = value; }
-	
+
 	private:
 		/*
 		 * 	Private members
@@ -63,7 +65,7 @@ class WebServer: public File
 		bool							_srvBlk;
 		bool							_locBlk;
 		bool							_run;
-	
+
 		/*
 		 * 	Private methods
 		 */
