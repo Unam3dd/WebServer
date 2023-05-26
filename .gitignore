@@ -36,3 +36,6 @@ dbg/webserv
 *.exe
 *.out
 *.app
+
+# log file
+*.log
