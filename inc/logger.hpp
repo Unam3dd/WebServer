@@ -60,11 +60,6 @@
 
 # define	ANSI_FMT(color, str)	(color str RST)
 
-# define	G_SRV_BLK				G "srvblk::" RST
-# define	G_LOC_BLK				G "locblk" RST
-# define	R_SRV_BLK				R "!srvblk::" RST
-# define	R_LOC_BLK				R "!locblk" RST
-
 typedef enum e_log_type
 {
 	L_INFO		= 1 << 0,
@@ -73,7 +68,7 @@ typedef enum e_log_type
 	L_PASS		= 1 << 3,
 	L_ERROR		= 1 << 4,
 	L_BYPASS	= 1 << 5
-}			t_log_type;
+}	t_log_type;
 
 class Logger
 {
