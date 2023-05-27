@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "file.hpp"
-#include "http_colors.hpp"
+#include "logger.hpp"
 #include "http_utils.hpp"
 #include "http_status.hpp"
 #include <sys/stat.h>
@@ -20,55 +20,51 @@
 bool	File::open(const char *filename, int flags, mode_t mode)
 {
 	struct stat	s;
+	std::string	tmp_filename(filename);
 
 	if (!filename) {
-		std::cerr << FAIL << "[File::open()] filename is empty !" << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, "file name is empty !");
 		return (false);
 	}
 
 	if (stat(filename, &s) < 0) {
-		std::cerr << FAIL << "[File::open()] to execute stat on " << filename << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, "to execute stat on " + tmp_filename);
 		return (false);
 	}
 
 	if (s.st_mode & S_IFDIR) {
-		std::cerr << FAIL << "[File::open()] " << filename << " is a directory/folder !" << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, tmp_filename + " is a directory/folder !");
 		return (false);
 	}
 
 	_fd = ::open(filename, flags, mode);
 
 	if (_fd < 0) {
-		std::cerr << FAIL << " [File::open()] opening " << filename << " failed due to a permission error !" << std::endl;
+		logz.log(L_ERROR | L_BYPASS, "opening " + tmp_filename + " failed due to a permission error !");
 		return (false);
 	}
-
-	std::cout << SUCCESS << "[File::open()] " << filename << " was opened successfully !" << std::endl;
+	logz.log(L_PASS | L_BYPASS, tmp_filename + " was opened successfully !");
 	_filename = const_cast<char *>(filename);
 	return (true);
 }
 
-http_status_code_t	File::open(const char *filename, mode_t mode){
+http_status_code_t	File::open(const char *filename, mode_t mode)
+{
 	struct stat s;
+	std::string tmp_filename(filename);
 
 	if (!filename) {
-			#if DEBUG
-			std::cerr << WARN << "[File::open()] filename is empty !" << std::endl;
-			#endif
+		logz.logerr(L_WARN, "filename is empty !");
 		return (HTTP_STATUS_NOT_FOUND);
 	}
 
 	if (stat(filename, &s) < 0) {
-			#if DEBUG
-			std::cerr << WARN << "[File::open()] to execute stat on " << filename << std::endl;
-			#endif
+		logz.logerr(L_WARN, "to execute stat on " + tmp_filename);
 		return (HTTP_STATUS_NOT_FOUND);
 	}
 
 	if (s.st_mode & S_IFDIR) {
-			#if DEBUG
-			std::cerr << WARN << "[File::open] '" << filename << "' is a directory/folder ! Populating directory list" << std::endl;
-			#endif
+		logz.logerr(L_WARN, "'" + tmp_filename + "' is a directory/folder ! Populating directory list");
 		_dir = new Directory(filename);
 		return (HTTP_STATUS_OK);
 	}
@@ -76,14 +72,10 @@ http_status_code_t	File::open(const char *filename, mode_t mode){
 	_fd = ::open(filename, O_RDONLY, mode);
 
 	if (_fd < 0) {
-			#if DEBUG
-			std::cerr << WARN << "[File::open()] opening " << filename << " failed due to error permissions !" << std::endl;
-			#endif
+		logz.logerr(L_WARN, "opening " + tmp_filename + " failed due to error permissions !");
 		return (HTTP_STATUS_FORBIDDEN);
 	}
-		#if DEBUG
-		std::cout << SUCCESS << "[File::open()] " << filename << " was opened successfully !" << std::endl;
-		#endif
+	logz.log(L_PASS, tmp_filename + " was opened successfully !");
 	_filename = const_cast<char *>(filename);
 	return (HTTP_STATUS_OK);
 }

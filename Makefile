@@ -78,10 +78,10 @@ vpath %.hpp inc
 SRCS					:= $(shell find src -iname "*.cpp" -print | sed 's/src\///g')
 OBJS					:= $(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
 
-ifneq ($(DEBUG),1)
+ifeq ($(DEBUG),)
 	CXXFLAGS += -Werror
 else
-	CXXFLAGS += -g3 -DDEBUG=1
+	CXXFLAGS += -g3 -DDEBUG=$(DEBUG)
 	DIST = dbg
 endif
 
@@ -124,7 +124,7 @@ export banner
 #
 ###################################
 
-SHELL					:= /bin/zsh
+SHELL					:= /bin/bash
 
 .SILENT:
 
@@ -205,18 +205,18 @@ $(OBJDIR):
 clean:
 	rm -rf $(OBJDIR)
 
-fclean: clean
+fclean:					clean
 	rm -rf $(DIST)/$(NAME)
 	rm -rf $(DIST)/$(TEST_NAME)
 	rm -rf bin dbg
 
-re: fclean all
+re:						fclean all
 
-run:
+run:					re
 ifeq ($(ARG),)
-	./$(DIST)/$(NAME)
+	./$(DIST)/$(NAME) 420>exec.log
 else
-	./$(DIST)/$(NAME) $(ARG)
+	./$(DIST)/$(NAME) $(ARG) 420>exec.log
 endif
 
 .ONESHELL:

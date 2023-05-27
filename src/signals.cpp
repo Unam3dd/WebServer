@@ -9,7 +9,7 @@ void	sig_handler(int sig)
 	WebServer	*ptr = SG_WebServer(NULL);
 
 	if (sig == SIGINT) {
-		logz.log(0, "Closing server wait a moment please !");
+		logz.log(L_INFO, "Closing server wait a moment please !");
 		ptr->SetRun(false);
 	}
 }

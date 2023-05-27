@@ -27,7 +27,7 @@
 #define FOREACH_MAP_STR(x, y) for (std::map<std::string, std::string>::iterator y = x.begin(); y != x.end(); ++y)
 #define FOREACH_MAP_STR_CONST(x, y) for (std::map<std::string, std::string>::const_iterator y = x.begin(); y != x.end(); ++y)
 
-#define APPEND_FILE_TO_STRING(str, file) for (file_size_t i = 0; i < file.length(); i++) str += file.getData()[i]; 
+#define APPEND_FILE_TO_STRING(str, file) for (file_size_t i = 0; i < file.length(); i++) str += file.getData()[i];
 #define IS_BAD_IP(x) (check_format_ip(x) == false)
 #define FILE_EXISTS(x) (File(x, O_RDONLY, S_IRUSR).getFd() != -1)
 #define SANITIZE_AND_CAST_INT_TO_HTTP_STATUS(status) ((status < 100 || status > 102) && (status < 200 || status > 208) && (status < 300 || status > 308) && (status < 400 || status > 417) && (status < 500 || status > 505) ? HTTP_STATUS_INTERNAL_SERVER_ERROR : static_cast<http_status_code_t>(status))
