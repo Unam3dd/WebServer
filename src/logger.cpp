@@ -130,7 +130,7 @@ void	Logger::format(int fd, std::string str)
 	#if DEBUG != 0
 		this->write_debug_fd(fd, str, header, caller_info);
 	#endif
-	if (this->get_bypass())
+	if (this->get_bypass() && DEBUG == 0)
 		this->write_debug_fd(fd, str, header, caller_info);
 	this->write_debug_fd(DEBUG_FD, str, header, caller_info);
 }
