@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/27 09:03:43 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/27 09:09:28 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_status	WebServer::_waitSrvs(void)
 			client = this->_getClientSocketFromEvent(&evs[i]);
 			if (!client)
 			{
-				logz.log(2, "cannot find client socket from event");
+				logz.log(L_ERROR, "cannot find client socket from event");
 				continue;
 			}
 			sock_fd = client->Getfd();
@@ -127,17 +127,17 @@ t_status	WebServer::_waitSrvs(void)
 				::ioctl(sock_fd, FIONREAD, &size);
 				if (!size) continue;
 
-				logz.log(1, "EPOLLIN : size of packet: " + NumberToString(size));
+				logz.log(L_DEBUG, "EPOLLIN : size of packet: " + NumberToString(size));
 				tmpbufs[bufindex] = new char[size + 1];
 
 				if (!tmpbufs[bufindex]) {
-					logz.log(2, "Bad Alloc");
+					logz.log(L_ERROR, "Bad Alloc");
 					continue ;
 				}
 
 				if (::read(sock_fd, tmpbufs[bufindex], size) != (int)size)
 				{
-					logz.log(2, "Read error");
+					logz.log(L_ERROR, "Read error");
 					continue ;
 				}
 
@@ -145,7 +145,7 @@ t_status	WebServer::_waitSrvs(void)
 				for (size_t j = 0; j < size; j++) {
 					bufs[bufindex].push_back(tmpbufs[bufindex][j]);
 				}
-				logz.log(1, "EPOLLIN : request size now of: " + NumberToString(bufs[bufindex].size()));
+				logz.log(L_DEBUG, "EPOLLIN : request size now of: " + NumberToString(bufs[bufindex].size()));
 
 				delete[] tmpbufs[bufindex];
 				tmpbufs[bufindex] = NULL;
@@ -165,31 +165,31 @@ t_status	WebServer::_waitSrvs(void)
 				{
 					if (bufs[bufindex].substr(0, 4) == "POST")
 					{
-						logz.log(1, "EPOLLIN : Found end of header (\\r\\n\\r\\n), but method POST. Searching content-length...");
+						logz.log(L_DEBUG, "EPOLLIN : Found end of header (\\r\\n\\r\\n), but method POST. Searching content-length...");
 						if (bufs[bufindex].find("Content-Length: ") > bufs[bufindex].find("\r\n\r\n")
 						&&  bufs[bufindex].find("content-length: ") > bufs[bufindex].find("\r\n\r\n"))
 						{
-							logz.log(1, "EPOLLIN : No content-length found. Returning 411");
+							logz.log(L_DEBUG, "EPOLLIN : No content-length found. Returning 411");
 							this->_respondAndClean(HTTP_STATUS_LENGTH_REQUIRED, sock_fd);
 							bufs[bufindex].clear();
 							continue;
 						}
 						else
 						{
-							logz.log(1, "EPOLLIN : Content-length found. parsing value...");
+							logz.log(L_DEBUG, "EPOLLIN : Content-length found. parsing value...");
 							size_t pos = bufs[bufindex].find("Content-Length:");
 							if (pos == std::string::npos)
 								pos = bufs[bufindex].find("content-length:");
 							size_t pos2 = bufs[bufindex].find("\r\n", pos);
 							std::string content_length = bufs[bufindex].substr(pos + 15, pos2 - pos - 15);
-							logz.log(1, "EPOLLIN : Content-length parsed. Content-length: " + content_length);
+							logz.log(L_DEBUG, "EPOLLIN : Content-length parsed. Content-length: " + content_length);
 							if (StringToNumber<unsigned long>(content_length) > bufs[bufindex].size() - bufs[bufindex].find("\r\n\r\n") - 4)
 							{
-								logz.log(1, "EPOLLIN : Content-length is bigger than what we have. Keeping EPOLLIN and rolling again!");
+								logz.log(L_DEBUG, "EPOLLIN : Content-length is bigger than what we have. Keeping EPOLLIN and rolling again!");
 								continue;
 							} else
 							{
-								logz.log(1, "EPOLLIN : We have content-length bytes. Setting EPOLLOUT.");
+								logz.log(L_DEBUG, "EPOLLIN : We have content-length bytes. Setting EPOLLOUT.");
 								evs[i].events = EPOLLIN | EPOLLOUT;
 								this->_epoll.Ctl(EPOLL_CTL_MOD, sock_fd, &evs[i]);
 								continue ;
@@ -204,14 +204,15 @@ t_status	WebServer::_waitSrvs(void)
 			}
 			else if (evs[i].events & EPOLLOUT) {
 				HttpRequest req(bufs[bufindex], client->GetSrvPort(), const_cast<char*>(client->InetNtoa(client->GetSin()->sin_addr.s_addr).c_str()));
-				
+			
+				logz.log(L_DEBUG, "parsed request:");
 				#if DEBUG
-					std::cout << DBG << "[WebServer::Wait] Parsed request: " << std::endl << req << std::endl;
+					std::cout << req << std::endl;
 				#endif
 
 				HttpResponse res(req);
 				
-				logz.log(1, "EPOLLOUT : Sending response with code " + res.getStatusCodeStr());
+				logz.log(L_DEBUG, "EPOLLOUT : Sending response with code " + res.getStatusCodeStr());
 				write(client->Getfd(), res.getResponse().c_str(), res.getResponse().size());
 				::close(client->Getfd());
 				_epoll.Ctl(EPOLL_CTL_DEL, client->Getfd(), NULL);
