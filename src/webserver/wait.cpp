@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/27 04:36:55 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/27 04:59:22 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,8 +131,6 @@ t_status	WebServer::_waitSrvs(void)
 
 				if (!tmpbufs[bufindex]) {
 					logz.log(2, "Bad Alloc");
-					delete[] tmpbufs[bufindex];
-					tmpbufs[bufindex] = NULL;
 					continue ;
 				}
 
@@ -202,35 +200,32 @@ t_status	WebServer::_waitSrvs(void)
 				}
 			}
 			else if (evs[i].events & EPOLLOUT) {
-				HttpRequest req(bufs[bufindex], static_cast<Socket*>(evs[i].data.ptr)->GetSrvPort(), const_cast<char*>(static_cast<Socket*>(evs[i].data.ptr)->InetNtoa(static_cast<Socket*>(evs[i].data.ptr)->GetSin()->sin_addr.s_addr).c_str()));
+				HttpRequest req(bufs[bufindex], client->GetSrvPort(), const_cast<char*>(client->InetNtoa(client->GetSin()->sin_addr.s_addr).c_str()));
+				
 				#if DEBUG
 					std::cout << DBG << "[WebServer::Wait] Parsed request: " << std::endl << req << std::endl;
 				#endif
 
 				HttpResponse res(req);
-				#if DEBUG
-					std::cout << DBG << "[WebServer::Wait] Generated response, status code: " << res.getStatusCodeStr() << std::endl;
-				#endif
-				write(static_cast<Socket*>(evs[i].data.ptr)->Getfd(), res.getResponse().c_str(), res.getResponse().size());
-
-				::close(static_cast<Socket*>(evs[i].data.ptr)->Getfd());
-				_epoll.Ctl(EPOLL_CTL_DEL, static_cast<Socket*>(evs[i].data.ptr)->Getfd(), NULL);
-				#if DEBUG
-					std::cout << DBG << "[WebServer::_wait] _clients.size(): " << _clients.size() << std::endl;
-				#endif
+				
+				logz.log(1, "EPOLLOUT : Sending response with code " + res.getStatusCodeStr());
+				write(client->Getfd(), res.getResponse().c_str(), res.getResponse().size());
+				::close(client->Getfd());
+				_epoll.Ctl(EPOLL_CTL_DEL, client->Getfd(), NULL);
+				
 				FOREACH_VECTOR(Socket*, _clients, it){
 					if (*it == evs[i].data.ptr) _clients.erase(it);
 				}
-				::close(static_cast<Socket*>(evs[i].data.ptr)->GetTfd());
-				_epoll.Ctl(EPOLL_CTL_DEL, static_cast<Socket*>(evs[i].data.ptr)->GetTfd(), NULL);
-				this->_timerfds.erase(static_cast<Socket*>(evs[i].data.ptr)->Getfd());
-				delete static_cast<Socket*>(evs[i].data.ptr);
-				bufs[bufindex].clear();
-				#if DEBUG
-					std::cout << DBG << "[WebServer::_wait] response sent and cleanup done." << std::endl;
-				#endif
-			}
+				
+				::close(client->GetTfd());
+				_epoll.Ctl(EPOLL_CTL_DEL, client->GetTfd(), NULL);
+				this->_timerfds.erase(client->Getfd());
 
+				delete client;
+				bufs[bufindex].clear();
+
+				logz.log(1, "EPOLLOUT : Response sent and cleanup done.");
+			}
 		}
 	}
 
