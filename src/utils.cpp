@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 15:32:27 by stales            #+#    #+#             */
-/*   Updated: 2023/05/24 19:43:45 by stales           ###   ########.fr       */
+/*   Updated: 2023/05/27 04:21:16 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "webserver.hpp"
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 
 bool	check_overflow_port(const std::string &str)
 {
@@ -137,4 +138,25 @@ std::string	SG_GetContentType(std::string& extension)
 				return (m[i].str);
 	}
 	return ("text/html");
+}
+
+unsigned long long	lowest_heap_address(void)
+{
+	std::stringstream	ss;
+	std::ifstream		regions("/proc/self/maps");
+	std::string			line;
+	std::string			addr;
+	unsigned long long	ret = 0;
+
+	while (std::getline(regions, line))
+	{
+		if (line.find("[heap]") != std::string::npos)
+		{
+			addr = line.substr(0, line.find("-"));
+			ss << std::hex << addr;
+			ss >> ret;
+			break;
+		}
+	}
+	return (!ret ? 0xFFFFFF : ret);
 }

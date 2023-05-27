@@ -39,3 +39,7 @@ dbg/webserv
 
 # log file
 *.log
+
+# nvim files
+.ccls-cache
+.ccls

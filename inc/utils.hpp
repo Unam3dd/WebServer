@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 17:20:14 by stales            #+#    #+#             */
-/*   Updated: 2023/05/26 17:48:44 by stales           ###   ########.fr       */
+/*   Updated: 2023/05/27 04:21:32 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ struct mime_content_type_t
 
 bool	check_overflow_port(const std::string& str);
 static inline int	test(void)  { return (2); }
+
+unsigned long long	lowest_heap_address(void);
 
 template <typename T>
 std::string	NumberToString(T num) { std::ostringstream s; s << num; return (s.str()); }

@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/05/26 22:44:12 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/27 04:26:36 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ class WebServer
 		/*
 		 * 	Private methods
 		 */
+		Socket*							_getClientSocketFromFd(int fd);
+		Socket*							_getClientSocketFromEvent(struct epoll_event* event);
 		std::vector<std::string>		_splitDirective(const std::string& line);
 		t_errcode						_parseSrvDirective(const std::string& line);
 		t_errcode						_parseLocDirective(const std::string& line);
@@ -83,6 +85,7 @@ class WebServer
 		t_status						_setupEpoll(void);
 		t_status						_waitSrvs(void);
 		t_status						_acceptClient(ev_t *ev);
+		void							_respondAndClean(http_status_code_t status, int fd);
 };
 
 #endif
