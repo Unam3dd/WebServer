@@ -40,14 +40,7 @@ SHELL					:= /bin/bash
 #
 ###################################
 
-# define	R						ANSI_ESC "38:2::255:0:0m"
-# define	G						ANSI_ESC "38:2::0:255:0m"
-# define	B						ANSI_ESC "38:2::0:0:255m"
-# define	C						ANSI_ESC "38:2::0:255:255m"
-# define	Y						ANSI_ESC "38:2::255:255:0m"
-# define	O						ANSI_ESC "38:2::255:165:0m"
-
-ESC						:= \033[
+ESC						:= \x1b[
 R						:= $(ESC)38:2::255:0:0m
 G						:= $(ESC)38:2::0:255:0m
 B						:= $(ESC)38:2::0:0:255m
@@ -147,30 +140,30 @@ BANNER:
 	clear
 	printf "$$banner"
 	printf "\n$(CHECK) Check C++ Files... at $(G)$(DATE)$(RST)\n"
-	if test -f $(DIST)/$(NAME)
-	then
-	printf "\n$(CHECK) Project is already Compiled ! to rebuild use make re\n\n"
+	if test -f $(DIST)/$(NAME); then
+		printf "\n$(CHECK) Project is already Compiled ! to rebuild use make re\n"
 	else
-	printf "\n$(CHECK) Compiling C++ Files... at $(G)$(DATE)$(RST)\n\n"
+		printf "\n$(CHECK) Compiling C++ Files... at $(G)$(DATE)$(RST)\n"
 	fi
+	printf "\n\n"
 
 .ONESHELL:
 $(OBJDIR)/%.o: %.cpp
-	printf "%b" "$(MOVUP_CLR)"
+	echo -ne "$(MOVUP_CLR)"
 	echo -n '[ '
 	i=2
 	if [ $(PERC) -lt "25" ] ; then
-		printf "%b" "$(R)"
+		echo -ne "$(R)"
 	elif [ $(PERC) -ge "25" ] && [ $(PERC) -lt "75" ]; then
-		printf "%b" "$(Y)"
+		echo -ne "$(Y)"
 	else
-		printf "%b" "$(G)"
+		echo -ne "$(G)"
 	fi
 	while [ "$$i" -le $(cnt) ]; do
 		echo -n "="
 		((i++))
 	done
-	printf "%b" "$(RST)"
+	echo -ne "$(RST)"
 	echo -n '🚀 '
 	i=$(cnt)
 	while [ "$$i" -le $(NUM_CF) ]; do
@@ -179,11 +172,11 @@ $(OBJDIR)/%.o: %.cpp
 	done
 	echo -n ']'
 	if [ $(PERC) -lt "25" ]; then
-		printf " %b %s...\n" "($(R)$(PERC)%$(RST))" "$<"
+		echo -e " ($(R)$(PERC)%$(RST)) $<..."
 	elif [ $(PERC) -ge "25" ] && [ $(PERC) -lt "75" ]; then
-		printf " %b %s...\n" "($(Y)$(PERC)%$(RST))" "$<"
+		echo -e " ($(Y)$(PERC)%$(RST)) $<..."
 	else
-		printf " %b %s...\n" "($(G)$(PERC)%$(RST))" "$<"
+		echo -e " ($(G)$(PERC)%$(RST)) $<..."
 	fi
 	$(CC) $(CXXFLAGS) -c $< -o $@
 	$(eval PERC=$(shell echo "$(cnt)/$(NUM_CF)*100" | bc -l | tr '.' '\n' | head -n 1))
