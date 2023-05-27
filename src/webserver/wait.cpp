@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/27 09:09:28 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/27 10:21:01 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ t_status	WebServer::_waitSrvs(void)
 
 	Socket* client = NULL;
 
-	// TODO: Setup Signals
 	sig_setup();
 	this->_run = 1;
 
@@ -204,11 +203,10 @@ t_status	WebServer::_waitSrvs(void)
 			}
 			else if (evs[i].events & EPOLLOUT) {
 				HttpRequest req(bufs[bufindex], client->GetSrvPort(), const_cast<char*>(client->InetNtoa(client->GetSin()->sin_addr.s_addr).c_str()));
-			
-				logz.log(L_DEBUG, "parsed request:");
-				#if DEBUG
-					std::cout << req << std::endl;
-				#endif
+		
+				std::ostringstream oss;
+				oss << req;
+				logz.log(L_DEBUG, "parsed request: " + oss.str());
 
 				HttpResponse res(req);
 				

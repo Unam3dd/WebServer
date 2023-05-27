@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 12:35:50 by stales            #+#    #+#             */
-/*   Updated: 2023/05/27 02:14:10 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/27 10:08:14 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,5 +124,6 @@ t_errcode WebServer::Parse(void)
 			return (ERRPARSE_NOPORT);
 		}
 	}
+	logz.log(L_PASS | L_BYPASS, "Succesfully parsed config file");
 	return (ERRPARSE_OK);
 }

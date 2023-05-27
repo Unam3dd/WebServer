@@ -77,9 +77,7 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 	logz.log(L_DEBUG, "Port: " + logz.itoa(_request.getPort()));
 	logz.log(L_DEBUG, "Uri: " + _request.getUri());
 	std::string tmp;
-	for (std::vector<std::string>::iterator it = this->_srvcfg->GetServerNames().begin();
-		 it != this->_srvcfg->GetServerNames().end();
-		 ++it)
+	FOREACH_VECTOR(std::string, this->_srvcfg->GetServerNames(), it)
 		tmp += *it;
 	logz.log(L_DEBUG, "Server config chosen: " + tmp);
 	logz.log(L_DEBUG, "Request config choosen: " + (this->_reqcfg == NULL ? "None" : this->_reqcfg->GetScope()));
