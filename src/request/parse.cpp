@@ -42,7 +42,7 @@ t_status HttpRequest::_parseRequestLine(const std::string &reqline)
 			if (i + 2 >= (int)uri.length())
 				return (STATUS_FAIL);
 			tmp = uri.substr(i + 1, 2);
-			if (!isHex(tmp))
+			if (!isHex(tmp) || hexToChar(tmp) > 0x7f)
 				return (STATUS_FAIL);
 			uri = uri.substr(0, i) + hexToChar(tmp) + uri.substr(i + 3, uri.length() - i - 3);
 		} else if (uri[i] == '+'){
@@ -84,7 +84,7 @@ t_status	HttpRequest::_parseHeaders(const std::string &req)
 		value = line.substr(pos + 2, line.length());
 		if (_header.find(key) == _header.end())
 		{
-			logz.logerr(L_WARN | L_BYPASS, "Header " + key + " does not exist");
+			logz.logerr(L_WARN, "Header " + key + " does not exist");
 			continue ;
 		}
 		if (key == "host")
