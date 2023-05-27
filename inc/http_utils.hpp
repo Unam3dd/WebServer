@@ -16,7 +16,10 @@
 //
 /////////////////////////////////
 
-#define VERSION "1.0.0"
+#ifndef		VERSION
+# define	VERSION "1.0.0"
+#endif
+
 #define MAX_EVENT 16
 
 #define FOREACH_VECTOR(type, variable, it) for(std::vector<type>::iterator it = variable.begin(); it < variable.end(); it++)

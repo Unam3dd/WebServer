@@ -18,7 +18,7 @@
 
 AUTHORS					:= Sam0verfl0w, Clinche, Pixailz
 NAME					:= webserv
-WEBSERVER_VERSION		:= 1.0.0
+WEBSERVER_VERSION		:= 1.0.1
 DIST					:= bin
 
 ###################################
@@ -29,6 +29,7 @@ DIST					:= bin
 
 CC						:= c++
 CXXFLAGS				:= -Wall -Wextra -std=c++98 -I. -Iinc -Iinc/libsocket
+CXXFLAGS				+= -DVERSION=\"$(WEBSERVER_VERSION)\"
 TESTFLAGS				:= -I. -Iinc -Iinc/libsocket -std=c++98
 VERSION					:= $(shell $(CC) --version | head -n 1)
 
