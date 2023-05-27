@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 15:32:22 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/05/24 16:07:49 by stales           ###   ########.fr       */
+/*   Updated: 2023/05/27 09:58:32 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,27 +23,27 @@ bool	File::open(const char *filename, int flags, mode_t mode)
 	std::string	tmp_filename(filename);
 
 	if (!filename) {
-		logz.logerr(L_ERROR | L_BYPASS, "file name is empty !");
+		logz.logerr(L_WARN, "file name is empty !");
 		return (false);
 	}
 
 	if (stat(filename, &s) < 0) {
-		logz.logerr(L_ERROR | L_BYPASS, "to execute stat on " + tmp_filename);
+		logz.logerr(L_WARN, "to execute stat on " + tmp_filename);
 		return (false);
 	}
 
 	if (s.st_mode & S_IFDIR) {
-		logz.logerr(L_ERROR | L_BYPASS, tmp_filename + " is a directory/folder !");
+		logz.logerr(L_WARN, tmp_filename + " is a directory/folder !");
 		return (false);
 	}
 
 	_fd = ::open(filename, flags, mode);
 
 	if (_fd < 0) {
-		logz.log(L_ERROR | L_BYPASS, "opening " + tmp_filename + " failed due to a permission error !");
+		logz.log(L_WARN, "opening " + tmp_filename + " failed due to a permission error !");
 		return (false);
 	}
-	logz.log(L_PASS | L_BYPASS, tmp_filename + " was opened successfully !");
+	logz.log(L_PASS, tmp_filename + " was opened successfully !");
 	_filename = const_cast<char *>(filename);
 	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: sam0verfl0w <stales@student.42angouleme.f  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 18:11:10 by sam0verfl0w       #+#    #+#             */
-/*   Updated: 2023/03/05 17:01:56 by stales           ###   ########.fr       */
+/*   Updated: 2023/05/27 09:58:55 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ file_size_t	File::read(void)
 	this->close();
 
 	std::string	tmp(this->_filename);
-	logz.log(L_PASS | L_BYPASS, tmp + " Mapped into heap memory !");
+	logz.log(L_PASS, tmp + " Mapped into heap memory !");
 
 	return (_size);
 }
