@@ -73,9 +73,13 @@ cnt						:= 2
 #
 ###################################
 
-OBJDIR					:= obj
-vpath %.cpp src
+SRC_DIR					:= src
+OBJ_DIR					:= obj
+
+vpath %.cpp $(SRC_DIR)
 vpath %.hpp inc
+
+CXXFLAGS				+= -DSRC_DIR=\"$(SRC_DIR)\"
 
 ###################################
 #
@@ -84,7 +88,7 @@ vpath %.hpp inc
 ###################################
 
 SRCS					:= $(shell find src -iname "*.cpp" -print | sed 's|src/||g')
-OBJS					:= $(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
+OBJS					:= $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 
 ifeq ($(DEBUG),)
 	CXXFLAGS += -Werror
@@ -149,7 +153,7 @@ BANNER:
 	printf "\n\n"
 
 .ONESHELL:
-$(OBJDIR)/%.o: %.cpp
+$(OBJ_DIR)/%.o: %.cpp
 	echo -ne "$(MOVUP_CLR)"
 	echo -n '[ '
 	i=2
@@ -184,7 +188,7 @@ $(OBJDIR)/%.o: %.cpp
 	$(eval cnt=$(shell echo $$(($(cnt)+1))))
 
 .ONESHELL:
-$(DIST)/$(NAME): $(OBJDIR) $(OBJS)
+$(DIST)/$(NAME): $(OBJ_DIR) $(OBJS)
 	printf "\n$(CHECK) WebServer Created at $(GOTO_COL)$(G)$(DATE)$(RST)\n"
 	printf "$(CHECK) Version Build$(GOTO_COL)$(G)$(DIST)$(RST)\n"
 	printf "$(CHECK) Version WServer$(GOTO_COL)$(G)$(WEBSERVER_VERSION)$(RST)\n"
@@ -196,11 +200,11 @@ $(DIST)/$(NAME): $(OBJDIR) $(OBJS)
 	printf "$(CHECK) Sha1sum$(GOTO_COL)$(G)%s$(RST)\n" "$$(sha1sum $(DIST)/$(NAME) | cut -d ' ' -f1)"
 	printf "$(CHECK) Sha256sum$(GOTO_COL)$(G)%s$(RST)\n" "$$(sha256sum $(DIST)/$(NAME) | cut -d ' ' -f1)"
 
-$(OBJDIR):
-	mkdir -p $(sort $(addprefix $(OBJDIR)/, $(dir $(SRCS))))
+$(OBJ_DIR):
+	mkdir -p $(sort $(addprefix $(OBJ_DIR)/, $(dir $(SRCS))))
 
 clean:
-	rm -rf $(OBJDIR)
+	rm -rf $(OBJ_DIR)
 
 fclean:					clean
 	rm -rf $(DIST)/$(NAME)
