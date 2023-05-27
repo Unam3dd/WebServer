@@ -27,6 +27,10 @@
  * <func>		ostringstream()
  */
 
+# ifndef	DEBUG
+#  define	DEBUG					0
+# endif
+
 # ifndef	DEBUG_FD
 #  define	DEBUG_FD				420
 # endif

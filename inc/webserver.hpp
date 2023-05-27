@@ -14,9 +14,6 @@
 #define WEBSERVER_HPP
 
 #include "http_server.hpp"
-# ifndef	DEBUG
-#  define	DEBUG					1
-# endif
 #include "logger.hpp"
 #include "epoll.hpp"
 #include <string>
