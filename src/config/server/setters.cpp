@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 18:57:36 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/24 17:18:32 by stales           ###   ########.fr       */
+/*   Updated: 2023/05/27 10:25:32 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,8 @@ t_errcode	HttpServerConfig::SetMaxPostSize(const std::vector<std::string> &max_s
 t_errcode	HttpServerConfig::SetCookies(const std::vector<std::string> &cookies)
 {
 	logz.log(L_DEBUG, "setting cookies");
+	if (cookies.size() != 2)
+		return (ERRPARSE_NBARGS);
 	std::string tmp = cookies.at(1);
 	LOWERCASE(tmp);
 	if (tmp == "on")
@@ -176,6 +178,8 @@ t_errcode	HttpServerConfig::SetCookies(const std::vector<std::string> &cookies)
 t_errcode	HttpServerConfig::SetUploads(const std::vector<std::string> &uploads)
 {
 	logz.log(L_DEBUG, "setting uploads");
+	if (uploads.size() != 2)
+		return (ERRPARSE_NBARGS);
 	std::string tmp = uploads.at(1);
 	LOWERCASE(tmp);
 	if (tmp == "on")
@@ -191,6 +195,8 @@ t_errcode	HttpServerConfig::SetUploads(const std::vector<std::string> &uploads)
 t_errcode	HttpServerConfig::SetDirList(const std::vector<std::string> &dirlist)
 {
 	logz.log(L_DEBUG, "setting dir list");
+	if (dirlist.size() != 2)
+		return (ERRPARSE_NBARGS);
 	std::string tmp = dirlist.at(1);
 	LOWERCASE(tmp);
 	if (tmp == "on")

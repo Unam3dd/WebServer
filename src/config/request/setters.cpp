@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 16:59:57 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/24 17:28:31 by stales           ###   ########.fr       */
+/*   Updated: 2023/05/27 10:24:11 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,8 @@ t_errcode	HttpRequestConfig::SetMaxPostSize(const std::vector<std::string> &max_
 t_errcode	HttpRequestConfig::SetCookies(const std::vector<std::string> &cookies)
 {
 	logz.log(L_DEBUG, "setting cookies");
+	if (cookies.size() != 2)
+		return (ERRPARSE_COOKIES);
 	std::string tmp = cookies.at(1);
 	LOWERCASE(tmp);
 	if (tmp == "on")
@@ -143,6 +145,8 @@ t_errcode	HttpRequestConfig::SetCookies(const std::vector<std::string> &cookies)
 t_errcode	HttpRequestConfig::SetUploads(const std::vector<std::string> &uploads)
 {
 	logz.log(L_DEBUG, "setting uploads");
+	if (uploads.size() != 2)
+		return (ERRPARSE_UPLOADS);
 	std::string tmp = uploads.at(1);
 	LOWERCASE(tmp);
 	if (tmp == "on")
@@ -159,6 +163,8 @@ t_errcode	HttpRequestConfig::SetUploads(const std::vector<std::string> &uploads)
 t_errcode	HttpRequestConfig::SetDirList(const std::vector<std::string> &dirlist)
 {
 	logz.log(L_DEBUG, "setting dir list");
+	if (dirlist.size() != 2)
+		return (ERRPARSE_DIRLIST);
 	std::string tmp = dirlist.at(1);
 	LOWERCASE(tmp);
 	if (tmp == "on")
@@ -174,7 +180,7 @@ t_errcode	HttpRequestConfig::SetDirList(const std::vector<std::string> &dirlist)
 t_errcode	HttpRequestConfig::SetCgi(const std::vector<std::string> &cgi)
 {
 	logz.log(L_DEBUG, "setting cgi");
-	if (cgi.size() < 3)
+	if (cgi.size() != 3)
 		return (ERRPARSE_CGI);
 	try{
 		this->_cgi.at(cgi.at(1));
