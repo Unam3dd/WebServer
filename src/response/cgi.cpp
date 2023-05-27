@@ -1,5 +1,5 @@
 #include "http_response.hpp"
-#include "http_colors.hpp"
+#include "logger.hpp"
 #include "http_utils.hpp"
 #include <cstdlib>
 #include <fcntl.h>
@@ -76,9 +76,9 @@ void HttpResponse::_createCgiEnvp(const std::string& file){
 	std::string remoteaddr = "REMOTE_ADDR=" + this->_request.getIp();
 	env.push_back(query);
 	env.push_back(remoteaddr);
-	
+
 	std::string cookies;
-	if (   ( this->_reqcfg && this->_reqcfg->GetCookies()) 
+	if (   ( this->_reqcfg && this->_reqcfg->GetCookies())
 		|| ( this->_srvcfg && this->_srvcfg->GetCookies()) )
 		cookies = "HTTP_COOKIE=" + this->_request.getHeaders().at("cookie");
 	else
@@ -90,11 +90,11 @@ void HttpResponse::_createCgiEnvp(const std::string& file){
 	std::string useragent = "HTTP_USER_AGENT=" + this->_request.getHeaders().at("user-agent");
 	std::string referer = "HTTP_REFERER=" + this->_request.getHeaders().at("referer");
 	std::string contenttype = "CONTENT_TYPE=" + this->_request.getHeaders().at("content-type");
-	
+
 	std::string contentlen;
-	this->_request.getMethod() == POST ? contentlen = "CONTENT_LENGTH=" + NumberToString(this->_request.getBody().size()) 
+	this->_request.getMethod() == POST ? contentlen = "CONTENT_LENGTH=" + NumberToString(this->_request.getBody().size())
 									   : contentlen = "CONTENT_LENGTH=0";
-	
+
 	env.push_back(cookies);
 	env.push_back(accept);
 	env.push_back(acceptlang);
@@ -103,7 +103,7 @@ void HttpResponse::_createCgiEnvp(const std::string& file){
 	env.push_back(referer);
 	env.push_back(contenttype);
 	env.push_back(contentlen);
-	
+
 	envp.reserve(env.size() + 1);
 
 	for (size_t i = 0; i < env.size(); i++)
@@ -127,20 +127,15 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 
 	_cgibuf.clear();
 	command = path + " " + file;
-	
-	#if DEBUG
-		std::cout << DBG << "[HttpResponse::_processCgi] Processing File: " << file << std::endl;
-		std::cout << DBG << "[HttpResponse::_processCgi] Cgi Path: " << path << std::endl;
-	#endif
+
+	logz.log(L_DEBUG, "Processing file: " + file);
+	logz.log(L_DEBUG, "Cgi path: " + path);
 
 	if (pipe(inputfd) < 0 || pipe(outputfd) < 0)
 	{
-		#if DEBUG
-			std::cout << DBG << FAIL << "[HttpResponse::_processCgi] Pipe Error" << std::endl;
-		#endif
+		logz.logerr(L_ERROR, "Pipe error");
 		return (1);
 	}
-	
 
 	if (!fork()) {
 		close(inputfd[1]);
@@ -157,14 +152,10 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 
 	if (this->_request.getMethod() == POST)
 	{
-		#if DEBUG
-			std::cout << DBG << "[HttpResponse::_processCgi] POST Request" << std::endl;
-		#endif
+		logz.log(L_DEBUG, "POST request");
 		if (write(inputfd[1], this->_request.getBody().c_str(), this->_request.getBody().size()) < 0)
 		{
-			#if DEBUG
-				std::cout << DBG << FAIL << "[HttpResponse::_processCgi] Write Error" << std::endl;
-			#endif
+			logz.logerr(L_ERROR, "Write error");
 			return (1);
 		}
 	}
@@ -188,12 +179,11 @@ int	HttpResponse::_processCgi(const std::string& path, const std::string& file)
 	}
 	wait(NULL);
 
-	#if DEBUG
-		if (len < 10000)
-			std::cout << DBG << "[HttpResponse::_processCgi] Cgi Output: " << _cgibuf.data() << std::endl;
-		else
-			std::cout << DBG << "[HttpResponse::_processCgi] Cgi Output not displayed due to big size (>10000 chars)"  << std::endl;
-	#endif
+	// TOCHECK : NOT QUITE SIMILAR
+	if (len < 10000)
+		logz.log(L_DEBUG, "Cgi output: " + this->_cgibuf);
+	else
+		logz.log(L_DEBUG, "Cgi Output not displayed due to big size (>10000 chars)");
 
 	close(inputfd[1]);
 	close(outputfd[0]);

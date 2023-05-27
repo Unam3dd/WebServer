@@ -14,10 +14,6 @@
 #define WEBSERVER_HPP
 
 #include "http_server.hpp"
-#ifndef DEBUG
-# define DEBUG 0
-#endif
-
 #include "logger.hpp"
 #include "epoll.hpp"
 #include <string>
@@ -28,7 +24,7 @@
 #include "http_config.hpp"
 
 #define MAX_EVENT 16
-#define DEFAULT_CONF "./cfg/all_configs.conf"
+#define DEFAULT_CONF "./cfg/good/default_config.conf"
 
 class WebServer
 {

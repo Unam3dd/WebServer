@@ -43,12 +43,12 @@ t_errcode WebServer::Parse(void)
 		tmp = this->_srvBlk ? ANSI_FMT(G, "srvblk::") : ANSI_FMT(R, "!srvblk::");
 		tmp += this->_locBlk ? ANSI_FMT(G, "locblk") : ANSI_FMT(R, "!locblk");
 		tmp += " " + line;
-		logz.log(1, tmp);
+		logz.log(L_DEBUG, tmp);
 		if (this->_isSrvBlk(line))
 		{
 			if (this->_srvBlk == true)
 			{
-				logz.log(2, red_line + " new server block before end of previous one");
+				logz.log(L_ERROR, red_line + " new server block before end of previous one");
 				return (ERRPARSE_NEWSRVBLK);
 			}
 			this->_srvBlk = true;
@@ -58,7 +58,7 @@ t_errcode WebServer::Parse(void)
 		{
 			if (this->_locBlk == true)
 			{
-				logz.log(2, red_line + " new location block before end of previous one");
+				logz.log(L_ERROR, red_line + " new location block before end of previous one");
 				return (ERRPARSE_NEWLOCBLK);
 			}
 			this->_locBlk = true;
@@ -82,7 +82,7 @@ t_errcode WebServer::Parse(void)
 		}
 		else if (!this->_srvBlk && !this->_locBlk && this->_isEndBlk(line))
 		{
-			logz.log(2, red_line + " end of block without any block opened");
+			logz.log(L_ERROR, red_line + " end of block without any block opened");
 			return (ERRPARSE_ENDBLK);
 		}
 		else if (this->_srvBlk && !this->_locBlk && (!line.empty() || line.find_first_not_of(" \t") != std::string::npos))
@@ -101,12 +101,12 @@ t_errcode WebServer::Parse(void)
 	}
 	if (this->_srvBlk == true)
 	{
-		logz.log(2, red_line + " unclosed server block");
+		logz.log(L_ERROR, red_line + " unclosed server block");
 		return (ERRPARSE_NEWSRVBLK);
 	}
 	if (this->_locBlk == true)
 	{
-		logz.log(2, red_line + " unclosed location block");
+		logz.log(L_ERROR, red_line + " unclosed location block");
 		return (ERRPARSE_NEWLOCBLK);
 	}
 	int i = 0;
@@ -115,12 +115,12 @@ t_errcode WebServer::Parse(void)
 		tmp = R "config #" RST + logz.itoa(i + 1);
 		if ((*it)->GetServerNames().empty())
 		{
-			logz.log(2, tmp + " server name is empty");
+			logz.log(L_ERROR, tmp + " server name is empty");
 			return (ERRPARSE_NOSRVNAME);
 		}
 		if ((*it)->GetServerPorts().empty())
 		{
-			logz.log(2, tmp + " server port is empty");
+			logz.log(L_ERROR, tmp + " server port is empty");
 			return (ERRPARSE_NOPORT);
 		}
 	}

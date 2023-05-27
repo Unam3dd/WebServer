@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "http_server.hpp"
-#include "http_colors.hpp"
+#include "logger.hpp"
 #include <iostream>
 
 /*********************************************************************
@@ -20,7 +20,7 @@
 *
 * @param	int:	backlog
 *
-* @return   true or false 
+* @return   true or false
 *
 *********************************************************************/
 
@@ -29,12 +29,12 @@ bool	HttpServer::Listen(int backlog)
 	_s.Listen(backlog);
 	if (!_s.isOnListening())
 		return (false);
-	
+
 	if (!_ip.empty())
-		std::cout << SUCCESS << "[HttpServer::Listen] Listening on " << this->_ip << ":" << this->_port << "/ " << std::endl;
+		logz.log(L_PASS | L_BYPASS, "Listening on " + this->_ip + ":" + logz.itoa(this->_port) + "/");
 
 	if (this->_ip.empty())
-		std::cout << SUCCESS << "[HttpServer::Listen] Listening on " << this->_port << "/" << std::endl;
+		logz.log(L_PASS | L_BYPASS, "Listening on " + logz.itoa(this->_port) + "/");
 
 	return (true);
 }

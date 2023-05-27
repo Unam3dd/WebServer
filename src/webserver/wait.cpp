@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/27 04:59:22 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/05/27 09:03:43 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "http_server.hpp"
 #include "http_status.hpp"
 #include "http_utils.hpp"
-#include "http_colors.hpp"
+#include "logger.hpp"
 #include "http_response.hpp"
 #include "webserver.hpp"
 #include "utils.hpp"
@@ -50,7 +50,7 @@ t_status	WebServer::_acceptClient(ev_t *e)
 		if (e->data.fd == (*srv)->getSocket().Getfd())
 		{
 			client = (*srv)->getSocket().Accept();
-			if (client) 
+			if (client)
 			{
 				client->SetSrvPort((*srv)->getPort());
 				(*srv)->getClients().push_back(client);
@@ -69,12 +69,13 @@ t_status	WebServer::_acceptClient(ev_t *e)
 				client->SetTfd(tfd);
 
 				_clients.push_back(client);
-				std::cout << SUCCESS << "[WebServer::Wait] New client Accepted ! " << client->InetNtoa(client->GetSin()->sin_addr.s_addr) << ":" << client->Ntohs(client->GetSin()->sin_port) << std::endl;
+				logz.log(L_PASS | L_BYPASS, "New clien accepted ! " +
+					client->InetNtoa(client->GetSin()->sin_addr.s_addr) + ":" +
+					logz.itoa(client->Ntohs(client->GetSin()->sin_port)));
 				return (STATUS_OK);
 			}
 		}
 	}
-
 	return (STATUS_FAIL);
 }
 
@@ -116,7 +117,7 @@ t_status	WebServer::_waitSrvs(void)
 
 			if (evs[i].events & EPOLLIN) {
 				if ((unsigned long long)evs[i].data.fd < lowest_heap_address()) { //black magic: epoll_event.data is union, so if we store an fd instead on a ptr, it will always be inferior to a memory address
-					logz.log(1, "EPOLLIN : timerfd. Sending timeout response.");
+					logz.log(L_DEBUG, "EPOLLIN : timerfd. Sending timeout response.");
 					::read(evs[i].data.fd, &size, sizeof(size));
 					this->_respondAndClean(HTTP_STATUS_REQUEST_TIMEOUT, client->Getfd());
 					bufs[bufindex].clear();
@@ -150,7 +151,8 @@ t_status	WebServer::_waitSrvs(void)
 				tmpbufs[bufindex] = NULL;
 
 				//we reset the timerfd
-				logz.log(1, "EPOLLIN : Resetting timerfd");
+				logz.log(L_DEBUG, "EPOLLIN: Resetting timerfd");
+
 				struct itimerspec new_value;
 				new_value.it_value.tv_sec = 10;
 				new_value.it_value.tv_nsec = 0;
@@ -194,7 +196,8 @@ t_status	WebServer::_waitSrvs(void)
 							}
 						}
 					}
-					logz.log(1, "EPOLLIN : Found end of header (\\r\\n\\r\\n). Setting EPOLLOUT. If there's data to be read, it should be read before going to EPOLLOUT");
+					logz.log(L_DEBUG, "EPOLLIN : Found end of header (\\r\\n\\r\\n). Setting EPOLLOUT.");
+					logz.log(L_DEBUG, "If there's data to be read, it should be read before going to EPOLLOUT");
 					evs[i].events = EPOLLIN | EPOLLOUT;
 					this->_epoll.Ctl(EPOLL_CTL_MOD, sock_fd, &evs[i]);
 				}
