@@ -16,9 +16,6 @@
 //
 /////////////////////////////////
 
-#ifndef DEBUG
-# define DEBUG 0
-#endif
 #define VERSION "1.0.0"
 #define MAX_EVENT 16
 

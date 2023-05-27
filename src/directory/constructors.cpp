@@ -1,5 +1,5 @@
 #include "directory.hpp"
-#include "http_colors.hpp"
+#include "logger.hpp"
 #include <algorithm>
 #include <dirent.h>
 #include <iostream>
@@ -13,7 +13,7 @@ Directory::Directory(const char *path): _path(path){
 		}
 		closedir(dir);
 	} else {
-		std::cerr << WARN << "Could not open directory: " << path << std::endl;
+		logz.logerr(L_WARN | L_BYPASS, "Could not open directory: " + _path);
 	}
 	std::sort(_files.begin(), _files.end());
 }

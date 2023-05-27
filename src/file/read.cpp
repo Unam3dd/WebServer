@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "file.hpp"
-#include "http_colors.hpp"
+#include "logger.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <cstring>
@@ -19,7 +19,7 @@
 file_size_t	File::read(void)
 {
 	if (_fd < 0) {
-		std::cerr << FAIL << " Bad file descriptor !" << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, "Bad file descriptor !");
 		return (0);
 	}
 
@@ -27,22 +27,23 @@ file_size_t	File::read(void)
 	lseek(_fd, 0, SEEK_SET);
 
 	_data = new (std::nothrow) char[_size+1];
-	
+
 	if (!_data) {
-		std::cerr << FAIL << " Bad alloc or not enough memory !" << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, "Bad alloc or not enough memory !");
 		return (0);
 	}
 
 	std::memset(_data, 0, _size+1);
-	
+
 	if (::read(_fd, _data, _size) != (ssize_t)_size) {
-		std::cerr << FAIL << " During reading file descriptor !" << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, "During reading file descriptor !");
 		return (0);
 	}
 
 	this->close();
 
-	std::cout << SUCCESS << " " << this->_filename << " Mapped into heap memory !" << std::endl;
+	std::string	tmp(this->_filename);
+	logz.log(L_PASS | L_BYPASS, tmp + " Mapped into heap memory !");
 
 	return (_size);
 }

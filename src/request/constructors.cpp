@@ -1,6 +1,6 @@
 #include "http_request.hpp"
 #include "http_utils.hpp"
-#include "http_colors.hpp"
+#include "logger.hpp"
 #include <iostream>
 
 HttpRequest::HttpRequest(){}
@@ -11,13 +11,13 @@ HttpRequest::HttpRequest(const std::string& req, in_port_t port, char* ip):_ip(i
 	const char** http_headers = get_http_headers();
 	for (int i = 0; http_headers[i]; i++)
 		_header[http_headers[i]] = "";
-	
+
 	std::string line;
 	t_status	status = STATUS_OK;
 
 	if (req.length() == 0 || req.find("\r\n") == std::string::npos)
 	{
-		std::cerr << FAIL << "[HttpRequest::HttpRequest] Received Invalid Request (CRLF mandatory)" << RESET << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, "Received Invalid Request (CRLF mandatory)");
 		this->_badrequest = true;
 		return ;
 	}
@@ -26,23 +26,23 @@ HttpRequest::HttpRequest(const std::string& req, in_port_t port, char* ip):_ip(i
 	status = _parseRequestLine(line);
 	if (status != STATUS_OK)
 	{
-		std::cerr << FAIL << "[HttpRequest::HttpRequest] Error parsing request line: " << line << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, "Error parsing request line: " + line);
 		this->_badrequest = true;
 		return ;
 	}
-	
+
 	if (req.find("\r\n") == std::string::npos)
 	{
-		std::cerr << FAIL << "[HttpRequest::HttpRequest] Received Invalid Request (CRLF mandatory)" << RESET << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, "Received Invalid Request (CRLF mandatory)");
 		this->_badrequest = true;
 		return ;
 	}
-	
+
 	line = req.substr(req.find("\r\n") + 2, req.length() - req.find("\r\n"));
 	status = _parseHeaders(line);
 	if (status != STATUS_OK)
 	{
-		std::cerr << FAIL << "[HttpRequest::HttpRequest] Error parsing headers" << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, "Error parsing headers");
 		this->_badrequest = true;
 		return ;
 	}

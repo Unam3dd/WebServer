@@ -12,7 +12,6 @@
 
 #include "http_server.hpp"
 #include "http_utils.hpp"
-#include "http_colors.hpp"
 #include <asm-generic/socket.h>
 #include <netinet/in.h>
 #include <iostream>
