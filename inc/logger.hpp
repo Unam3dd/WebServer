@@ -26,6 +26,10 @@
 /**
  * <func>		ostringstream()
  */
+#include <string.h>
+/**
+ * <func>		strlen()
+ */
 
 # ifndef	DEBUG
 #  define	DEBUG					0
@@ -37,6 +41,10 @@
 
 # ifndef	VERBOSE
 #  define	VERBOSE					1
+# endif
+
+# ifndef	SRC_DIR
+#  define	SRC_DIR					"srccc"
 # endif
 
 # define	ANSI_ESC				"\x1b["

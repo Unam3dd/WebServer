@@ -68,11 +68,14 @@ void	Logger::set_caller_info(std::string caller_func,
 	int caller_line)
 {
 	std::string	tmp;
+	std::string::size_type needle = caller_file.find(SRC_DIR "/");
 
 	tmp = caller_func;
 	tmp += ";";
 	tmp += this->itoa(caller_line);
 	tmp += ":";
+	if (needle != std::string::npos)
+		caller_file.erase(needle, strlen(SRC_DIR "/"));
 	tmp += caller_file;
 	if (tmp.length() <= INFO_LEN)
 		this->_caller_info = "[" + tmp + "]";
