@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "logger.hpp"
 #include "http_response.hpp"
-#include "http_colors.hpp"
 #include "http_status.hpp"
 #include "file.hpp"
 #include <sys/stat.h>
@@ -19,16 +19,16 @@
 
 /*
  * @brief: get the content of the error page for the given http status code.
- * if the error page specified by the config file is not found, return the 
+ * if the error page specified by the config file is not found, return the
  * default error page.
  *
- * @param: httpstatus: the http status code for which to get the error page 
+ * @param: httpstatus: the http status code for which to get the error page
  * content.
  *
  * @return: the content of the error page for the given http status code.
  * if the error page specified by the config file is not found, return the
  * default error page.
- * 
+ *
  */
 std::string	HttpResponse::_getErrorPageContent(http_status_code_t httpstatus){
 	std::string	root;
@@ -85,9 +85,7 @@ std::string	HttpResponse::_getErrorPageContent(http_status_code_t httpstatus){
 	}
 	fullpath = root + path;
 	if (!FILE_EXISTS(fullpath.c_str())){
-		#if DEBUG
-			std::cout << DBG << "[_getErrorPageContent] Error page '" << fullpath << "' not found. Returning default error page." << std::endl;
-		#endif
+		logz.log(L_WARN, "Error page '" + fullpath + "' not found. Returning default error page.");
 		return (SG_DefaultErrorPages(status));
 	}
 	struct stat st;

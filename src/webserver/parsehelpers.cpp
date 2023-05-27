@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "http_config.hpp"
-#include "http_colors.hpp"
+#include "logger.hpp"
 #include "http_utils.hpp"
 #include "webserver.hpp"
 #include <iostream>
@@ -79,24 +79,24 @@ std::vector<std::string> WebServer::_splitDirective(const std::string& directive
 
 void	WebServer::_initNewSrvBlk()
 {
-	#if DEBUG
-		std::cout << DBG << "[WebServer::_initNewSrvBlk] entering function. previous _nserv:" << this->_nserv << " _configs.size():" << _configs.size() << std::endl;
-	#endif
+	std::string	tmp;
+
+	tmp = "entering function. previous _nserv: " + logz.itoa(this->_nserv);
+	tmp += " _configs.size(): " + logz.itoa(_configs.size());
+	logz.log(L_DEBUG, tmp);
 	this->_configs.push_back(new HttpServerConfig());
 	this->_nserv += 1;
-	#if DEBUG
-		std::cout << DBG << "[WebServer::_initNewSrvBlk] successful. new _nserv:" << this->_nserv << " _configs.size():" << _configs.size() << std::endl;
-	#endif
+	tmp = "successful. new _nserv: " + logz.itoa(this->_nserv);
+	tmp += " _configs.size(): " + logz.itoa(_configs.size());
+	logz.log(L_DEBUG, tmp);
 }
 
 t_errcode	WebServer::_initNewLocBlk(const std::string& line)
 {
 	HttpServerConfig* srv = this->_configs.at(this->_nserv - 1);
 	std::string scope = line.substr(9, line.find_first_of("{") - 9);
-	
-	#if DEBUG
-		std::cout << DBG << "[WebServer::_initNewLocBlk] scope: " << scope << std::endl;
-	#endif
+
+	logz.log(L_DEBUG, "scope: " + scope);
 	if (scope.empty())
 		return (ERRPARSE_NEWLOCBLK);
 	srv->initNewLocBlk(scope);

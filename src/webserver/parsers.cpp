@@ -14,7 +14,7 @@
 #include "webserver.hpp"
 #include "http_config.hpp"
 #include "http_request_config.hpp"
-#include "http_colors.hpp"
+#include "logger.hpp"
 #include <iostream>
 #include <algorithm>
 #include <cctype>
@@ -25,37 +25,30 @@ t_errcode WebServer::_parseSrvDirective(const std::string& line)
 	HttpServerConfig			*srv;
 	std::vector<std::string>	argv;
 	std::string					arg;
+	std::string					tmp;
 	int							argc;
 	t_errcode					err;
 
-	#if DEBUG
-	std::cout << DBG << "[WebServer::_parseSrvDirective] parsing server directive: " << line << std::endl;
-	#endif
+	logz.log(L_DEBUG, "parsing server directive: " + line);
 	srv = this->_configs.at(this->_nserv - 1);
 	argv = this->_splitDirective(line);
 	arg = argv.at(0);
 	argc = argv.size();
-	#if DEBUG
-	std::cout << DBG << "[WebServer::_parseSrvDirective] arg: " << arg << "\targc: " << argc << std::endl;
-	#endif
+	logz.log(L_DEBUG, "arg: " + arg + " argc: " + logz.itoa(argc));
 	switch (argc){
 		case 0:
 			return (ERRPARSE_OK);
 		case 1:
 			if (argv.at(0) == "}")
 			{
-				#if DEBUG
-					std::cout << DBG << "[_parseSrvDirective] end of server block" << std::endl;
-				#endif
+				logz.log(L_DEBUG, "end of server block");
 				return (ERRPARSE_OK);
 			}
 			return (ERRPARSE_SINGLEARG);
 	}
 	if (arg.at(0) == '/' || arg.at(0) == '#')
 	{
-		#if DEBUG
-			std::cout << DBG << "[_parseLocDirective] directive: " << arg << " is a comment" << std::endl;
-		#endif
+		logz.log(L_DEBUG, "directive: " + arg + "is a comment");
 		return (ERRPARSE_OK);
 	}
 	if (argv.back() == "}"){
@@ -65,17 +58,18 @@ t_errcode WebServer::_parseSrvDirective(const std::string& line)
 	if (argv.back().at(argv.back().size() - 1) == '}'){
 		argv.back().erase(argv.back().end() - 1);
 	}
+	tmp = "line: " O + this->_line;
 	try{
 		HttpServerConfig::t_parseMap callback;
 		callback = srv->GetParseMap().at(arg);
 		err = (srv->*callback)(argv);
 		if (err != ERRPARSE_OK)
 		{
-			std::cerr << FAIL << "[_parseSrvDirective]" << RED << "line: " << this->_line << "\t" << this->GetErrorStrs().at(err) << RESET << std::endl;
+			logz.logerr(L_ERROR | L_BYPASS, tmp + " " + R + this->GetErrorStrs().at(err) + RST);
 			return (err);
 		}
 	}catch (std::out_of_range& e){
-		std::cerr << FAIL << "[_parseSrvDirective]" << RED << "line: " << this->_line << "\tunknown directive: " << arg << RESET << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, tmp + " " + RST " unknown directive: " + arg);
 		return (ERRPARSE_UNKNOWN);
 	}
 	return (ERRPARSE_OK);
@@ -86,6 +80,7 @@ t_errcode WebServer::_parseLocDirective(const std::string& line)
 	HttpRequestConfig*			loc = this->_configs.at(this->_nserv - 1)->GetRequestConfigs().back();
 	std::vector<std::string>	argv;
 	std::string					arg;
+	std::string					tmp;
 	int							argc;
 	t_errcode					err;
 
@@ -98,17 +93,14 @@ t_errcode WebServer::_parseLocDirective(const std::string& line)
 		case 1:
 			if (argv.at(0) == "}")
 			{
-				if (DEBUG)
-					std::cout << DBG << "[_parseLocDirective] end of location block" << std::endl;
+				logz.log(L_DEBUG, "end of location block");
 				return (ERRPARSE_OK);
 			}
 			return (ERRPARSE_SINGLEARG);
 	}
 	if (arg.at(0) == '/' || arg.at(0) == '#')
 	{
-		#if (DEBUG)
-			std::cout << DBG << "[_parseLocDirective] directive: " << arg << " is a comment" << std::endl;
-		#endif
+		logz.log(L_DEBUG, "directive: " + arg + " is a comment");
 		return (ERRPARSE_OK);
 	}
 	if (argv.back() == "}"){
@@ -118,17 +110,18 @@ t_errcode WebServer::_parseLocDirective(const std::string& line)
 	if (argv.back().at(argv.back().size() - 1) == '}'){
 		argv.back().erase(argv.back().end() - 1);
 	}
+	tmp = "line: " O + this->_line;
 	try{
 		HttpRequestConfig::t_parseMap callback;
 		callback = loc->GetParseMap().at(arg);
 		err = (loc->*callback)(argv);
 		if (err != ERRPARSE_OK)
 		{
-			std::cerr << FAIL << "[_parseLocDirective]" << RED << "line: " << this->_line << "\t" << this->GetErrorStrs().at(err) << RESET << std::endl;
+			logz.logerr(L_ERROR | L_BYPASS, tmp + " " + R + this->GetErrorStrs().at(err) + RST);
 			return (err);
 		}
 	}catch (std::out_of_range& e){
-		std::cerr << FAIL << "[_parseLocDirective]" << RED << " unknown directive: " << arg << RESET << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, tmp + " " + RST " unknown directive: " + arg);
 		return (ERRPARSE_UNKNOWN);
 	}
 	return (ERRPARSE_OK);

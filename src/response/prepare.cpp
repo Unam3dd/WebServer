@@ -1,5 +1,5 @@
 #include "http_response.hpp"
-#include "http_colors.hpp"
+#include "logger.hpp"
 #include "http_status.hpp"
 #include <cstring>
 #include <iostream>
@@ -51,13 +51,9 @@ void	HttpResponse::_prepareResponse(){
 	}
 
 	if (!isdir && (this->_request.getMethod() == GET || this->_request.getMethod() == POST)){
-		#if DEBUG
-		{
-			std::cout << DBG << "[_prepareGetResponse] request is not a directory" << std::endl;
-			std::cout << DBG << "[_prepareGetResponse] path: " << path << std::endl;
-			std::cout << DBG << "[_prepareGetResponse] docroot: " << docroot << std::endl;
-		}
-		#endif
+		logz.log(L_DEBUG, "request is not a directory");
+		logz.log(L_DEBUG, "Path:    " + path);
+		logz.log(L_DEBUG, "Docroot: " + docroot);
 		if (stat(path.c_str(), &st) < 0)
 		{
 			this->_status = HTTP_STATUS_NOT_FOUND;
@@ -111,21 +107,16 @@ void	HttpResponse::_prepareResponse(){
 			this->_contenttype = "text/html";
 			return;
 		}
-		#if DEBUG
-			std::cout << DBG << "[_prepareGetResponse] request: "<< path << " is a directory" << std::endl;
-		#endif
+		logz.log(L_DEBUG, "request: " + path + " is a directory");
 		if ((_reqcfg && !_reqcfg->GetDirList()) || (!_reqcfg && !_srvcfg->GetDirList()))
 		{
-			if (DEBUG)
-				std::cout << DBG << RED <<"[_prepareGetResponse] directory listing is disabled" << RESET << std::endl;
+			logz.log(L_WARN, "directory listing is disabled");
 			this->_status = HTTP_STATUS_FORBIDDEN;
 			this->_body = this->_getErrorPageContent(this->_status);
 			this->_contenttype = "text/html";
 			return;
 		}
-		#if DEBUG
-			std::cout << DBG << "[_prepareGetResponse] directory listing is enabled" << std::endl;
-		#endif
+		logz.log(L_DEBUG, "directory listing is enabled");
 		Directory dir(path.c_str());
 		std::vector<std::string> files = dir.getFiles();
 		this->_status = HTTP_STATUS_OK;

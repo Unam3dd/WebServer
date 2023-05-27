@@ -49,6 +49,8 @@ std::string	Logger::get_methods(int methods)
 		tmp += "PUT ";
 	if (methods & 0b1000)
 		tmp += "DELETE ";
+	if (methods & 0b10000)
+		tmp += "UNKNOWN";
 	return (tmp);
 }
 
