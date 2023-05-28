@@ -42,7 +42,7 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 	this->_reqcfg ? this->_status = SANITIZE_AND_CAST_INT_TO_HTTP_STATUS(this->_reqcfg->GetHttpResponseCode()) : this->_status = HTTP_STATUS_OK;
 	this->_contenttype = "";
 
-	if (this->_request.isBadRequest())
+	if (this->_request.isBadRequest() || !_request.getHeaders().at("host").length())
 	{
 		this->_status = HTTP_STATUS_BAD_REQUEST;
 		this->_contenttype = "text/html";
