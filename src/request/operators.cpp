@@ -10,7 +10,7 @@ std::ostream& operator<<(std::ostream& os, const HttpRequest& req)
 		os << ANSI_FMT(R, "bad request");
 		return os;
 	}
-	os << "\n\tMethod: " << req.getMethod() << std::endl;
+	os << "\n\tMethod: " << STR_METHOD(req.getMethod()) << std::endl;
 	os << "\tUri: " << req.getUri() << std::endl;
 	os << "\tVersion: " << req.getVersion() << std::endl;
 	os << "\tHeaders: " << std::endl;
