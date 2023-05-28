@@ -54,7 +54,7 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 
 	if (isReqTraversal(this->_srvcfg->GetRoot(), req.getUri()))
 	{
-		this->_status = HTTP_STATUS_UNAUTHORIZED;
+		this->_status = HTTP_STATUS_NOT_FOUND;
 		this->_contenttype = "text/html";
 		this->_body = this->_getErrorPageContent(this->_status);
 		this->_generateResponse();
