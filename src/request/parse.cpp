@@ -15,9 +15,9 @@ static bool isHex(const std::string &str)
 	return (true);
 }
 
-static char hexToChar(const std::string &str)
+static unsigned char hexToChar(const std::string &str)
 {
-	return (char)(std::strtol(str.c_str(), NULL, 16));
+	return (unsigned char)(std::strtol(str.c_str(), NULL, 16));
 }
 
 t_status HttpRequest::_parseRequestLine(const std::string &reqline)
@@ -44,7 +44,7 @@ t_status HttpRequest::_parseRequestLine(const std::string &reqline)
 			tmp = uri.substr(i + 1, 2);
 			if (!isHex(tmp) || hexToChar(tmp) > 0x7f)
 				return (STATUS_FAIL);
-			uri = uri.substr(0, i) + hexToChar(tmp) + uri.substr(i + 3, uri.length() - i - 3);
+			uri = uri.substr(0, i) + (char)hexToChar(tmp) + uri.substr(i + 3, uri.length() - i - 3);
 		} else if (uri[i] == '+'){
 			uri[i] = ' ';
 		} else
