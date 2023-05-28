@@ -6,6 +6,26 @@
 #include <cstring>
 #include <iostream>
 
+bool	isReqTraversal(std::string root, std::string uri)
+{
+	char	*real_path_root;
+	char	*real_path_uri;
+	bool	is_traversal;
+
+	real_path_root = realpath(root.c_str(), NULL);
+	uri = root + "/" + uri;
+	real_path_uri = realpath(uri.c_str(), NULL);
+	if (!real_path_uri || !strncmp(real_path_root, real_path_uri, strlen(real_path_root)))
+		is_traversal = false;
+	else
+		is_traversal = true;
+	if (real_path_root)
+		free(real_path_root);
+	if (real_path_uri)
+		free(real_path_uri);
+	return (is_traversal);
+}
+
 /*
  * @brief: constructor for the HttpResponse class.
  *
@@ -29,6 +49,16 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 		this->_body = this->_getErrorPageContent(this->_status);
 		this->_generateResponse();
 		logz.log(L_DEBUG, "Bad request");
+		return ;
+	}
+
+	if (isReqTraversal(this->_srvcfg->GetRoot(), req.getUri()))
+	{
+		this->_status = HTTP_STATUS_UNAUTHORIZED;
+		this->_contenttype = "text/html";
+		this->_body = this->_getErrorPageContent(this->_status);
+		this->_generateResponse();
+		logz.log(L_WARN | L_BYPASS, "Uri " + req.getUri() + " is traversal. blocking it");
 		return ;
 	}
 
