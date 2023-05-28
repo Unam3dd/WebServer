@@ -69,7 +69,7 @@ t_status	WebServer::_acceptClient(ev_t *e)
 				client->SetTfd(tfd);
 
 				_clients.push_back(client);
-				logz.log(L_PASS | L_BYPASS, "New clien accepted ! " +
+				logz.log(L_PASS | L_BYPASS, "New client accepted ! " +
 					client->InetNtoa(client->GetSin()->sin_addr.s_addr) + ":" +
 					logz.itoa(client->Ntohs(client->GetSin()->sin_port)));
 				return (STATUS_OK);
