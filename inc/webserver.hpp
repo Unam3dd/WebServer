@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/06/01 10:27:49 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/06/01 10:36:23 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ class WebServer
 		t_status						_waitSrvs(void);
 		t_status						_acceptClient(ev_t *ev);
 		void							_respondAndClean(http_status_code_t status, int fd);
-		unsigned long long				_checkContentLength(const std::string& buffer);
+		long long						_checkContentLength(const std::string& buffer);
 };
 
 #endif

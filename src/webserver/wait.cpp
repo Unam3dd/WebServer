@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/06/01 10:34:48 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/06/01 10:37:05 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ t_status	WebServer::_waitSrvs(void)
 					if (bufs[bufindex].substr(0, 4) == "POST")
 					{
 						logz.log(L_DEBUG, "EPOLLIN : Found end of header (\\r\\n\\r\\n), but method POST. Searching content-length...");
-						unsigned long long reqsize = this->_checkContentLength(bufs[bufindex]);
+						long long reqsize = this->_checkContentLength(bufs[bufindex]);
 						if (reqsize < 0)
 						{
 							logz.log(L_DEBUG, "EPOLLIN : No or invalid content-length found. Returning 411");
@@ -176,7 +176,7 @@ t_status	WebServer::_waitSrvs(void)
 						}
 						else
 						{
-							if (reqsize > bufs[bufindex].size() - bufs[bufindex].find("\r\n\r\n") - 4)
+							if (reqsize > (long long)(bufs[bufindex].size() - bufs[bufindex].find("\r\n\r\n") - 4))
 							{
 								logz.log(L_DEBUG, "EPOLLIN : Content-length is bigger than what we have. Keeping EPOLLIN and rolling again!");
 								continue;
