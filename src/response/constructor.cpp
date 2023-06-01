@@ -117,7 +117,7 @@ HttpResponse::HttpResponse(const HttpRequest &req) : _request(req)
 
 HttpResponse::HttpResponse(int status) : _request(HttpRequest()), _srvcfg(NULL), _reqcfg(NULL){
 	// TOCHECK : CREATE A LOT OF OUTPUT
-	// logz.log(L_DEBUG, "Creating forced error response (via constructor surcharge)");
+	logz.log(L_DEBUG, "Creating forced error response (via constructor surcharge)");
 	this->_status = SANITIZE_AND_CAST_INT_TO_HTTP_STATUS(status);
 	this->_contenttype = "text/html";
 	this->_body = this->_getErrorPageContent(this->_status);

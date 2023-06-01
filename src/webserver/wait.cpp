@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/27 10:21:01 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/06/01 10:29:32 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,19 @@
 #include <sys/timerfd.h>
 #include <string>
 
+static void	resetTimerFd(unsigned int sec, unsigned int fd){
+	logz.log(L_DEBUG, "EPOLLIN: Resetting timerfd");
+
+	struct itimerspec new_value;
+
+	new_value.it_value.tv_sec = sec;
+	new_value.it_value.tv_nsec = 0;
+	new_value.it_interval.tv_sec = 0;
+	new_value.it_interval.tv_nsec = 0;
+	
+	timerfd_settime(fd, 0, &new_value, NULL);
+}
+
 t_status	WebServer::_acceptClient(ev_t *e)
 {
 	Socket	*client = NULL;
@@ -39,19 +52,13 @@ t_status	WebServer::_acceptClient(ev_t *e)
 
 	if (!e) return (STATUS_FAIL);
 
-	struct itimerspec its;
-	its.it_value.tv_sec = 10;
-	its.it_value.tv_nsec = 0;
-	its.it_interval.tv_sec = 0;
-	its.it_interval.tv_nsec = 0;
-
 	FOREACH_VECTOR(HttpServer*, this->_srv, srv)
 	{
 		if (e->data.fd == (*srv)->getSocket().Getfd())
 		{
 			client = (*srv)->getSocket().Accept();
 			if (client)
-			{
+			
 				client->SetSrvPort((*srv)->getPort());
 				(*srv)->getClients().push_back(client);
 
@@ -61,7 +68,7 @@ t_status	WebServer::_acceptClient(ev_t *e)
 				this->_epoll.Ctl(EPOLL_CTL_ADD, client->Getfd(), &tev);
 
 				tfd = timerfd_create(CLOCK_MONOTONIC, 0);
-				timerfd_settime(tfd, 0, &its, NULL);
+				resetTimerFd(REQUEST_TIMEOUT, tfd);
 				this->_timerfds.insert(std::pair<int, int>(client->Getfd(), tfd));
 				tev.events = EPOLLIN | EPOLLET;
 				tev.data.fd = tfd;
@@ -115,7 +122,7 @@ t_status	WebServer::_waitSrvs(void)
 			bufindex = sock_fd % MAX_EVENT;
 
 			if (evs[i].events & EPOLLIN) {
-				if ((unsigned long long)evs[i].data.fd < lowest_heap_address()) { //black magic: epoll_event.data is union, so if we store an fd instead on a ptr, it will always be inferior to a memory address
+				if ((unsigned long long)evs[i].data.fd < lowest_heap_address()) { //black magic
 					logz.log(L_DEBUG, "EPOLLIN : timerfd. Sending timeout response.");
 					::read(evs[i].data.fd, &size, sizeof(size));
 					this->_respondAndClean(HTTP_STATUS_REQUEST_TIMEOUT, client->Getfd());
@@ -150,39 +157,26 @@ t_status	WebServer::_waitSrvs(void)
 				tmpbufs[bufindex] = NULL;
 
 				//we reset the timerfd
-				logz.log(L_DEBUG, "EPOLLIN: Resetting timerfd");
+				resetTimerFd(REQUEST_TIMEOUT, this->_timerfds[sock_fd]);
 
-				struct itimerspec new_value;
-				new_value.it_value.tv_sec = 10;
-				new_value.it_value.tv_nsec = 0;
-				new_value.it_interval.tv_sec = 0;
-				new_value.it_interval.tv_nsec = 0;
-				timerfd_settime(this->_timerfds[sock_fd], 0, &new_value, NULL);
-
+			
 				//we check for end of header, then check if it is a POST, and then check for content-length received
 				if (!(evs[i].events & EPOLLOUT) && (bufs[bufindex].find("\r\n\r\n") != std::string::npos || bufs[bufindex].find("\n\n") != std::string::npos))
 				{
 					if (bufs[bufindex].substr(0, 4) == "POST")
 					{
 						logz.log(L_DEBUG, "EPOLLIN : Found end of header (\\r\\n\\r\\n), but method POST. Searching content-length...");
-						if (bufs[bufindex].find("Content-Length: ") > bufs[bufindex].find("\r\n\r\n")
-						&&  bufs[bufindex].find("content-length: ") > bufs[bufindex].find("\r\n\r\n"))
+						unsigned long long reqsize = this->_checkContentLength(bufs[bufindex]);
+						if (reqsize < 0)
 						{
-							logz.log(L_DEBUG, "EPOLLIN : No content-length found. Returning 411");
+							logz.log(L_DEBUG, "EPOLLIN : No or invalid content-length found. Returning 411");
 							this->_respondAndClean(HTTP_STATUS_LENGTH_REQUIRED, sock_fd);
 							bufs[bufindex].clear();
 							continue;
 						}
 						else
 						{
-							logz.log(L_DEBUG, "EPOLLIN : Content-length found. parsing value...");
-							size_t pos = bufs[bufindex].find("Content-Length:");
-							if (pos == std::string::npos)
-								pos = bufs[bufindex].find("content-length:");
-							size_t pos2 = bufs[bufindex].find("\r\n", pos);
-							std::string content_length = bufs[bufindex].substr(pos + 15, pos2 - pos - 15);
-							logz.log(L_DEBUG, "EPOLLIN : Content-length parsed. Content-length: " + content_length);
-							if (StringToNumber<unsigned long>(content_length) > bufs[bufindex].size() - bufs[bufindex].find("\r\n\r\n") - 4)
+							if (reqsize > bufs[bufindex].size() - bufs[bufindex].find("\r\n\r\n") - 4)
 							{
 								logz.log(L_DEBUG, "EPOLLIN : Content-length is bigger than what we have. Keeping EPOLLIN and rolling again!");
 								continue;
