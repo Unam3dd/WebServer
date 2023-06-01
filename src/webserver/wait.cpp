@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/06/01 10:29:32 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/06/01 10:34:48 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ t_status	WebServer::_acceptClient(ev_t *e)
 		{
 			client = (*srv)->getSocket().Accept();
 			if (client)
-			
+			{
 				client->SetSrvPort((*srv)->getPort());
 				(*srv)->getClients().push_back(client);
 
