@@ -6,7 +6,7 @@
 #    By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/03 17:02:32 by stales            #+#    #+#              #
-#    Updated: 2023/05/24 17:41:42 by stales           ###   ########.fr        #
+#    Updated: 2023/06/01 11:04:28 by ldournoi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@
 
 AUTHORS					:= Sam0verfl0w, Clinche, Pixailz
 NAME					:= webserv
-WEBSERVER_VERSION		:= 1.0.1
+WEBSERVER_VERSION		:= 1.1.0
 DIST					:= bin
 
 ###################################
