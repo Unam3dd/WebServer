@@ -1,13 +1,13 @@
 #include "http_request.hpp"
-#include "http_colors.hpp"
+#include "logger.hpp"
 #include "http_utils.hpp"
 #include <iostream>
 
 static bool isHex(const std::string &str)
 {
 	for (int i = 0; i < (int)str.size(); i++){
-		if (   (str[i] >= '0' && str[i] <= '9') 
-			|| (str[i] >= 'a' && str[i] <= 'f') 
+		if (   (str[i] >= '0' && str[i] <= '9')
+			|| (str[i] >= 'a' && str[i] <= 'f')
 			|| (str[i] >= 'A' && str[i] <= 'F'))
 			continue ;
 		return (false);
@@ -15,9 +15,9 @@ static bool isHex(const std::string &str)
 	return (true);
 }
 
-static char hexToChar(const std::string &str)
+static unsigned char hexToChar(const std::string &str)
 {
-	return (char)(std::strtol(str.c_str(), NULL, 16));
+	return (unsigned char)(std::strtol(str.c_str(), NULL, 16));
 }
 
 t_status HttpRequest::_parseRequestLine(const std::string &reqline)
@@ -34,19 +34,17 @@ t_status HttpRequest::_parseRequestLine(const std::string &reqline)
 	uri = line.substr(0, line.find(" "));
 	if (uri.length() == 0)
 		return (STATUS_FAIL);
-	
 	for (int i = 0; i < (int)uri.length(); i++){
 		if (uri[i] == '%')
 		{
-			#if DEBUG
-				std::cout << DBG << "[HttpRequest::_parseRequestLine] Found URI-Encoded string at " << &uri[i] << std::endl;
-			#endif
+			tmp = &uri[i];
+			logz.log(L_DEBUG, "Found URI-Encoded string at " + tmp);
 			if (i + 2 >= (int)uri.length())
 				return (STATUS_FAIL);
 			tmp = uri.substr(i + 1, 2);
-			if (!isHex(tmp))
+			if (!isHex(tmp) || hexToChar(tmp) > 0x7f)
 				return (STATUS_FAIL);
-			uri = uri.substr(0, i) + hexToChar(tmp) + uri.substr(i + 3, uri.length() - i - 3);
+			uri = uri.substr(0, i) + (char)hexToChar(tmp) + uri.substr(i + 3, uri.length() - i - 3);
 		} else if (uri[i] == '+'){
 			uri[i] = ' ';
 		} else
@@ -63,7 +61,7 @@ t_status HttpRequest::_parseRequestLine(const std::string &reqline)
 
 	line = line.substr(line.find(" ") + 1, line.length() - line.find(" "));
 	setVersion(line);
-	
+
 	return (STATUS_OK);
 }
 
@@ -86,7 +84,7 @@ t_status	HttpRequest::_parseHeaders(const std::string &req)
 		value = line.substr(pos + 2, line.length());
 		if (_header.find(key) == _header.end())
 		{
-			std::cerr << WARN << "[HttpRequest::_parseHeaders] Header " << key << " does not exist" << std::endl;
+			logz.logerr(L_WARN, "Header " + key + " does not exist");
 			continue ;
 		}
 		if (key == "host")

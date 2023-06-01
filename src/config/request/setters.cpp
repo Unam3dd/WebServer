@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 16:59:57 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/05/24 17:28:31 by stales           ###   ########.fr       */
+/*   Updated: 2023/05/27 10:24:11 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,60 +20,60 @@
 
 t_errcode	HttpRequestConfig::SetIndexes(const std::vector<std::string> &indexs)
 {
-	logz.log(1, "setting indexes");
+	logz.log(L_DEBUG, "setting indexes");
 	for (size_t i = 1; i < indexs.size(); i++)
 	{
 		if (indexs.at(i).find_first_of(" \t") != std::string::npos)
 			return (ERRPARSE_SPCORTAB);
 		this->_indexs.push_back(indexs.at(i));
-		logz.log(1, "pushed index[" + logz.itoa(i - 1) + "]: " + _indexs.at(i - 1));
+		logz.log(L_DEBUG, "pushed index[" + logz.itoa(i - 1) + "]: " + _indexs.at(i - 1));
 	}
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpRequestConfig::SetErrorPages(const std::vector<std::string> &pages)
 {
-	logz.log(1, "setting error pages");
+	logz.log(L_DEBUG, "setting error pages");
 	if (pages.size() != 3)
 		return (ERRPARSE_ERRPAGE);
 	if (pages.at(1) == "400")
 	{
-		logz.log(1, "setting error page 400 to: " + pages.at(2));
+		logz.log(L_DEBUG, "setting error page 400 to: " + pages.at(2));
 		this->_errpages[E400].path = pages.at(2);
 	}
 	else if (pages.at(1) == "401")
 	{
-		logz.log(1, "setting error page 401 to: " + pages.at(2));
+		logz.log(L_DEBUG, "setting error page 401 to: " + pages.at(2));
 		this->_errpages[E401].path = pages.at(2);
 	}
 	else if (pages.at(1) == "403")
 	{
-		logz.log(1, "setting error page 403 to: " + pages.at(2));
+		logz.log(L_DEBUG, "setting error page 403 to: " + pages.at(2));
 		this->_errpages[E403].path = pages.at(2);
 	}
 	else if (pages.at(1) == "404")
 	{
-		logz.log(1, "setting error page 404 to: " + pages.at(2));
+		logz.log(L_DEBUG, "setting error page 404 to: " + pages.at(2));
 		this->_errpages[E404].path = pages.at(2);
 	}
 	else if (pages.at(1) == "405")
 	{
-		logz.log(1, "setting error page 405 to: " + pages.at(2));
+		logz.log(L_DEBUG, "setting error page 405 to: " + pages.at(2));
 		this->_errpages[E405].path = pages.at(2);
 	}
 	else if (pages.at(1) == "500")
 	{
-		logz.log(1, "setting error page 500 to: " + pages.at(2));
+		logz.log(L_DEBUG, "setting error page 500 to: " + pages.at(2));
 		this->_errpages[E500].path = pages.at(2);
 	}
 	else if (pages.at(1) == "501")
 	{
-		logz.log(1, "setting error page 501 to: " + pages.at(2));
+		logz.log(L_DEBUG, "setting error page 501 to: " + pages.at(2));
 		this->_errpages[E501].path = pages.at(2);
 	}
 	else if (pages.at(1) == "505")
 	{
-		logz.log(1, "setting error page 505 to: " + pages.at(2));
+		logz.log(L_DEBUG, "setting error page 505 to: " + pages.at(2));
 		this->_errpages[E505].path = pages.at(2);
 	}
 	else
@@ -84,19 +84,19 @@ t_errcode	HttpRequestConfig::SetErrorPages(const std::vector<std::string> &pages
 t_errcode	HttpRequestConfig::SetRoot(const std::vector<std::string> &root)
 {
 
-	logz.log(1, "setting root");
+	logz.log(L_DEBUG, "setting root");
 	if (root.size() != 2) return (ERRPARSE_NBARGS);
 	this->_root = root.at(1);
 	if (this->_root.at(this->_root.size() - 1) != '/')
 		this->_root += '/';
-	logz.log(1, "root set to: " + this->GetRoot());
+	logz.log(L_DEBUG, "root set to: " + this->GetRoot());
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpRequestConfig::SetMaxPostSize(const std::vector<std::string> &max_size_post)
 {
 	std::string tmp = max_size_post.at(1);
-	logz.log(1, "settings max post size");
+	logz.log(L_DEBUG, "settings max post size");
 	if (max_size_post.size() != 2 && (std::atof(tmp.c_str()) < 0 || std::atof(tmp.c_str()) == HUGE_VAL))
 		return (ERRPARSE_POST);
 	maxpost_size_t max_size = std::atof(tmp.c_str());
@@ -121,13 +121,15 @@ t_errcode	HttpRequestConfig::SetMaxPostSize(const std::vector<std::string> &max_
 		}
 	}
 	this->_max_size_post = max_size;
-	logz.log(1, "max post size set to (in bytes): " + logz.itoa(this->GetMaxPostSize()));
+	logz.log(L_DEBUG, "max post size set to (in bytes): " + logz.itoa(this->GetMaxPostSize()));
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpRequestConfig::SetCookies(const std::vector<std::string> &cookies)
 {
-	logz.log(1, "setting cookies");
+	logz.log(L_DEBUG, "setting cookies");
+	if (cookies.size() != 2)
+		return (ERRPARSE_COOKIES);
 	std::string tmp = cookies.at(1);
 	LOWERCASE(tmp);
 	if (tmp == "on")
@@ -136,13 +138,15 @@ t_errcode	HttpRequestConfig::SetCookies(const std::vector<std::string> &cookies)
 		this->_cookies = false;
 	else
 		return (ERRPARSE_COOKIES);
-	logz.log(1, "cookies set to: " + this->GetCookies());
+	logz.log(L_DEBUG, "cookies set to: " + this->GetCookies());
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpRequestConfig::SetUploads(const std::vector<std::string> &uploads)
 {
-	logz.log(1, "setting uploads");
+	logz.log(L_DEBUG, "setting uploads");
+	if (uploads.size() != 2)
+		return (ERRPARSE_UPLOADS);
 	std::string tmp = uploads.at(1);
 	LOWERCASE(tmp);
 	if (tmp == "on")
@@ -152,13 +156,15 @@ t_errcode	HttpRequestConfig::SetUploads(const std::vector<std::string> &uploads)
 	else
 		return (ERRPARSE_UPLOADS);
 
-	logz.log(1, "uploads set to: " + this->GetUploads());
+	logz.log(L_DEBUG, "uploads set to: " + this->GetUploads());
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpRequestConfig::SetDirList(const std::vector<std::string> &dirlist)
 {
-	logz.log(1, "setting dir list");
+	logz.log(L_DEBUG, "setting dir list");
+	if (dirlist.size() != 2)
+		return (ERRPARSE_DIRLIST);
 	std::string tmp = dirlist.at(1);
 	LOWERCASE(tmp);
 	if (tmp == "on")
@@ -167,14 +173,14 @@ t_errcode	HttpRequestConfig::SetDirList(const std::vector<std::string> &dirlist)
 		this->_dirlist = false;
 	else
 		return (ERRPARSE_DIRLIST);
-	logz.log(1, "dir list set to: " + this->GetDirList());
+	logz.log(L_DEBUG, "dir list set to: " + this->GetDirList());
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpRequestConfig::SetCgi(const std::vector<std::string> &cgi)
 {
-	logz.log(1, "setting cgi");
-	if (cgi.size() < 3)
+	logz.log(L_DEBUG, "setting cgi");
+	if (cgi.size() != 3)
 		return (ERRPARSE_CGI);
 	try{
 		this->_cgi.at(cgi.at(1));
@@ -185,7 +191,7 @@ t_errcode	HttpRequestConfig::SetCgi(const std::vector<std::string> &cgi)
 		(void)e;
 	}
 	this->_cgi[cgi.at(1)] = cgi.at(2);
-	logz.log(1, "cgi: " + cgi.at(1) + " -> " + this->_cgi[cgi.at(1)]);
+	logz.log(L_DEBUG, "cgi: " + cgi.at(1) + " -> " + this->_cgi[cgi.at(1)]);
 	return (ERRPARSE_OK);
 }
 
@@ -193,7 +199,7 @@ t_errcode	HttpRequestConfig::SetMethods(const std::vector<std::string> &methods)
 {
 	int	tmp = 0;
 	std::string tmpstr;
-	logz.log(1, "settings methods");
+	logz.log(L_DEBUG, "settings methods");
 	for (size_t i = 1; i < methods.size(); i++)
 	{
 		tmpstr = methods.at(i);
@@ -210,13 +216,13 @@ t_errcode	HttpRequestConfig::SetMethods(const std::vector<std::string> &methods)
 			return (ERRPARSE_METHODS);
 	}
 	this->_methods = static_cast<methods_t>(tmp);
-	logz.log(1, "methods set to: " + this->GetMethods());
+	logz.log(L_DEBUG, "methods set to: " + logz.get_methods(this->GetMethods()));
 	return (ERRPARSE_OK);
 }
 
 t_errcode	HttpRequestConfig::SetHttpResponseCode(const std::vector<std::string> &argv)
 {
-	logz.log(1, "setting http reponse code");
+	logz.log(L_DEBUG, "setting http reponse code");
 	std::string code = argv.at(1);
 	if (code.size() != 3)
 		return (ERRPARSE_HTTPCODE);

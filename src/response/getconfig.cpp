@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "http_response.hpp"
-#include "http_colors.hpp"
+#include "logger.hpp"
 #include "webserver.hpp"
 #include <iostream>
 
@@ -28,7 +28,7 @@
  * host, return the first server config matching the host.
  * then, if no server config is found for the host and the port, return the first
  * server config of config file.
- * 
+ *
  */
 
 HttpServerConfig*	HttpResponse::_getSrvConfig(const std::string& host, port_t port){
@@ -61,14 +61,12 @@ HttpServerConfig*	HttpResponse::_getSrvConfig(const std::string& host, port_t po
  *
  * @return: the request config for the given uri.
  * if no request config is found for the uri, returns NULL.
- * 
+ *
  */
 HttpRequestConfig* HttpResponse::_getReqConfig(const HttpServerConfig* cfg, const std::string& uri){
 	std::vector<HttpRequestConfig*> reqs = cfg->GetRequestConfigs();
 
-	#if DEBUG
-		std::cout << DBG << "[_getReqConfig] uri: " << uri << std::endl;
-	#endif
+	logz.log(L_DEBUG, "uri: " + uri);
 	FOREACH_VECTOR(HttpRequestConfig*, reqs, req){
 		if (uri.substr(0, (*req)->GetScope().length()) == (*req)->GetScope())
 			return (*req);

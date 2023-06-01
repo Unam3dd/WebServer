@@ -8,10 +8,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["file"])) {
   $file_name = $_FILES["file"]["name"];
   $file_tmp = $_FILES["file"]["tmp_name"];
 
-  if (is_uploaded_file($file_tmp)) {
-	  echo "File is uploaded.";
+  if (is_uploaded_file($file_tmp) == 1) {
+	  echo "File is too big to be uploded. Change limit in cgi-bin/php.ini file.<br>";
   } else {
-	  echo "File is not uploaded.";
+	  echo "File is uploaded.";
   }
   // Move the file to the uploads directory
   if (move_uploaded_file($file_tmp, "uploads/" . $file_name)) {
@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["SecretValue"])) {
   
   <h2>Form Post and File Upload Example</h2>
   <form method="post" enctype="multipart/form-data">
-    <label for="file">Upload a file:</label>
+  <label for="file">Upload a file (max size: <?php echo(ini_get('upload_max_filesize')); ?>):</label>
     <input type="file" name="file" id="file">
     <br>
     <input type="submit" value="Upload">

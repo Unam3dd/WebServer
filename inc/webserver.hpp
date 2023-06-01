@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 11:23:56 by stales            #+#    #+#             */
-/*   Updated: 2023/05/26 22:44:12 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/06/01 10:36:23 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 #define WEBSERVER_HPP
 
 #include "http_server.hpp"
-#ifndef DEBUG
-# define DEBUG 0
-#endif
-
 #include "logger.hpp"
 #include "epoll.hpp"
 #include <string>
@@ -28,7 +24,7 @@
 #include "http_config.hpp"
 
 #define MAX_EVENT 16
-#define DEFAULT_CONF "./cfg/all_configs.conf"
+#define DEFAULT_CONF "./cfg/good/default_config.conf"
 
 class WebServer
 {
@@ -70,6 +66,8 @@ class WebServer
 		/*
 		 * 	Private methods
 		 */
+		Socket*							_getClientSocketFromFd(int fd);
+		Socket*							_getClientSocketFromEvent(struct epoll_event* event);
 		std::vector<std::string>		_splitDirective(const std::string& line);
 		t_errcode						_parseSrvDirective(const std::string& line);
 		t_errcode						_parseLocDirective(const std::string& line);
@@ -83,6 +81,8 @@ class WebServer
 		t_status						_setupEpoll(void);
 		t_status						_waitSrvs(void);
 		t_status						_acceptClient(ev_t *ev);
+		void							_respondAndClean(http_status_code_t status, int fd);
+		long long						_checkContentLength(const std::string& buffer);
 };
 
 #endif

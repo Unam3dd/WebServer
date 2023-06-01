@@ -1,6 +1,6 @@
 #include "http_utils.hpp"
 #include "webserver.hpp"
-#include "http_colors.hpp"
+#include "logger.hpp"
 #include <iostream>
 t_status	WebServer::Run(void)
 {
@@ -9,25 +9,25 @@ t_status	WebServer::Run(void)
 	status = this->_setupSrvs();
 	if (status != STATUS_OK)
 	{
-		std::cerr << FAIL << "[WebServer::Run] Cannot setup servers" << RESET << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, "Cannot setup servers");
 		return (status);
 	}
 	status = this->_listenSrvs();
 	if (status != STATUS_OK)
 	{
-		std::cerr << FAIL << "[WebServer::Run] Cannot listen servers" << RESET << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, "Cannot listen servers");
 		return (status);
 	}
 	status = this->_setupEpoll();
 	if (status != STATUS_OK)
 	{
-		std::cerr << FAIL << "[WebServer::Run] Cannot setup epoll" << RESET << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, "Cannot setup epoll");
 		return (status);
 	}
 	status = this->_waitSrvs();
 	if (status != STATUS_OK)
 	{
-		std::cerr << FAIL << "[WebServer::Run] Cannot wait servers" << RESET << std::endl;
+		logz.logerr(L_ERROR | L_BYPASS, "Cannot wait servers");
 		return (status);
 	}
 	return (STATUS_OK);

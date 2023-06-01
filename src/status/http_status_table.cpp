@@ -20,6 +20,7 @@ http_status_t	*get_http_status_table(size_t *size)
 		{ "Bad Request", HTTP_STATUS_BAD_REQUEST },
 		{ "Payment Required", HTTP_STATUS_PAYMENT_REQUIRED },
 		{ "Forbidden", HTTP_STATUS_FORBIDDEN },
+		{ "Unauthorized", HTTP_STATUS_UNAUTHORIZED},
 		{ "Not Found", HTTP_STATUS_NOT_FOUND },
 		{ "Method Not Allowed", HTTP_STATUS_METHOD_NOT_ALLOWED },
 		{ "Not Acceptable", HTTP_STATUS_NOT_ACCEPTABLE },
