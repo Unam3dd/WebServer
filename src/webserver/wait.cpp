@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/06/01 10:37:05 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/06/01 12:21:52 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,8 @@ t_status	WebServer::_waitSrvs(void)
 				if (::read(sock_fd, tmpbufs[bufindex], size) != (int)size)
 				{
 					logz.log(L_ERROR, "Read error");
+					delete [] tmpbufs[bufindex];
+					tmpbufs[bufindex] = NULL;
 					continue ;
 				}
 
