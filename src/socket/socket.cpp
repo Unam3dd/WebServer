@@ -6,11 +6,12 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:26:18 by stales            #+#    #+#             */
-/*   Updated: 2023/04/12 19:31:33 by stales           ###   ########.fr       */
+/*   Updated: 2023/06/19 16:13:42 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "socket.hpp"
+#include "http_utils.hpp"
 #include <cstring>
 #include <fcntl.h>
 #include <ostream>
@@ -33,6 +34,8 @@ Socket::Socket(void): _fd(-1)
 	_isbinded = false;
 	_isconnected = false;
 	_isonlistening = false;
+	_forcedresponse = false;
+	_forcedstatus = SANITIZE_AND_CAST_INT_TO_HTTP_STATUS(200);
 }
 
 /*********************************************************************
@@ -56,6 +59,8 @@ Socket::Socket(int family, int type, int proto)
 	_isbinded = false;
 	_isconnected = false;
 	_isonlistening = false;
+	_forcedresponse = false;
+	_forcedstatus = SANITIZE_AND_CAST_INT_TO_HTTP_STATUS(200);
 }
 
 /*********************************************************************
@@ -145,6 +150,8 @@ int	Socket::SetupSocket(int family, int type, int proto)
 	this->_isconnected = false;
 	this->_isbinded = false;
 	this->_isonlistening = false;
+	this->_forcedresponse = false;
+	this->_forcedstatus = SANITIZE_AND_CAST_INT_TO_HTTP_STATUS(200);
 	this->Fcntl(this->_fd, F_SETFD, FD_CLOEXEC);
 	return (0);
 }
