@@ -18,7 +18,7 @@
 
 AUTHORS					:= Sam0verfl0w, Clinche, Pixailz
 NAME					:= webserv
-WEBSERVER_VERSION		:= 2.0.0rc2
+WEBSERVER_VERSION		:= 2.0.0
 DIST					:= bin
 
 ###################################
