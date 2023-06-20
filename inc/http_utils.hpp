@@ -28,6 +28,7 @@
 
 #define FOREACH_VECTOR(type, variable, it) for(std::vector<type>::iterator it = variable.begin(); it < variable.end(); it++)
 #define FOREACH_VECTOR_CONST(type, variable, it) for(std::vector<type>::const_iterator it = variable.begin(); it < variable.end(); it++)
+#define FOREACH_MAP_GENERIC(type1, type2, _map, it) for (std::map<type1, type2>::iterator it = _map.begin(); it != _map.end(); ++it)
 #define FOREACH_MAP_STR(x, y) for (std::map<std::string, std::string>::iterator y = x.begin(); y != x.end(); ++y)
 #define FOREACH_MAP_STR_CONST(x, y) for (std::map<std::string, std::string>::const_iterator y = x.begin(); y != x.end(); ++y)
 

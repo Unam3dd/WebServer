@@ -6,7 +6,7 @@
 /*   By: stales <stales@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 17:51:04 by stales            #+#    #+#             */
-/*   Updated: 2023/05/23 13:52:39 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/06/19 16:15:17 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 //
 /////////////////////////////////
 
+#include "http_status.hpp"
 #include <cstddef>
 #include <sstream>
 #include <ostream>
@@ -283,6 +284,10 @@ class	Socket
 
 		int		Fcntl(int fd, int cmd, long arg);
 		int		Fcntl(int cmd, long arg);
+
+		void				SetForcedResponse(http_status_code_t status);
+		bool				GetForcedResponseStatus(void) { return (this->_forcedresponse); }
+		http_status_code_t	GetForcedResponseCode(void) { return (this->_forcedstatus); }
 		
 		~Socket(void);
 	
@@ -298,6 +303,8 @@ class	Socket
 		bool				_isconnected;
 		bool				_isonlistening;
 		bool				_isbinded;
+		bool				_forcedresponse;
+		http_status_code_t	_forcedstatus;
 };
 
 #endif

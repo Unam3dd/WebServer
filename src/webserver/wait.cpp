@@ -6,7 +6,7 @@
 /*   By: ldournoi <ldournoi@student.42angouleme.fr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:10:21 by ldournoi          #+#    #+#             */
-/*   Updated: 2023/06/01 12:21:52 by ldournoi         ###   ########.fr       */
+/*   Updated: 2023/06/19 16:13:04 by ldournoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,9 +123,11 @@ t_status	WebServer::_waitSrvs(void)
 
 			if (evs[i].events & EPOLLIN) {
 				if ((unsigned long long)evs[i].data.fd < lowest_heap_address()) { //black magic
-					logz.log(L_DEBUG, "EPOLLIN : timerfd. Sending timeout response.");
+					logz.log(L_DEBUG, "EPOLLIN : timerfd. Setting forced response.");
 					::read(evs[i].data.fd, &size, sizeof(size));
-					this->_respondAndClean(HTTP_STATUS_REQUEST_TIMEOUT, client->Getfd());
+					client->SetForcedResponse(HTTP_STATUS_REQUEST_TIMEOUT);
+					evs[i].events = EPOLLOUT;
+					_epoll.Ctl(EPOLL_CTL_MOD, sock_fd, &evs[i]);
 					bufs[bufindex].clear();
 					continue;
 				}
@@ -198,6 +200,18 @@ t_status	WebServer::_waitSrvs(void)
 				}
 			}
 			else if (evs[i].events & EPOLLOUT) {
+				if (client->GetForcedResponseStatus())
+				{
+					logz.log(L_DEBUG, "EPOLLOUT : Forced response status. Sending response with code " + NumberToString(client->GetForcedResponseCode()));
+					HttpResponse res(client->GetForcedResponseCode());
+					write(client->Getfd(), res.getResponse().c_str(), res.getResponse().size());
+					::close(client->Getfd());
+					_epoll.Ctl(EPOLL_CTL_DEL, client->Getfd(), NULL);
+					FOREACH_VECTOR(Socket*, _clients, it){
+						if (*it == evs[i].data.ptr) _clients.erase(it);
+					}
+					continue;
+				}
 				HttpRequest req(bufs[bufindex], client->GetSrvPort(), const_cast<char*>(client->InetNtoa(client->GetSin()->sin_addr.s_addr).c_str()));
 		
 				std::ostringstream oss;
@@ -228,6 +242,7 @@ t_status	WebServer::_waitSrvs(void)
 	}
 
 	FOREACH_VECTOR(Socket*, this->_clients, it){ delete *it; }
+	FOREACH_MAP_GENERIC(int, int, this->_timerfds, tfd){ ::close(tfd->second); }
 	for (int i = 0; i < MAX_EVENT; i++)
 		if (tmpbufs[i]) delete tmpbufs[i];
 	return (STATUS_OK);
